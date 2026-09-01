@@ -1,6 +1,6 @@
 Nama : Rheina Uliana
 
-NPM : 2206600801
+NPM : 2506600801
 
 Kelas : PBP A
 

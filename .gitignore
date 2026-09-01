@@ -1,0 +1,15 @@
+# Mengabaikan folder Virtual Environment
+env/
+
+# Mengabaikan file sistem dan cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Mengabaikan database lokal SQLite
+db.sqlite3
+
+# Mengabaikan file konfigurasi rahasia
+.env
+.env.prod

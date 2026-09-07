@@ -1,5 +1,4 @@
 /* BASE */
-
 /* Menyiapkan ukuran kanvas utama */
 html, body {
     margin: 0;
@@ -9,12 +8,13 @@ html, body {
 }
 
 /* Mereset jarak bawaan & memastikan kotak tidak melar (border-box) */
-* { margin: 0;
+* {
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* COLOR PALETTE: navy, maroon, paper */ 
+/* COLOR PALETTE: navy, maroon, paper */
 :root {
     --ink: #27374D;
     --paper: #F0F0F0;
@@ -33,25 +33,31 @@ body {
     /* Layout */
     overflow-x: hidden; /* Mencegah layar bisa digeser ke samping */
     position: relative;
-    min-height: 100vh;  /* Minimal tinggi selalu selayar penuh */
-    
+    min-height: 100vh; /* Minimal tinggi selalu selayar penuh */
+
     /* Jarak atas supaya tidak tertabrak Navbar */
-    padding-top: 64px; 
+    padding-top: 64px;
 }
 
 /* LAYOUT DASAR */
 main {
     position: relative;
     z-index: 2;
-    overflow: clip; }
+    overflow: clip;
+}
+
+/* Supaya judul section tidak ketutup navbar saat link diklik */
+section[id], div[id] {
+    scroll-margin-top: 110px;
+}
 
 /* TYPOGRAPHY */
 h1, h2, h3, .brand {
-    font-family: "Freeman",
-    sans-serif;
-    font-weight: 400; }
+    font-family: "Freeman", sans-serif;
+    font-weight: 400;
+}
 
-/* Pembatas ruang konten khusus Desktop) */
+/* Pembatas ruang konten khusus Desktop */
 .container {
     width: 100%;
     margin: 0 auto;
@@ -60,20 +66,29 @@ h1, h2, h3, .brand {
 
 /* HEADER: menempel di atas & miring */
 .site-header-slanted {
-    background-color:var(--ink);
+    background-color: var(--ink);
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     padding-bottom: 2.4rem; margin-bottom: 0;
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 60px), 0 100%); /* Supaya slanted */
 }
 
+/* Strip maroon di bibir atas header */
+.site-header-slanted::before {
+    content: "";
+    display: block;
+    height: 5px;
+    background-color: var(--accent);
+}
+
 /* Layout isi header */
 .header-inner {
-    display: flex; justify-content: space-between; align-items: center; padding-top: 0.9rem
- }
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 0.9rem;
+}
 
- /* Gaya Brand */
+/* Gaya Brand */
 .brand {
-    font-size: 1.6rem;font-weight: 700; color: var(--paper);
+    font-size: 1.6rem; font-weight: 700; color: var(--paper);
     text-decoration: none; /* Menghilangkan garis bawah link */
     letter-spacing: 1px;
     margin: 0;
@@ -91,31 +106,41 @@ h1, h2, h3, .brand {
     padding: 0.35rem 0.9rem; display: inline-block;
 }
 
-/* Efek saat tombol di hover) */
+/* Efek saat tombol di hover */
 .site-header-slanted nav a:hover {
     background-color: var(--accent); color: var(--paper);
 }
 
-/* ==================================================
-   5. HERO SECTION (Banner Profil)
-===================================================== */
+.site-header-slanted nav a {
+    position: relative; overflow: hidden;
+}
+
+.site-header-slanted nav a::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: 0; height: 70%;
+    background-image: url('/static/img/halftone-bg.png'); background-size: 140px auto; background-position: 50% 85%; background-repeat: no-repeat;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* HERO SECTION (Banner Profil) */
 /* Pembungkus utama hero section */
-.hero-wrapper { 
-    position: relative; 
-    z-index: 5; 
+.hero-wrapper {
+    position: relative;
+    z-index: 5;
 }
 
 /* Garis aksen miring di bagian bawah foto banner */
-.hero-wrapper::after { 
-    content: ""; 
-    position: absolute; 
-    left: -2vw; right: -2vw; 
-    bottom: 4%; 
-    height: 7px; 
-    background: var(--ink); 
+.hero-wrapper::after {
+    content: "";
+    position: absolute;
+    left: -2vw; right: -2vw;
+    bottom: 4%;
+    height: 7px;
+    background: var(--ink);
     transform: rotate(-2.3deg); /* Memiringkan garis sejajar dengan foto */
-    z-index: 6; 
-    pointer-events: none;       /* Supaya garis tidak menghalangi klik */
+    z-index: 6;
+    pointer-events: none; /* Supaya garis tidak menghalangi klik */
     box-shadow: 0 5px 0 #B9C0C9; /* Efek bayangan di bawah garis */
 }
 
@@ -128,46 +153,48 @@ h1, h2, h3, .brand {
 }
 
 /* Supaya foto lebih redup */
-.hero-overlay { 
-    position: absolute; 
-    top: 0; left: 0; right: 0; bottom: 0; 
-    z-index: 1; 
-    background-color: rgba(240, 240, 240, 0.8); 
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
+    background-color: rgba(240, 240, 240, 0.8);
 }
 
 /* Supaya isinya ke sebelah kanan */
-.hero-content-right { 
-    position: relative; 
-    z-index: 2; 
-    display: flex; justify-content: flex-end; 
+.hero-content-right {
+    position: relative;
+    z-index: 2;
+    display: flex; justify-content: flex-end;
 }
 
 /* Supaya ukurannya pas */
-.hero-boxes { 
-    max-width: 550px; display: flex;  flex-direction: column; width: 100%; 
+.hero-boxes {
+    max-width: 550px; display: flex; flex-direction: column; width: 100%;
 }
 
 /* HERO CONTENT KOTAK */
 
 /* Kotak nama: hitam */
-.box-name { 
-    background-color: var(--ink); color: var(--paper); 
-    padding: 1.2rem 2rem; border: none; 
-    margin-bottom: 1.5rem; 
+.box-name {
+    background-color: var(--ink); color: var(--paper);
+    padding: 1.2rem 2rem; border: none;
+    margin-bottom: 1.5rem;
     box-shadow: 6px 6px 0px var(--ink);
 }
 
-.box-name h1 { 
-    font-size: 1.4rem; 
-    letter-spacing: 2px; 
-    margin: 0; 
+.box-name h1 {
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    margin: 0;
     text-transform: uppercase;
 }
 
 /* Kotak Deskripsi Bio: putih dengan garis */
-.box-desc { 
+.box-desc {
+    position: relative;
+    overflow: hidden; /* Menyiapkan lapisan texture (lapis 4) */
     background-color: var(--paper); border: 3px solid var(--ink);
-    padding: 2.5rem 2rem; 
+    padding: 2.5rem 2rem;
     margin-bottom: 1.5rem;
     box-shadow: 6px 6px 0px var(--ink);
 }
@@ -188,6 +215,15 @@ h1, h2, h3, .brand {
     margin-right: 10px;
 }
 
+/* Pita dots di kaki box profile */
+.box-desc::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
+    background-image: url('/static/img/halftone-bg.png'); background-repeat: no-repeat; background-position: 50% 74%; background-size: 100% auto;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
 /* Teks bio */
 .box-desc .bio {
     color: var(--text-muted);
@@ -205,7 +241,8 @@ h1, h2, h3, .brand {
 .meta-row dt {
     font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em;
     color: var(--text-muted);
-    margin: 0;}
+    margin: 0;
+}
 
 .meta-row dd {
     font-weight: 700; font-size: 1.1rem;
@@ -228,11 +265,27 @@ h1, h2, h3, .brand {
     width: 22px; height: 22px;
 }
 
+.icon-square {
+    position: relative; overflow: hidden;
+}
+
+.icon-square svg {
+    position: relative; z-index: 1;
+}
+
+.icon-square::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url('/static/img/halftone-bg.png'); background-size: 120px auto; background-position: 50% 88%; background-repeat: no-repeat;
+    opacity: 0;
+    pointer-events: none;
+}
+
 .icon-square:hover {
     background-color: var(--accent); color: var(--paper);
 }
 
-/* JUDUL SECTION */
+/* JUDUL SECTION (satu gaya untuk PROJECTS & ARTS) */
 /* Banner miring merah maroon */
 .slanted-title {
     display: inline-block; background-color: var(--accent); color: var(--paper);
@@ -241,6 +294,8 @@ h1, h2, h3, .brand {
     transform: skewX(-15deg); /* Supaya miring jajaran genjang */
     box-shadow: 6px 6px 0px var(--ink);
     border: 3px solid var(--ink);
+    background-image: url('/static/img/halftone-bg.png');
+    background-repeat: no-repeat; background-size: 100% auto; background-position: 50% 82%;
 }
 
 /* Teks di dalam banner diluruskan lagi */
@@ -261,6 +316,17 @@ h1, h2, h3, .brand {
     padding: 2rem 0;
     position: relative; z-index: 2;
     margin-top: 4rem;
+}
+
+#projects { position: relative; scroll-margin-top: 90px; }
+/* Pita dots di batas atas footer */
+#arts::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: 0; height: 200px;
+    background-image: url('/static/img/halftone-bg.png'); background-repeat: no-repeat; background-size: 100% auto; background-position: 50% 80%;
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: -1;
 }
 
 /* PROJECTS */
@@ -303,6 +369,15 @@ h1, h2, h3, .brand {
     top: 0; bottom: 0; left: 0; width: 14px;
     background-color: var(--accent);
     z-index: 2; pointer-events: none;
+}
+
+/* Bilah maroon di sisi dalam foto terpilih */
+.project-selected-image::after {
+    content: "";
+    position: absolute; top: 0; bottom: 0; left: 0; width: 14px;
+    background-color: var(--accent);
+    z-index: 2;
+    pointer-events: none;
 }
 
 /* Kolom kanan: judul + deskripsi + kartu */
@@ -365,6 +440,14 @@ h1, h2, h3, .brand {
     color: var(--ink);
 }
 
+/* Pita dots di kaki box deskripsi project */
+.desc-box::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
+    background-image: url('/static/img/halftone-bg.png'); background-repeat: no-repeat; background-position: 50% 74%; background-size: 100% auto;
+    opacity: 0.4;
+    pointer-events: none; }
+
 /* Tombol: menempel kanan bawah deskripsi */
 .project-link {
     display: block; width: fit-content;
@@ -377,6 +460,22 @@ h1, h2, h3, .brand {
     border: 3px solid var(--ink);
     padding: 0.6rem 1.4rem;
     box-shadow: 4px 4px 0px var(--ink);
+}
+
+.project-link:hover {
+    background-color: var(--ink);
+}
+
+.project-link {
+    position: relative; overflow: hidden;
+}
+
+.project-link::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url('/static/img/halftone-bg.png'); background-repeat: no-repeat; background-size: 100% auto; background-position: 50% 85%;
+    filter: invert(1); opacity: 0;
+    pointer-events: none;
 }
 
 /* MINI CARDS: deretan kartu, kartu terakhir terpotong tepi (disengaja) */
@@ -413,8 +512,11 @@ h1, h2, h3, .brand {
     position: absolute;
     left: -16px; right: -16px; bottom: 0; /* Dilebarkan mengikuti miring card */
     z-index: 1;
-    transform: skewX(12deg); display: block; height: 42px; line-height: 42px;
-    font-family: "Space Grotesk", sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-align: left; padding: 0 1.4rem;
+    transform: skewX(12deg);
+    display: block; height: 42px; line-height: 42px;
+    font-family: "Space Grotesk", sans-serif; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    text-align: left; padding: 0 1.4rem;
     color: var(--paper); background-color: var(--ink);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     pointer-events: none;
@@ -430,39 +532,6 @@ h1, h2, h3, .brand {
 
 .mini-card.is-active .mini-card-label {
     background-color: var(--accent);
-}
-
-/* JUDUL SECTION: sama kayak PROJECTS */
-.section-title-wrapper {
-    margin-bottom: 2rem;
-    text-align: center; /* Judul selalu di tengah */
-}
-
-/* Jarak antar section */
-.slanted-section {
-    background-color: transparent;
-    padding: 2rem 0;
-    position: relative; z-index: 2;
-    margin-top: 4rem;
-}
-
-#projects { position: relative; scroll-margin-top: 90px; }
-#arts { position: relative; scroll-margin-top: 90px; margin-top: 5rem; }
-
-/* Banner miring merah maroon */
-.slanted-title {
-    display: inline-block; background-color: var(--accent); color: var(--paper);
-    padding: 0.9rem 3.5rem; font-size: 1.9rem;
-    font-family: "Freeman", sans-serif; font-weight: 400; letter-spacing: 5px;
-    transform: skewX(-15deg); /* Supaya miring jajaran genjang */
-    box-shadow: 6px 6px 0px var(--ink);
-    border: 3px solid var(--ink);
-}
-
-/* Teks banner diluruskan lagi */
-.slanted-title span {
-    display: inline-block;
-    transform: skewX(15deg);
 }
 
 /* ARTS */
@@ -489,6 +558,22 @@ h1, h2, h3, .brand {
 .art-tab span {
     display: inline-block;
     transform: skewX(-12deg);
+}
+
+.art-tab {
+    position: relative; overflow: hidden;
+}
+
+.art-tab span {
+    position: relative; z-index: 1;
+}
+
+.art-tab::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url('/static/img/halftone-bg.png'); background-size: 200px auto; background-position: 50% 88%; background-repeat: no-repeat;
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* Tab yang sedang dipilih: merah */
@@ -574,7 +659,7 @@ h1, h2, h3, .brand {
 /* Kotak kecil di sebelah teks footer */
 .footer-logo::before {
     content: "";
-    display: inline-block; width: 11px; height: 11px; 
+    display: inline-block; width: 11px; height: 11px;
     background-color: var(--accent);
     margin-right: 10px;
 }
@@ -587,21 +672,21 @@ h1, h2, h3, .brand {
 .footer-col {
     display: flex; flex-direction: column;
 }
-.footer-col h4 { 
-    color: var(--paper); 
-    margin-bottom: 0.8rem; 
+.footer-col h4 {
+    color: var(--paper);
+    margin-bottom: 0.8rem;
 }
-.footer-col a { 
-    color: #aaa; 
-    text-decoration: none; 
-    margin-bottom: 0.35rem; 
+.footer-col a {
+    color: #aaa;
+    text-decoration: none;
+    margin-bottom: 0.35rem;
 }
-.footer-col a:hover { 
-    color: var(--accent); 
+.footer-col a:hover {
+    color: var(--accent);
 }
-.footer-bottom { 
-    padding-top: 1.5rem; 
+.footer-bottom {
+    padding-top: 1.5rem;
 }
-.footer-bottom p { 
-    font-size: 0.85rem; 
+.footer-bottom p {
+    font-size: 0.85rem;
 }

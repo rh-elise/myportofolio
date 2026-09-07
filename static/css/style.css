@@ -232,6 +232,206 @@ h1, h2, h3, .brand {
     background-color: var(--accent); color: var(--paper);
 }
 
+/* JUDUL SECTION */
+/* Banner miring merah maroon */
+.slanted-title {
+    display: inline-block; background-color: var(--accent); color: var(--paper);
+    padding: 0.9rem 3.5rem; font-size: 1.9rem;
+    font-family: "Freeman", sans-serif; font-weight: 400; letter-spacing: 5px;
+    transform: skewX(-15deg); /* Supaya miring jajaran genjang */
+    box-shadow: 6px 6px 0px var(--ink);
+    border: 3px solid var(--ink);
+}
+
+/* Teks di dalam banner diluruskan lagi */
+.slanted-title span {
+    display: inline-block;
+    transform: skewX(15deg);
+}
+
+/* PEMBUNGKUS JUDUL: selalu di tengah */
+.section-title-wrapper {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* SECTION: jarak antar section */
+.slanted-section {
+    background-color: transparent;
+    padding: 2rem 0;
+    position: relative; z-index: 2;
+    margin-top: 4rem;
+}
+
+/* PROJECTS */
+
+/* Grid 12 kolom untuk foto kiri + teks kanan */
+.project-showcase {
+    display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px;
+    position: relative; min-height: 420px; align-items: stretch; overflow: visible;
+}
+
+/* Kolom kiri: ditempel ke tepi kiri layar */
+.project-left-col {
+    grid-column: 1 / 5;
+    position: relative; z-index: 1;
+    margin-left: -112px;
+    align-self: stretch;
+}
+
+/* Foto terpilih: miring + bingkai */
+.project-selected-image {
+    position: absolute; top: 0; bottom: -2rem; left: 0; right: 0;
+    background: var(--ink);
+    border: 3px solid var(--ink);
+    transform: skewX(-12deg); /* Supaya miring */
+    transform-origin: top right;
+    box-shadow: 6px 6px 0px var(--ink);
+    overflow: hidden;
+}
+
+/* Foto di dalam diluruskan lagi + diperbesar supaya sudut tertutup */
+.project-selected-image img {
+    width: 100%; height: 100%; object-fit: cover;
+    transform: skewX(12deg) scale(1.4);
+    object-position: right center;
+}
+
+/* Bilah maroon di sisi dalam foto */
+.project-selected-image::after {
+    content: ""; position: absolute;
+    top: 0; bottom: 0; left: 0; width: 14px;
+    background-color: var(--accent);
+    z-index: 2; pointer-events: none;
+}
+
+/* Kolom kanan: judul + deskripsi + kartu */
+.project-right-col {
+    grid-column: 5 / 13;
+    display: flex; flex-direction: column; gap: 1.5rem;
+    z-index: 2; min-width: 0; overflow: visible;
+}
+
+.project-info-card {
+    position: relative; width: 100%;
+    display: flex; flex-direction: column;
+}
+
+/* Bubble nama: ekor di luar kiri deskripsi */
+.title-flag {
+    position: relative; z-index: 10;
+    display: inline-flex; align-items: center; justify-content: center; text-align: center;
+    padding: 0.95rem 2.2rem 1.15rem 3.4rem;
+    margin-left: 0.4rem;
+    margin-bottom: -2.7rem; /* Menumpuk di atas deskripsi */
+    align-self: flex-start;
+    max-width: calc(100% - 0.4rem);
+}
+
+/* Gambar bubble sebagai background */
+.title-flag-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+    object-fit: fill;
+    z-index: -1;
+}
+
+/* Teks bubble selalu di tengah */
+.title-flag h3 {
+    margin: 0 auto;
+    font-family: "Freeman", sans-serif; font-weight: 400;
+    font-size: 1.35rem; letter-spacing: 2px;
+    color: var(--accent); text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* Kotak deskripsi: sisi kiri maroon tebal */
+.desc-box {
+    position: relative; z-index: 1;
+    background-color: var(--paper);
+    border: 3px solid var(--ink);
+    border-left: 8px solid var(--accent);
+    padding: 3.2rem 1.5rem 2.6rem 1.5rem;
+    box-shadow: 6px 6px 0px var(--ink);
+    overflow: hidden;
+    margin-left: 2.6rem; /* Geser kanan supaya ekor bubble di luar */
+    width: calc(100% - 2.6rem);
+}
+
+.desc-box p {
+    margin: 0;
+    font-weight: 700; font-size: 0.95rem;
+    color: var(--ink);
+}
+
+/* Tombol: menempel kanan bawah deskripsi */
+.project-link {
+    display: block; width: fit-content;
+    margin-left: auto; margin-top: 0.9rem;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none;
+    color: var(--paper); background-color: var(--accent);
+    border: 3px solid var(--ink);
+    padding: 0.6rem 1.4rem;
+    box-shadow: 4px 4px 0px var(--ink);
+}
+
+/* MINI CARDS: deretan kartu, kartu terakhir terpotong tepi (disengaja) */
+.project-mini-cards {
+    display: flex;
+    overflow-x: auto; overflow-y: hidden; /* Bisa digeser ke samping */
+    padding: 15px 0 40px 60px;
+    margin-left: -60px;
+    margin-right: -112px;
+    scrollbar-width: thin;
+}
+
+/* Kartu miring */
+.mini-card {
+    position: relative; z-index: 10;
+    flex: 0 0 150px; height: 178px;
+    border: 3px solid var(--ink);
+    background: none; padding: 0;
+    cursor: pointer; overflow: hidden;
+    margin-right: 1.2rem;
+    transform: skewX(-12deg); /* Supaya miring */
+}
+
+/* Foto kartu diluruskan lagi */
+.mini-card img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    transform: skewX(12deg) scale(1.25);
+    pointer-events: none;
+}
+
+/* Label judul: rata kiri + titik-titik kalau kepanjangan */
+.mini-card-label {
+    position: absolute;
+    left: -16px; right: -16px; bottom: 0; /* Dilebarkan mengikuti miring card */
+    z-index: 1;
+    transform: skewX(12deg); display: block; height: 42px; line-height: 42px;
+    font-family: "Space Grotesk", sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-align: left; padding: 0 1.4rem;
+    color: var(--paper); background-color: var(--ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    pointer-events: none;
+}
+
+/* Kartu yang sedang dipilih: merah */
+.mini-card.is-active {
+    border-color: var(--ink);
+    box-shadow: 6px 6px 0px var(--ink);
+    transform: skewX(-12deg) translateY(-5px);
+    z-index: 11;
+}
+
+.mini-card.is-active .mini-card-label {
+    background-color: var(--accent);
+}
+
 /* FOOTER */
 .site-footer {
     position: relative; z-index: 3;

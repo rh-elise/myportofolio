@@ -432,6 +432,120 @@ h1, h2, h3, .brand {
     background-color: var(--accent);
 }
 
+/* JUDUL SECTION: sama kayak PROJECTS */
+.section-title-wrapper {
+    margin-bottom: 2rem;
+    text-align: center; /* Judul selalu di tengah */
+}
+
+/* Jarak antar section */
+.slanted-section {
+    background-color: transparent;
+    padding: 2rem 0;
+    position: relative; z-index: 2;
+    margin-top: 4rem;
+}
+
+#projects { position: relative; scroll-margin-top: 90px; }
+#arts { position: relative; scroll-margin-top: 90px; margin-top: 5rem; }
+
+/* Banner miring merah maroon */
+.slanted-title {
+    display: inline-block; background-color: var(--accent); color: var(--paper);
+    padding: 0.9rem 3.5rem; font-size: 1.9rem;
+    font-family: "Freeman", sans-serif; font-weight: 400; letter-spacing: 5px;
+    transform: skewX(-15deg); /* Supaya miring jajaran genjang */
+    box-shadow: 6px 6px 0px var(--ink);
+    border: 3px solid var(--ink);
+}
+
+/* Teks banner diluruskan lagi */
+.slanted-title span {
+    display: inline-block;
+    transform: skewX(15deg);
+}
+
+/* ARTS */
+
+/* Barisan tab kategori */
+.arts-tabs {
+    display: flex; justify-content: center;
+    gap: 1.5rem; flex-wrap: wrap;
+    margin-bottom: 3rem;
+}
+
+/* Tombol tab: gelap tulisan terang */
+.art-tab {
+    flex: 0 0 auto; width: auto; min-width: 170px;
+    padding: 0.8rem 1.5rem; font-size: 1.15rem;
+    background-color: var(--ink); color: var(--paper);
+    border: 3px solid var(--ink);
+    transform: skewX(12deg); /* Supaya miring */
+    font-family: "Space Grotesk", sans-serif; font-weight: 700; letter-spacing: 0.05em;
+    cursor: pointer;
+}
+
+/* Teks tab diluruskan lagi */
+.art-tab span {
+    display: inline-block;
+    transform: skewX(-12deg);
+}
+
+/* Tab yang sedang dipilih: merah */
+.art-tab.is-active {
+    background-color: var(--accent); color: var(--paper);
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+/* GALERI: dua lajur selebar layar (animasi jalan di lapis 5) */
+.arts-marquee-wrapper {
+    width: 100vw; margin-left: calc(-50vw + 50%); overflow: hidden;
+    display: flex; flex-direction: column; gap: 2.5rem;
+    padding: 1rem 0 4rem 0;
+}
+
+.arts-marquee-track {
+    display: flex; width: max-content;
+}
+
+/* Kartu galeri miring */
+.art-item {
+    margin-right: 1.5rem;
+    position: relative; flex: 0 0 240px; height: 155px;
+    border: 3px solid var(--ink);
+    overflow: hidden; background-color: #d7dbe0;
+    transform: skewX(-12deg); /* Supaya miring */
+}
+
+/* Foto kartu diluruskan lagi */
+.art-item img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transform: skewX(12deg) scale(1.25);
+}
+
+/* Video di kartu galeri: diperlakukan sama kayak foto */
+.art-item video {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transform: skewX(12deg) scale(1.25);
+    pointer-events: none;
+}
+
+/* Judul di bawah foto: rata tengah */
+.art-item figcaption {
+    position: absolute;
+    left: -16px; right: -16px; bottom: 0; /* Dilebarkan mengikuti miring card */
+    z-index: 1;
+    transform: skewX(12deg);
+    display: block; height: 36px; line-height: 36px;
+    padding: 0 1.2rem;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    text-align: center;
+    color: var(--paper); background-color: var(--ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
 /* FOOTER */
 .site-footer {
     position: relative; z-index: 3;

@@ -97,10 +97,35 @@
                             <a id="projectHeroLink" class="project-link" href="#" target="_blank" rel="noopener">Play &#8599;</a>
                         </div>
                     </div>
+
                     <!-- MINI CARDS: diisi otomatis oleh script dari projectsData -->
                     <div class="project-mini-cards" id="miniCardsContainer"></div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- ARTS -->
+    <section class="slanted-section" id="arts">
+        <div class="container">
+            <!-- ARTS HEADER -->
+            <div class="section-title-wrapper">
+                <div class="slanted-title"><span>ARTS</span></div>
+            </div>
+
+            <!-- TAB KATEGORI -->
+            <div class="arts-tabs" id="artsTabsContainer">
+                <button class="art-tab" data-cat="rendered"><span>Rendered</span></button>
+                <button class="art-tab" data-cat="monochrome"><span>Monochrome</span></button>
+                <button class="art-tab is-active" data-cat="pixel"><span>Pixel</span></button>
+                <button class="art-tab" data-cat="animation"><span>Animation</span></button>
+            </div>
+        </div>
+
+        <!-- GALERI: diisi otomatis oleh script -->
+        <div class="arts-marquee-wrapper">
+            <div class="arts-marquee-track" id="artsTrack1"></div>
+            <div class="arts-marquee-track reverse-track" id="artsTrack2"></div>
         </div>
     </section>
 
@@ -170,6 +195,76 @@
             if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectProject(index); }
         });
         miniCardsContainer.appendChild(card);
+    });
+</script>
+
+<!-- SCRIPT ARTS -->
+<script>
+    // DATA ARTS per kategori
+    const artsData = {
+        rendered: [
+            { title: "Lab 3 DDP0 '26", img: "/static/img/art-rendered-1.jpg" },
+            { title: "Profile Picture 1", img: "/static/img/art-rendered-2.jpg" },
+            { title: "Profile Picrture 2", img: "/static/img/art-rendered-3.jpg" },
+        ],
+        monochrome: [
+            { title: "Tipsy", img: "/static/img/art-mono-1.jpg" },
+            { title: "Roman", img: "/static/img/art-mono-2.jpg" }
+        ],
+        pixel: [
+            { title: "RISTEK Open Recruitment Assignment Spritesheet", img: "/static/img/art-pixel-1.png" },
+            { title: "Game Jam Necronomi Clam Spritesheet", img: "/static/img/art-pixel-2.png" }
+        ],
+        animation: [
+            { title: "Run Agate Caressing the Night", video: "/static/img/art-anim-1.mp4" },
+            { title: "Minor Piece", video: "/static/img/art-anim-2.mp4" }
+        ]
+    };
+
+    // ELEMEN GALERI
+    const track1 = document.getElementById('artsTrack1');
+    const track2 = document.getElementById('artsTrack2');
+
+    // Bikin satu kartu galeri: video kalau ada, foto kalau tidak
+    function artFigure(item) {
+        let media = '';
+        if (item.video) {
+            media = '<video src="' + item.video + '" muted loop autoplay playsinline></video>';
+        } else {
+            media = '<img src="' + item.img + '" alt="' + item.title + '">';
+        }
+        return '<figure class="art-item">' + media + '<figcaption>' + item.title + '</figcaption></figure>';
+    }
+
+    // GAMBAR ULANG GALERI
+    function renderArts(category) {
+        const items = artsData[category];
+        let half = '';
+        for (let repeat = 0; repeat < 2; repeat++) {
+            items.forEach(function (item) {
+                half += artFigure(item);
+            });
+        }
+        track1.innerHTML = half + half;
+        const reversedItems = items.slice().reverse();
+        let reversedHalf = '';
+        for (let repeat = 0; repeat < 2; repeat++) {
+            reversedItems.forEach(function (item) {
+                reversedHalf += artFigure(item);
+            });
+        }
+        track2.innerHTML = reversedHalf + reversedHalf;
+    }
+    renderArts('rendered');
+
+    // TAB KLIK
+    const tabs = document.querySelectorAll('.art-tab');
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            tabs.forEach(function (t) { t.classList.remove('is-active'); });
+            tab.classList.add('is-active');
+            renderArts(tab.getAttribute('data-cat'));
+        });
     });
 </script>
 </body>

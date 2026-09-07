@@ -1,195 +1,293 @@
-* {
+/* BASE */
+
+/* Menyiapkan ukuran kanvas utama */
+html, body {
     margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Mereset jarak bawaan & memastikan kotak tidak melar (border-box) */
+* { margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* COLOR PALETTE: navy, maroon, paper */ 
 :root {
-    --ink: #1c1917;
-    --paper: #faf6f0;
-    --accent: #d95d39;
-    --accent-dark: #a8442a;
-    --line: #e3d9c9;
-    --text-muted: #6b6459;
-    --radius: 4px;
+    --ink: #27374D;
+    --paper: #F0F0F0;
+    --accent: #A80139;
+    --text-muted: #5D6A79;
 }
 
+/* BODY STYLE */
 body {
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* Tipografi */
+    font-family: "Space Grotesk", sans-serif;
     color: var(--ink);
     background-color: var(--paper);
     line-height: 1.6;
+
+    /* Layout */
+    overflow-x: hidden; /* Mencegah layar bisa digeser ke samping */
+    position: relative;
+    min-height: 100vh;  /* Minimal tinggi selalu selayar penuh */
+    
+    /* Jarak atas supaya tidak tertabrak Navbar */
+    padding-top: 64px; 
 }
 
-h1, .brand {
-    font-family: "Space Grotesk", -apple-system, sans-serif;
-}
+/* LAYOUT DASAR */
+main {
+    position: relative;
+    z-index: 2;
+    overflow: clip; }
 
+/* TYPOGRAPHY */
+h1, h2, h3, .brand {
+    font-family: "Freeman",
+    sans-serif;
+    font-weight: 400; }
+
+/* Pembatas ruang konten khusus Desktop) */
 .container {
-    max-width: 960px;
+    width: 100%;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 112px;
 }
 
-.site-header {
-    border-bottom: 1px solid var(--line);
+/* HEADER: menempel di atas & miring */
+.site-header-slanted {
+    background-color:var(--ink);
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding-bottom: 2.4rem; margin-bottom: 0;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 60px), 0 100%); /* Supaya slanted */
 }
 
-.site-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.25rem 1.5rem;
-}
+/* Layout isi header */
+.header-inner {
+    display: flex; justify-content: space-between; align-items: center; padding-top: 0.9rem
+ }
 
+ /* Gaya Brand */
 .brand {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--ink);
-    text-decoration: none;
+    font-size: 1.6rem;font-weight: 700; color: var(--paper);
+    text-decoration: none; /* Menghilangkan garis bawah link */
+    letter-spacing: 1px;
+    margin: 0;
 }
 
-.site-header nav {
-    display: flex;
-    gap: 2rem;
+/* Jarak antar tombol */
+.site-header-slanted nav {
+    display: flex; gap: 2rem;
 }
 
-.site-header nav a {
-    color: var(--ink);
-    text-decoration: none;
-    font-size: 0.95rem;
+/* Gaya tulisan tombol */
+.site-header-slanted nav a {
+    color: var(--paper); text-decoration: none;
+    font-size: 1.05rem; font-weight: 600; text-transform: uppercase;
+    padding: 0.35rem 0.9rem; display: inline-block;
 }
 
-.hero {
-    padding: 4.5rem 0 5rem;
+/* Efek saat tombol di hover) */
+.site-header-slanted nav a:hover {
+    background-color: var(--accent); color: var(--paper);
 }
 
-.hero-grid {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    grid-template-areas:
-        "identity photo"
-        "details  photo";
-    gap: 1.5rem 3rem;
+/* ==================================================
+   5. HERO SECTION (Banner Profil)
+===================================================== */
+/* Pembungkus utama hero section */
+.hero-wrapper { 
+    position: relative; 
+    z-index: 5; 
 }
 
-.hero-identity {
-    grid-area: identity;
+/* Garis aksen miring di bagian bawah foto banner */
+.hero-wrapper::after { 
+    content: ""; 
+    position: absolute; 
+    left: -2vw; right: -2vw; 
+    bottom: 4%; 
+    height: 7px; 
+    background: var(--ink); 
+    transform: rotate(-2.3deg); /* Memiringkan garis sejajar dengan foto */
+    z-index: 6; 
+    pointer-events: none;       /* Supaya garis tidak menghalangi klik */
+    box-shadow: 0 5px 0 #B9C0C9; /* Efek bayangan di bawah garis */
 }
 
-.hero-details {
-    grid-area: details;
+/* Foto background dengan potongan miring */
+.hero-slanted-photo {
+    background-image: url('/static/img/rheina.png');
+    background-color: #d7dbe0; background-size: cover; background-position: center 25%; background-repeat: no-repeat;
+    position: relative; padding: 9rem 0 7rem 0;
+    clip-path: polygon(0 60px, 100% 0, 100% calc(100% - 60px), 0 100%); /* Supaya slanted */
 }
 
-.hero-kicker {
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
+/* Supaya foto lebih redup */
+.hero-overlay { 
+    position: absolute; 
+    top: 0; left: 0; right: 0; bottom: 0; 
+    z-index: 1; 
+    background-color: rgba(240, 240, 240, 0.8); 
+}
+
+/* Supaya isinya ke sebelah kanan */
+.hero-content-right { 
+    position: relative; 
+    z-index: 2; 
+    display: flex; justify-content: flex-end; 
+}
+
+/* Supaya ukurannya pas */
+.hero-boxes { 
+    max-width: 550px; display: flex;  flex-direction: column; width: 100%; 
+}
+
+/* HERO CONTENT KOTAK */
+
+/* Kotak nama: hitam */
+.box-name { 
+    background-color: var(--ink); color: var(--paper); 
+    padding: 1.2rem 2rem; border: none; 
+    margin-bottom: 1.5rem; 
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+.box-name h1 { 
+    font-size: 1.4rem; 
+    letter-spacing: 2px; 
+    margin: 0; 
     text-transform: uppercase;
-    color: var(--accent-dark);
-    font-weight: 700;
-    margin-bottom: 0.75rem;
 }
 
-.hero-identity h1 {
-    font-size: clamp(3rem, 7vw, 5rem);
-    line-height: 0.95;
+/* Kotak Deskripsi Bio: putih dengan garis */
+.box-desc { 
+    background-color: var(--paper); border: 3px solid var(--ink);
+    padding: 2.5rem 2rem; 
+    margin-bottom: 1.5rem;
+    box-shadow: 6px 6px 0px var(--ink);
 }
 
-.bio {
+/* Teks kecil di atas judul */
+.hero-kicker {
+    font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); font-weight: 800;
+    margin-bottom: 1.5rem;
+}
+
+/* Membuat titik kotak di sebelah teks kicker */
+.hero-kicker::before {
+    content: "";
+    display: inline-block;
+    width: 10px; height: 10px;
+    background-color: var(--accent);
+    margin-right: 10px;
+}
+
+/* Teks bio */
+.box-desc .bio {
     color: var(--text-muted);
-    max-width: 480px;
     margin-bottom: 1.5rem;
+    font-size: 1.05rem; line-height: 1.7;
 }
 
+/* Daftar info singkat */
 .meta-list {
-    display: flex;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
+    display: flex; gap: 3rem;
+    border-left: 3px solid var(--accent); /* Garis vertikal di kiri */
+    padding-left: 1.5rem;
 }
 
 .meta-row dt {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em;
     color: var(--text-muted);
-    margin-bottom: 0.15rem;
-}
+    margin: 0;}
 
 .meta-row dd {
-    font-weight: 600;
+    font-weight: 700; font-size: 1.1rem;
+    margin: 0;
 }
 
-.social-links {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+/* CONTACT */
+.box-icons {
+    display: flex; gap: 0.8rem;
 }
 
-.social-link {
-    display: inline-block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-    color: var(--paper);
-    background-color: var(--ink);
-    border-radius: var(--radius);
-    padding: 0.5rem 1.1rem;
-    transition: background-color 0.2s ease;
+.icon-square {
+    width: 50px; height: 50px;
+    background-color: var(--ink); color: var(--paper);
+    display: flex; justify-content: center; align-items: center; text-decoration: none;
+    border: none; box-shadow: 4px 4px 0px var(--ink);
 }
 
-.social-link:hover {
-    background-color: var(--accent);
+.icon-square svg {
+    width: 22px; height: 22px;
 }
 
-.hero-photo {
-    grid-area: photo;
-    align-self: center;
-    position: relative;
+.icon-square:hover {
+    background-color: var(--accent); color: var(--paper);
 }
 
-.photo-block {
-    position: absolute;
-    top: 1.25rem;
-    left: 1.25rem;
-    width: 100%;
-    height: 100%;
-    background-color: var(--accent);
-    border-radius: var(--radius);
-    z-index: 0;
-}
-
-.avatar {
-    position: relative;
-    z-index: 1;
-    display: block;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border-radius: var(--radius);
-    border: 3px solid var(--ink);
-}
-
+/* FOOTER */
 .site-footer {
-    padding: 1.5rem;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    border-top: 1px solid var(--line);
+    position: relative; z-index: 3;
+    background-color: var(--ink); color: #888; padding: 8rem 112px 3rem 112px;
+    clip-path: polygon(0 60px, 100% 0, 100% 100%, 0 100%); /* Supaya slanted */
+    margin-top: -5rem; }
+
+/* Grid untuk isi footer */
+.footer-grid {
+    display: flex; justify-content: space-between; gap: 3rem;
+    border-bottom: 1px solid rgba(250, 246, 240, 0.15);
+    padding-bottom: 2rem;
 }
 
-@media (max-width: 600px) {
-    .hero-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "identity"
-            "photo"
-            "details";
-    }
+.footer-brand {
+    max-width: 420px;
+}
 
-    .hero-photo {
-        max-width: 220px;
-    }
+.footer-logo {
+    font-family: "Freeman";
+    font-size: 1.35rem; letter-spacing: 1px;
+    color: var(--paper);
+    margin-bottom: 0.9rem;
+}
 
-    .social-links {
-        justify-content: flex-start;
-    }
+/* Kotak kecil di sebelah teks footer */
+.footer-logo::before {
+    content: "";
+    display: inline-block; width: 11px; height: 11px; 
+    background-color: var(--accent);
+    margin-right: 10px;
+}
+
+.footer-tagline {
+    font-size: 0.95rem;
+}
+
+/* Kolom link footer */
+.footer-col {
+    display: flex; flex-direction: column;
+}
+.footer-col h4 { 
+    color: var(--paper); 
+    margin-bottom: 0.8rem; 
+}
+.footer-col a { 
+    color: #aaa; 
+    text-decoration: none; 
+    margin-bottom: 0.35rem; 
+}
+.footer-col a:hover { 
+    color: var(--accent); 
+}
+.footer-bottom { 
+    padding-top: 1.5rem; 
+}
+.footer-bottom p { 
+    font-size: 0.85rem; 
 }

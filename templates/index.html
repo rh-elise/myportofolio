@@ -1,61 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <!-- PENGATURAN DASAR -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rheina - Portfolio</title>
+
+    <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Freeman&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- STYLESHEETS: File CSS utama -->
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body>
-    <header class="site-header">
-        <div class="container">
+    <header class="site-header-slanted">
+        <div class="container header-inner">
             <a href="#profile" class="brand">Rheina</a>
+            <!-- NAVIGATION BAR -->
             <nav>
                 <a href="#profile">Profile</a>
+                <a href="#projects">Projects</a>
+                <a href="#arts">Arts</a>
             </nav>
+            <div class="header-spacer" aria-hidden="true"></div>
         </div>
     </header>
 
     <main>
-        <section class="hero" id="profile">
-            <div class="container hero-grid">
-                <div class="hero-identity">
-                    <p class="hero-kicker">Information System &middot; Universitas Indonesia</p>
-                    <h1>Rheina Uliana</h1>
-                </div>
-                <div class="hero-photo">
-                    <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/rheina.png" alt="Photo of Rheina">
-                </div>
-                <div class="hero-details">
-                    <p class="bio">watashi suka anime, kalau ada yg nonton anime, segera hubungi watashi.</p>
-                    <dl class="meta-list">
-                        <div class="meta-row">
-                            <dt>NPM</dt>
-                            <dd>2506600801</dd>
+        <!-- PROFILE -->
+        <div class="hero-wrapper" id="profile">
+            <section class="hero-slanted-photo">
+                <div class="hero-overlay"></div>
+                <div class="container hero-content-right">
+                    <div class="hero-boxes">
+                        <!-- NAMA -->
+                        <div class="box-name">
+                            <h1>HI, I'M RHEINA ULIANA</h1>
                         </div>
-                        <div class="meta-row">
-                            <dt>Program</dt>
-                            <dd>S1 Sistem Informasi</dd>
+
+                        <!-- DESKRIPSI: Major & NPM -->
+                        <div class="box-desc">
+                            <p class="hero-kicker">INFORMATION SYSTEMS &bull; UNIVERSITY OF INDONESIA</p>
+                            <p class="bio">Creating with Ristek :D</p>
+                            <dl class="meta-list">
+                                <div class="meta-row"><dt>NPM</dt><dd>2506600801</dd></div>
+                                <div class="meta-row"><dt>Program</dt><dd>BSc Information Systems</dd></div>
+                            </dl>
                         </div>
-                    </dl>
-                    <div class="social-links">
-                        <a href="https://github.com/rh-elise" class="social-link">GitHub</a>
-                        <a href="www.linkedin.com/in/rheinauliana" class="social-link">LinkedIn</a>
-                        <a href="rheina.ul67@gmail.com" class="social-link">Email</a>
+
+                        <!-- CONTACT -->
+                        <div class="box-icons">
+                            <a href="https://linkedin.com/in/rheinauliana" class="icon-square" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5ZM.5 8.98h8.96V23.5H.5V8.98ZM8.98 8.98h8.6v1.98h.12c1.2-2.1 4.13-2.98 6.5-1.98 3.4 1.42 3.8 4.4 3.8 7.6v8.92h-9V17.4c0-1.94-.04-4.43-2.7-4.43-2.7 0-3.12 2.1-3.12 4.28v6.25h-8.9V8.98Z"/></svg></a>
+                            <a href="https://x.com/chrobloss" class="icon-square" aria-label="Twitter / X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2H21.5l-7.5 8.57L22.8 22h-6.86l-5.37-6.62L4.4 22H1.14l8.02-9.17L1 2h7.03l4.86 6.05L18.244 2Zm-1.2 18.17h1.9L7.06 3.72H5.02l12.02 16.45Z"/></svg></a>
+                            <a href="https://github.com/rh-elise" class="icon-square" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 5.02 3.26 9.28 7.77 10.78.57.1.78-.25.78-.55v-2.02c-3.16.69-3.83-1.52-3.83-1.52-.52-1.32-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.68 1.24 3.33.95.1-.74.4-1.24.72-1.53-2.52-.29-5.17-1.26-5.17-5.6 0-1.24.44-2.25 1.17-3.04-.12-.29-.5-1.46.11-3.04 0 0 .96-.31 3.15 1.16a10.9 10.9 0 0 1 5.74 0c2.19-1.47 3.15-1.16 3.15-1.16.61 1.58.23 2.75.11 3.04.73.79 1.17 1.8 1.17 3.04 0 4.35-2.66 5.31-5.19 5.59.41.35.77 1.04.77 2.1v3.11c0 .3.2.66.79.55 4.5-1.5 7.76-5.76 7.76-10.78C23.02 5.24 18.27.5 12 .5Z"/></svg></a>
+                            <a href="https://eeliseee.itch.io" class="icon-square" aria-label="Itch.io"><svg viewBox="0 0 512 512" fill="currentColor"><path d="M41.8 141.1l42.3-76.4h343.8l42.3 76.4v33.5c-15.1 1.9-30 6.6-40.9 19.3-10.9-12.7-25.8-17.4-40.9-19.3-15.1 1.9-30 6.6-40.9 19.3-10.9-12.7-25.8-17.4-40.9-19.3-15.1 1.9-30 6.6-40.9 19.3-10.9-12.7-25.8-17.4-40.9-19.3h-7.6v-33.5zm-2.4 63.8c-5.4 0-10.6.3-15.5 1.1v166.4h32v-51.1h399.7v51.1h32v-166.4c-4.9-.8-10.1-1.1-15.5-1.1-16.1 0-31.5 6.6-42.3 19.3-10.9-12.7-26.3-19.3-42.3-19.3-16.1 0-31.5 6.6-42.3 19.3-10.9-12.7-26.3-19.3-42.3-19.3-16.1 0-31.5 6.6-42.3 19.3-10.9-12.7-26.3-19.3-42.3-19.3-16.1 0-31.5 6.6-42.3 19.3-10.9-12.7-26.3-19.3-42.3-19.3-16.1 0-31.5 6.6-42.3 19.3-10.9-12.7-26.3-19.3-42.3-19.3z"/></svg></a>
+                            <a href="mailto:rheina.ul67@gmail.com" class="icon-square" aria-label="Email"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5h20a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm10 6.3L4.2 6.5l-.9 1.2 8.7 5.6 8.7-5.6-.9-1.2L12 11.3Z"/></svg></a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
 
     <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 Rheina Uliana. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+    <div class="container footer-grid">
+        <div class="footer-brand">
+            <p class="footer-logo">RHEINA ULIANA</p>
+            <p class="footer-tagline">An Information Systems student who turns random ideas into real apps &mdash; while watching anime between coding sessions.</p>
         </div>
-    </footer>
+        <div class="footer-col">
+            <h4>Navigation</h4>
+            <a href="#profile">Profile</a>
+            <a href="#projects">Projects</a>
+            <a href="#arts">Arts</a>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <p>&copy; 2026 Rheina Uliana.</p>
+    </div>
+</footer>
 </body>
 </html>

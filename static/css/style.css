@@ -46,11 +46,6 @@ main {
     overflow: clip;
 }
 
-/* Supaya judul section tidak ketutup navbar saat link diklik */
-section[id], div[id] {
-    scroll-margin-top: 110px;
-}
-
 /* TYPOGRAPHY */
 h1, h2, h3, .brand {
     font-family: "Freeman", sans-serif;
@@ -111,6 +106,7 @@ h1, h2, h3, .brand {
     background-color: var(--accent); color: var(--paper);
 }
 
+/* Wadah lapisan dots hover (transparan dulu, nyala di ANIMASI) */
 .site-header-slanted nav a {
     position: relative; overflow: hidden;
 }
@@ -152,12 +148,12 @@ h1, h2, h3, .brand {
     clip-path: polygon(0 60px, 100% 0, 100% calc(100% - 60px), 0 100%); /* Supaya slanted */
 }
 
-/* Supaya foto lebih redup */
+/* Overlay duotone: navy kiri memudar ke paper kanan */
 .hero-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: 1;
-    background-color: rgba(240, 240, 240, 0.8);
+    background: linear-gradient(100deg, rgba(39,55,77,0.35) 0%, rgba(39,55,77,0.12) 35%, rgba(240,240,240,0.80) 65%);
 }
 
 /* Supaya isinya ke sebelah kanan */
@@ -192,7 +188,7 @@ h1, h2, h3, .brand {
 /* Kotak Deskripsi Bio: putih dengan garis */
 .box-desc {
     position: relative;
-    overflow: hidden; /* Menyiapkan lapisan texture (lapis 4) */
+    overflow: hidden; /* Menahan pita dots di dalam box */
     background-color: var(--paper); border: 3px solid var(--ink);
     padding: 2.5rem 2rem;
     margin-bottom: 1.5rem;
@@ -286,16 +282,16 @@ h1, h2, h3, .brand {
 }
 
 /* JUDUL SECTION (satu gaya untuk PROJECTS & ARTS) */
-/* Banner miring merah maroon */
+/* Banner miring merah maroon + dots aset */
 .slanted-title {
     display: inline-block; background-color: var(--accent); color: var(--paper);
+    background-image: url('/static/img/halftone-bg.png');
+    background-repeat: no-repeat; background-size: 100% auto; background-position: 50% 82%;
     padding: 0.9rem 3.5rem; font-size: 1.9rem;
     font-family: "Freeman", sans-serif; font-weight: 400; letter-spacing: 5px;
     transform: skewX(-15deg); /* Supaya miring jajaran genjang */
     box-shadow: 6px 6px 0px var(--ink);
     border: 3px solid var(--ink);
-    background-image: url('/static/img/halftone-bg.png');
-    background-repeat: no-repeat; background-size: 100% auto; background-position: 50% 82%;
 }
 
 /* Teks di dalam banner diluruskan lagi */
@@ -319,6 +315,8 @@ h1, h2, h3, .brand {
 }
 
 #projects { position: relative; scroll-margin-top: 90px; }
+#arts { position: relative; scroll-margin-top: 90px; margin-top: 5rem; }
+
 /* Pita dots di batas atas footer */
 #arts::after {
     content: "";
@@ -326,7 +324,7 @@ h1, h2, h3, .brand {
     background-image: url('/static/img/halftone-bg.png'); background-repeat: no-repeat; background-size: 100% auto; background-position: 50% 80%;
     opacity: 0.45;
     pointer-events: none;
-    z-index: -1;
+    z-index: -1; /* Di belakang teks/kartu */
 }
 
 /* PROJECTS */
@@ -369,15 +367,6 @@ h1, h2, h3, .brand {
     top: 0; bottom: 0; left: 0; width: 14px;
     background-color: var(--accent);
     z-index: 2; pointer-events: none;
-}
-
-/* Bilah maroon di sisi dalam foto terpilih */
-.project-selected-image::after {
-    content: "";
-    position: absolute; top: 0; bottom: 0; left: 0; width: 14px;
-    background-color: var(--accent);
-    z-index: 2;
-    pointer-events: none;
 }
 
 /* Kolom kanan: judul + deskripsi + kartu */
@@ -446,12 +435,14 @@ h1, h2, h3, .brand {
     position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
     background-image: url('/static/img/halftone-bg.png'); background-repeat: no-repeat; background-position: 50% 74%; background-size: 100% auto;
     opacity: 0.4;
-    pointer-events: none; }
+    pointer-events: none;
+}
 
 /* Tombol: menempel kanan bawah deskripsi */
 .project-link {
     display: block; width: fit-content;
     margin-left: auto; margin-top: 0.9rem;
+    position: relative; overflow: hidden; /* Menahan dots di dalam tombol */
     font-family: "Space Grotesk", sans-serif;
     font-size: 0.85rem; font-weight: 700;
     letter-spacing: 0.06em; text-transform: uppercase;
@@ -462,14 +453,7 @@ h1, h2, h3, .brand {
     box-shadow: 4px 4px 0px var(--ink);
 }
 
-.project-link:hover {
-    background-color: var(--ink);
-}
-
-.project-link {
-    position: relative; overflow: hidden;
-}
-
+/* Dots putih di seluruh tombol (invert hanya di lapisan ini) */
 .project-link::after {
     content: "";
     position: absolute; inset: 0;
@@ -582,7 +566,7 @@ h1, h2, h3, .brand {
     box-shadow: 6px 6px 0px var(--ink);
 }
 
-/* GALERI: dua lajur selebar layar (animasi jalan di lapis 5) */
+/* GALERI: dua lajur selebar layar */
 .arts-marquee-wrapper {
     width: 100vw; margin-left: calc(-50vw + 50%); overflow: hidden;
     display: flex; flex-direction: column; gap: 2.5rem;
@@ -690,3 +674,62 @@ h1, h2, h3, .brand {
 .footer-bottom p {
     font-size: 0.85rem;
 }
+
+/* ANIMASI (lapis 5): semua gerak dikumpulkan di sini */
+html { scroll-behavior: smooth; } /* Pindah section jadi halus */
+
+/* Brand ikut naik saat hover */
+.brand { transition: color 0.2s ease, transform 0.2s ease; }
+.brand:hover { color: var(--accent); transform: translateY(-2px); }
+
+/* Tombol nav: naik + bayangan + dots muncul */
+.site-header-slanted nav a { transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; }
+.site-header-slanted nav a:hover { transform: translateY(-2px); box-shadow: 3px 3px 0 rgba(0,0,0,0.45); }
+.site-header-slanted nav a:hover::after { opacity: 0.8; }
+.site-header-slanted nav a:active { transform: translateY(0); box-shadow: none; background-color: #7e0c2b; }
+.site-header-slanted nav a:active::after { opacity: 0; }
+
+/* Ikon: naik + dots muncul */
+.icon-square { transition: all 0.2s ease; }
+.icon-square:hover { transform: translateY(-4px); }
+.icon-square:hover::after { opacity: 0.8; }
+
+/* Tab: naik + merah + dots muncul */
+.art-tab { transition: all 0.2s ease; }
+.art-tab:hover { background-color: var(--accent); color: var(--paper); transform: skewX(12deg) translateY(-5px); box-shadow: 6px 6px 0px var(--ink); }
+.art-tab:hover::after { opacity: 0.7; }
+
+/* Kartu project: naik + foto zoom */
+.mini-card { transition: all 0.2s ease; }
+.mini-card img { transition: transform 0.2s ease; }
+.mini-card:hover { transform: skewX(-12deg) translateY(-5px); box-shadow: 6px 6px 0px var(--ink); }
+.mini-card:hover img { transform: skewX(12deg) scale(1.38); }
+
+/* Kartu galeri: naik */
+.art-item { transition: all 0.2s ease; }
+.art-item:hover { transform: skewX(-12deg) translateY(-5px); box-shadow: 6px 6px 0px var(--ink); }
+
+/* Tombol project: naik + dots putih muncul */
+.project-link { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.project-link:hover { transform: translateY(-4px); box-shadow: 6px 6px 0px var(--ink); }
+.project-link:hover::after { opacity: 0.85; }
+.project-link:active { transform: translateY(-1px); box-shadow: 2px 2px 0px var(--ink); }
+
+/* Link footer: blok merah + geser kanan */
+.footer-col a { transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; margin-left: -0.6rem; padding: 0.15rem 0.6rem; display: inline-block; }
+.footer-col a:hover { background-color: var(--accent); color: var(--paper); transform: translateX(5px); box-shadow: 3px 3px 0 rgba(0,0,0,0.45); }
+
+/* Tekan ke bawah sedikit saat diklik (skew dipertahankan supaya tidak lurus) */
+.icon-square:active { transform: translateY(-1px); }
+.mini-card:active { transform: skewX(-12deg) translateY(-1px); }
+.art-tab:active { transform: skewX(12deg) translateY(-1px); }
+.art-item:active { transform: skewX(-12deg) translateY(-1px); }
+
+/* Focus keyboard selalu terlihat (aksesibilitas, jangan dihapus) */
+a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.project-link:focus-visible, .art-tab.is-active:focus-visible { outline-color: var(--ink); }
+
+/* MARQUEE: lajur jalan sendiri-sendiri */
+.arts-marquee-track { animation: scroll 32s linear infinite; }
+.reverse-track { animation-direction: reverse; animation-duration: 36s; }
+@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }

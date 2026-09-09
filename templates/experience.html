@@ -29,40 +29,38 @@
         </div>
     </header>
 
+    <!-- EXPERIENCE -->
     <main>
-        <!-- PROFILE -->
-        <div class="hero-wrapper" id="profile">
-            <section class="hero-slanted-photo">
-                <div class="hero-overlay"></div>
-                <div class="container hero-content-right">
-                    <div class="hero-boxes">
-                        <!-- NAMA -->
-                        <div class="box-name">
-                            <h1>HI, I'M {{ name|upper }}</h1>
-                        </div>
+        <section class="experience-section" id="experience">
+            <div class="container">
+                <p class="section-kicker">Perjalanan saya sejauh ini</p>
+                <h1>Experience</h1>
 
-                        <!-- DESKRIPSI: Major & NPM -->
-                        <div class="box-desc">
-                            <p class="hero-kicker">{{ study_program|upper }} &bull; UNIVERSITAS INDONESIA</p>
-                            <p class="bio">{{ bio }}</p>
-                            <dl class="meta-list">
-                                <div class="meta-row"><dt>NPM</dt><dd>{{ npm }}</dd></div>
-                                <div class="meta-row"><dt>Program</dt><dd>{{ study_program }}</dd></div>
-                            </dl>
-                        </div>
+                <div class="experience-grid">
+                    {% for experience in experience_list %}
+                        <article class="experience-card">
+                            <span class="experience-category">
+                                {{ experience.get_category_display }}
+                            </span>
+                            <h2>{{ experience.title }}</h2>
+                            <p class="experience-description">
+                                {{ experience.description }}
+                            </p>
 
-                        <!-- CONTACT -->
-                        <div class="box-icons">
-                            <a href= "{{ linkedin }}" class="icon-square" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5ZM.5 8.98h8.96V23.5H.5V8.98ZM8.98 8.98h8.6v1.98h.12c1.2-2.1 4.13-2.98 6.5-1.98 3.4 1.42 3.8 4.4 3.8 7.6v8.92h-9V17.4c0-1.94-.04-4.43-2.7-4.43-2.7 0-3.12 2.1-3.12 4.28v6.25h-8.9V8.98Z"/></svg></a>
-                            <a href="{{ twitter }}" class="icon-square" aria-label="Twitter / X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2H21.5l-7.5 8.57L22.8 22h-6.86l-5.37-6.62L4.4 22H1.14l8.02-9.17L1 2h7.03l4.86 6.05L18.244 2Zm-1.2 18.17h1.9L7.06 3.72H5.02l12.02 16.45Z"/></svg></a>
-                            <a href="{{ github }}" class="icon-square" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 5.02 3.26 9.28 7.77 10.78.57.1.78-.25.78-.55v-2.02c-3.16.69-3.83-1.52-3.83-1.52-.52-1.32-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.68 1.24 3.33.95.1-.74.4-1.24.72-1.53-2.52-.29-5.17-1.26-5.17-5.6 0-1.24.44-2.25 1.17-3.04-.12-.29-.5-1.46.11-3.04 0 0 .96-.31 3.15 1.16a10.9 10.9 0 0 1 5.74 0c2.19-1.47 3.15-1.16 3.15-1.16.61 1.58.23 2.75.11 3.04.73.79 1.17 1.8 1.17 3.04 0 4.35-2.66 5.31-5.19 5.59.41.35.77 1.04.77 2.1v3.11c0 .3.2.66.79.55 4.5-1.5 7.76-5.76 7.76-10.78C23.02 5.24 18.27.5 12 .5Z"/></svg></a>
-                            <a href="{{ itchio }}" class="icon-square" aria-label="Itch.io"><svg viewBox="0 0 512 512" fill="currentColor"><path d="M41.8 141.1l42.3-76.4h343.8l42.3 76.4v33.5c-15.1 1.9-30 6.6-40.9 19.3-10.9-12.7-25.8-17.4-40.9-19.3-15.1 1.9-30 6.6-40.9 19.3-10.9-12.7-25.8-17.4-40.9-19.3-15.1 1.9-30 6.6-40.9 19.3-10.9-12.7-25.8-17.4-40.9-19.3h-7.6v-33.5zm-2.4 63.8c-5.4 0-10.6.3-15.5 1.1v166.4h32v-51.1h399.7v51.1h32v-166.4c-4.9-.8-10.1-1.1-15.5-1.1-16.1 0-31.5 6.6-42.3 19.3-10.9-12.7-26.3-19.3-42.3-19.3-16.1 0-31.5 6.6-42.3 19.3-10.9-12.7-26.3-19.3-42.3-19.3-16.1 0-31.5 6.6-42.3 19.3-10.9-12.7-26.3-19.3-42.3-19.3-16.1 0-31.5 6.6-42.3 19.3-10.9-12.7-26.3-19.3-42.3-19.3-16.1 0-31.5 6.6-42.3 19.3-10.9-12.7-26.3-19.3-42.3-19.3z"/></svg></a>
-                            <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ gmail }}" class="icon-square" aria-label="Email"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5h20a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm10 6.3L4.2 6.5l-.9 1.2 8.7 5.6 8.7-5.6-.9-1.2L12 11.3Z"/></svg></a>
-                        </div>
-                    </div>
+                            {% if experience.is_ongoing %}
+                                <p class="experience-status">Sedang berlangsung</p>
+                            {% else %}
+                                <p class="experience-status">Selesai</p>
+                            {% endif %}
+                        </article>
+                    {% empty %}
+                        <p class="empty-state">
+                            Belum ada pengalaman yang ditambahkan.
+                        </p>
+                    {% endfor %}
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </main>
 
     <!-- PROJECTS -->

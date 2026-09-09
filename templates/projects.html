@@ -31,39 +31,44 @@
         </div>
     </header>
 
-    <!-- EXPERIENCE -->
-    <main>
-        <section class="experience-section" id="experience">
-            <div class="container">
-                <p class="section-kicker">Perjalanan saya sejauh ini</p>
-                <h1>Experience</h1>
+    <!-- PROJECTS -->
+    <section class="slanted-section" id="projects">
+        <div class="container">
+            <!-- PROJECTS HEADER -->
+            <div class="section-title-wrapper">
+                <div class="slanted-title"><span>PROJECTS</span></div>
+            </div>
 
-                <div class="experience-grid">
-                    {% for experience in experience_list %}
-                        <article class="experience-card">
-                            <span class="experience-category">
-                                {{ experience.get_category_display }}
-                            </span>
-                            <h2>{{ experience.title }}</h2>
-                            <p class="experience-description">
-                                {{ experience.description }}
-                            </p>
+            <!-- SHOWCASE -->
+            <div class="project-showcase">
+                <div class="project-left-col">
+                    <div class="project-selected-image">
+                        <img id="projectSelectedImg" src="/static/img/cover-savethepatient.png" alt="Selected project image">
+                    </div>
+                </div>
 
-                            {% if experience.is_ongoing %}
-                                <p class="experience-status">Sedang berlangsung</p>
-                            {% else %}
-                                <p class="experience-status">Selesai</p>
-                            {% endif %}
-                        </article>
-                    {% empty %}
-                        <p class="empty-state">
-                            Belum ada pengalaman yang ditambahkan.
-                        </p>
-                    {% endfor %}
+                <!-- PROJECTS CARD -->
+                <div class="project-right-col">
+                    <div class="project-info-card">
+                        <div class="title-flag">
+                            <img src="/static/img/title-flag.png" alt="Bubble BG" class="title-flag-bg">
+                            <h3 id="projectHeroTitle">SAVE THE PATIENT!</h3>
+                        </div>
+                        
+                        <div class="desc-box">
+                            <p id="projectHeroDesc">A survival game about a doctor enduring a nonstop three-day shift. Keep your patients alive while fighting to stay awake yourself — go all in, because either both of you survive, or no one does.</p>
+                            
+                            <!-- PLAY LINK -->
+                            <a id="projectHeroLink" class="project-link" href="#" target="_blank" rel="noopener">Play &#8599;</a>
+                        </div>
+                    </div>
+
+                    <!-- MINI CARDS: diisi otomatis oleh script dari projectsData -->
+                    <div class="project-mini-cards" id="miniCardsContainer"></div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <!-- FOOTER -->
     <footer class="site-footer">

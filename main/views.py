@@ -31,7 +31,7 @@ def _artwork_context(category_slug):
         active_slug = categories[0]["slug"]
     else:
         active_slug = ""
-        
+
     return {
         "categories": categories,
         "active_category": active_slug,
@@ -71,7 +71,7 @@ def show_experience(request):
 def show_artworks(request):
     context = {
         "name": "Rheina Uliana",
-        "tagline" : "Hi! Hello! How are you?"
+        "tagline" : "Hi! Hello! How are you?",
     }
     context.update(_artwork_context(request.GET.get("category", "")))
 

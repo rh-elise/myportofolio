@@ -1,14 +1,19 @@
-<!-- SCRIPT ARTS: pindah tab tanpa lompat + marquee looping mulus (tanpa AJAX) -->
+<!-- SCRIPT ARTS -->
 <script>
-    // Ingat posisi scroll sebelum pindah tab, balikin instan (smooth dimatikan sesaat)
+    // Ingat posisi scroll
     (function () {
+        
         var KEY = 'artsScroll';
         var tabs = document.querySelectorAll('.artwork-tab');
+
+        // Event mouse
         tabs.forEach(function (tab) {
             tab.addEventListener('click', function () {
                 try { sessionStorage.setItem(KEY, String(window.scrollY)); } catch (e) {}
             });
         });
+
+        // Menyimpan posisi ke session storage
         var saved = null;
         try { saved = sessionStorage.getItem(KEY); } catch (e) {}
         if (saved !== null) {
@@ -19,14 +24,13 @@
         }
     })();
 
-    // Gandakan isi marquee sampai selebar 2x layar supaya looping tidak putus
+    // Gandakan isi marquee sampai selebar 2x layar supaya looping
     (function () {
         document.querySelectorAll('.arts-marquee-track').forEach(function (track) {
             if (!track.children.length) return;
-            var half = track.innerHTML;
             var guard = 0;
             while (track.scrollWidth < window.innerWidth * 2 && guard < 6) {
-                track.innerHTML += half;
+                track.innerHTML += track.innerHTML;
                 guard++;
             }
         });

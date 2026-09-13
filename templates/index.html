@@ -51,11 +51,12 @@
 
     <!-- ARTS -->
     <section class="slanted-section" id="artworks">
-        {% include "partials/artworks_section.html" with empty_message="No artworks have been added yet." tab_anchor="#artworks" %}
+        {% include "partials/artworks_section.html" with empty_message="No artworks have been added yet." %}
     </section>
 
     {% include "partials/site_footer.html" %}
 
+    {% include "partials/artworks_ui_script.html" %}
     {% include "partials/project_cards_script.html" %}
 
 </body>

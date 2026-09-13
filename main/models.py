@@ -1,6 +1,26 @@
 import uuid
 from django.db import models
 
+class Projects(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    image = models.CharField(max_length=255)  # path file
+    link = models.CharField(max_length=255, blank=True)  # URL menuju game
+
+    def __str__(self):
+        return self.title
+
+
+class Artworks(models.Model):
+    title = models.CharField(max_length=255)
+    image = models.CharField(max_length=255, blank=True)  # kosong kalau berupa video
+    video = models.CharField(max_length=255, blank=True)  # kosong kalau berupa gambar
+    category = models.CharField(max_length=50, default='uncategorized') # Kategori bebas diisi lewat admin, tab di halaman ngikutin isi database
+
+    def __str__(self):
+        return self.title
+
+
 class Experience(models.Model):
     EXPERIENCE_CHOICES = [
         ('internship', 'Internship'),
@@ -16,11 +36,16 @@ class Experience(models.Model):
     description = models.TextField()
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
     thumbnail = models.URLField(blank=True, null=True)
-    started_at = models.DateTimeField(auto_now_add=True)
-    ended_at = models.DateTimeField(blank=True, null=True)
+    year = models.PositiveIntegerField(default=2026)
+    status = models.CharField(
+        max_length=20,
+        choices=[('ongoing', 'Ongoing'), ('completed', 'Completed')],
+        default='ongoing',
+    )
+    
     def __str__(self):
         return self.title
     
     @property
     def is_ongoing(self):
-        return self.ended_at is None
+        return self.status == 'ongoing'

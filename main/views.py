@@ -14,7 +14,8 @@ def show_main(request):
         "twitter" : "https://x.com/chrobloss",
         "github" : "https://github.com/rh-elise",
         "itchio" : "https://eeliseee.itch.io",
-        "gmail" : "rheina.ul67@gmail.com"
+        "gmail" : "rheina.ul67@gmail.com",
+        "tagline" : "Hi! Hello! How are you?"
     }
     return render(request, "index.html", context)
 

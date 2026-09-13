@@ -23,7 +23,9 @@
             <!-- NAVIGATION BAR -->
             <nav>
                 <a href="{% url 'main:show_main' %}">Profile</a>
+                <a href="{% url 'main:show_projects' %}">Projects</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
+                <a href="{% url 'main:show_artworks' %}">Artworks</a>
             </nav>
             <div class="header-spacer" aria-hidden="true"></div>
         </div>
@@ -65,76 +67,13 @@
         </div>
     </main>
 
-    <!-- PROJECTS -->
-    <section class="slanted-section" id="projects">
-        <div class="container">
-            <!-- PROJECTS HEADER -->
-            <div class="section-title-wrapper">
-                <div class="slanted-title"><span>PROJECTS</span></div>
-            </div>
-
-            <!-- SHOWCASE -->
-            <div class="project-showcase">
-                <div class="project-left-col">
-                    <div class="project-selected-image">
-                        <img id="projectSelectedImg" src="/static/img/cover-savethepatient.png" alt="Selected project image">
-                    </div>
-                </div>
-
-                <!-- PROJECTS CARD -->
-                <div class="project-right-col">
-                    <div class="project-info-card">
-                        <div class="title-flag">
-                            <img src="/static/img/title-flag.png" alt="Bubble BG" class="title-flag-bg">
-                            <h3 id="projectHeroTitle">SAVE THE PATIENT!</h3>
-                        </div>
-                        
-                        <div class="desc-box">
-                            <p id="projectHeroDesc">A survival game about a doctor enduring a nonstop three-day shift. Keep your patients alive while fighting to stay awake yourself — go all in, because either both of you survive, or no one does.</p>
-                            
-                            <!-- PLAY LINK -->
-                            <a id="projectHeroLink" class="project-link" href="#" target="_blank" rel="noopener">Play &#8599;</a>
-                        </div>
-                    </div>
-
-                    <!-- MINI CARDS: diisi otomatis oleh script dari projectsData -->
-                    <div class="project-mini-cards" id="miniCardsContainer"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ARTS -->
-    <section class="slanted-section" id="arts">
-        <div class="container">
-            <!-- ARTS HEADER -->
-            <div class="section-title-wrapper">
-                <div class="slanted-title"><span>ARTS</span></div>
-            </div>
-
-            <!-- TAB KATEGORI -->
-            <div class="arts-tabs" id="artsTabsContainer">
-                <button class="art-tab is-active" data-cat="rendered"><span>Rendered</span></button>
-                <button class="art-tab" data-cat="monochrome"><span>Monochrome</span></button>
-                <button class="art-tab" data-cat="pixel"><span>Pixel</span></button>
-                <button class="art-tab" data-cat="animation"><span>Animation</span></button>
-            </div>
-        </div>
-
-        <!-- GALERI: diisi otomatis oleh script -->
-        <div class="arts-marquee-wrapper">
-            <div class="arts-marquee-track" id="artsTrack1"></div>
-            <div class="arts-marquee-track reverse-track" id="artsTrack2"></div>
-        </div>
-    </section>
-
     <!-- FOOTER -->
     <footer class="site-footer">
     <div class="container footer-grid">
         <!-- PROFIKLE -->
         <div class="footer-brand">
-            <p class="footer-logo">RHEINA ULIANA</p>
-            <p class="footer-tagline">Hi! Hello! How are you?</p>
+            <p class="footer-logo">{{ name|upper }}</p>
+            <p class="footer-tagline">{{ tagline }}</p>
         </div>
 
         <!-- NAVIGATION -->

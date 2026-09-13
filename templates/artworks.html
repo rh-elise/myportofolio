@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "partials/head.html" %}
+
+<body>
+    {% include "partials/site_header.html" %}
+
+    <!-- ARTS -->
+    <section class="slanted-section" id="artworks">
+        {% include "partials/artworks_section.html" with empty_message="No artworks have been added yet." %}
+    </section>
+
+    {% include "partials/site_footer.html" %}
+
+</body>
+</html>

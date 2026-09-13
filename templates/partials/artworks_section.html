@@ -1,0 +1,41 @@
+<div class="container">
+    <!-- ARTWORKS HEADER -->
+    <div class="section-title-wrapper">
+        <div class="slanted-title"><span>ARTWORKS</span></div>
+    </div>
+
+    <!-- CATEGORY TAB -->
+    {% if categories %}
+    <div class="artworks-tabs" id="artsTabsContainer">
+        {% for cat in categories %}
+        <a class="artwork-tab {% if cat.slug == active_category %}is-active{% endif %}" href="?category={{ cat.slug }}{{ tab_anchor|default:"" }}"><span>{{ cat.name }}</span></a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- GALERI  -->
+<div class="arts-marquee-wrapper">
+
+    <!-- GALERI ATAS BAWAH  -->
+    {% if artworks %}
+    <div class="arts-marquee-track" id="artsTrack1">
+        {% for art in artworks %}
+        {% include "partials/art_figure.html" with art=art %}
+        {% endfor %}
+        {% for art in artworks %}
+        {% include "partials/art_figure.html" with art=art %}
+        {% endfor %}
+    </div>
+    <div class="arts-marquee-track reverse-track" id="artsTrack2">
+        {% for art in artworks reversed %}
+        {% include "partials/art_figure.html" with art=art %}
+        {% endfor %}
+        {% for art in artworks reversed %}
+        {% include "partials/art_figure.html" with art=art %}
+        {% endfor %}
+    </div>
+    {% else %}
+    {% include "partials/empty_state.html" with message=empty_message %}
+    {% endif %}
+</div>

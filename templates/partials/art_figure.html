@@ -1,0 +1,9 @@
+<!-- Satu kartu galeri: video/foto -->
+<figure class="art-item">
+    {% if art.video %}
+    <video src="{{ art.video }}" muted loop autoplay playsinline></video>
+    {% else %}
+    <img src="{{ art.image }}" alt="{{ art.title }}">
+    {% endif %}
+    <figcaption>{{ art.title }}</figcaption>
+</figure>

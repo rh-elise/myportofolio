@@ -1,0 +1,47 @@
+<!-- PROJECTS HEADER -->
+<div class="section-title-wrapper">
+    <div class="slanted-title"><span>PROJECTS</span></div>
+</div>
+
+<!-- SHOWCASE -->
+{% if projects_list %}
+<div class="project-showcase">
+    <div class="project-left-col">
+        <div class="project-selected-image">
+            <img id="projectSelectedImg" src="{{ projects_list.0.image }}" alt="{{ projects_list.0.title }}">
+        </div>
+    </div>
+
+    <!-- PROJECTS CARD -->
+    <div class="project-right-col">
+        <div class="project-info-card">
+            <!-- PROJECTS HERO -->
+            <div class="title-flag">
+                <img src="/static/img/title-flag.png" alt="Bubble BG" class="title-flag-bg">
+                <h3 id="projectHeroTitle">{{ projects_list.0.title|upper }}</h3>
+            </div>
+
+            <div class="desc-box">
+                <p id="projectHeroDesc">{{ projects_list.0.description }}</p>
+
+                <!-- PLAY LINK -->
+                <a id="projectHeroLink" class="project-link" href="{{ projects_list.0.link }}" target="_blank" rel="noopener">Play &#8599;</a>
+            </div>
+        </div>
+
+        <!-- MINI PROJECTS CARDS -->
+        <div class="project-mini-cards" id="miniCardsContainer">
+            {% for proj in projects_list %}
+            <div class="mini-card {% if forloop.first %}is-active{% endif %}" tabindex="0" role="button"
+                data-title="{{ proj.title }}" data-desc="{{ proj.description }}"
+                data-img="{{ proj.image }}" data-link="{{ proj.link }}">
+                <img src="{{ proj.image }}" alt="{{ proj.title }}">
+                <span class="mini-card-label">{{ proj.title }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% else %}
+{% include "partials/empty_state.html" with message=empty_message %}
+{% endif %}

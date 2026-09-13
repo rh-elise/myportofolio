@@ -1,0 +1,22 @@
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="container footer-grid">
+        <!-- PROFILE -->
+        <div class="footer-brand">
+            <p class="footer-logo">{{ name|upper }}</p>
+            <p class="footer-tagline">{{ tagline }}</p>
+        </div>
+
+        <!-- NAVIGATION -->
+        <div class="footer-col">
+            <h4>Navigation</h4>
+                <a href="{% url 'main:show_main' %}">Profile</a>
+                <a href="{% url 'main:show_projects' %}">Projects</a>
+                <a href="{% url 'main:show_experience' %}">Experience</a>
+                <a href="{% url 'main:show_artworks' %}">Artworks</a>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+    </div>
+</footer>

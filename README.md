@@ -62,76 +62,183 @@ Setelah server berhasil dijalankan, buka browser dan akses:
 
 ---
 
+## Contoh Data Dummy (untuk Testing)
+
+Jika ingin mencoba mengisi database dengan beberapa data contoh, buka Django shell terlebih dahulu:
+
+```bash
+python manage.py shell
+```
+
+Setelah shell terbuka, jalankan kode-kode berikut sesuai model yang ingin diisi.
+
+### Artworks
+
+```python
+from main.models import Artworks
+
+# --- Kategori: Monochrome ---
+Artworks.objects.create(
+    title="Tipsy",
+    image="/static/img/art-tipsy.jpg",
+    category="Monochrome",
+)
+
+Artworks.objects.create(
+    title="Roman",
+    image="/static/img/art-roman.jpg",
+    category="Monochrome",
+)
+
+# --- Kategori: Animation ---
+Artworks.objects.create(
+    title="Minor Piece",
+    video="/static/img/art-minor-piece.mp4",
+    category="Animation",
+)
+
+Artworks.objects.create(
+    title="Agate Caressing The Night",
+    video="/static/img/art-agate-caressing-the-night.mp4",
+    category="Animation",
+)
+
+# --- Kategori: Rendered ---
+Artworks.objects.create(
+    title="Profile Picture 1",
+    image="/static/img/art-profile-picture-1.jpg",
+    category="Rendered",
+)
+
+Artworks.objects.create(
+    title="Profile Picture 2",
+    image="/static/img/art-profile-picture-2.jpg",
+    category="Rendered",
+)
+
+Artworks.objects.create(
+    title="Lab 3 DDP0 26",
+    image="/static/img/art-lab-3-ddp0-26.jpg",
+    category="Rendered",
+)
+
+# --- Kategori: Pixel ---
+Artworks.objects.create(
+    title="RISTEK Submission",
+    image="/static/img/art-ristek-submission-spritesheet.png",
+    category="Pixel",
+)
+
+Artworks.objects.create(
+    title="Necronomi Jam Clam",
+    image="/static/img/art-necronomi-jam-clam-spritesheet.png",
+    category="Pixel",
+)
+```
+
+### Projects
+
+```python
+from main.models import Projects
+
+Projects.objects.create(
+    title="Wait, New Rule!",
+    description="A 2.5D platformer where you dodge hazards including a floor that is literally lava. Just when you feel safe, a new card rule drops and changes everything.",
+    image="/static/img/cover-wait-new-rule.png",
+    link="https://marlioboro.itch.io/wait-new-rules"
+)
+
+Projects.objects.create(
+    title="Brine & Blade",
+    description="A top-down 2D roguelite bullet-hell starring a pirate dragged into a cosmic abyss. Slash through bullet storms, parry what you cannot dodge, and fight your way back to the surface.",
+    image="/static/img/cover-brine-and-blade.png",
+    link="https://marlioboro.itch.io/brine-and-blade"
+)
+
+Projects.objects.create(
+    title="Where Do You Belong?",
+    description="A puzzle deduction game where you work as a train conductor guiding living passengers and lost souls to where they belong. Inspect identities by day, uncover the dead by night, and make every decision count.",
+    image="/static/img/cover-where-do-you-belong.png",
+    link="https://mir4na.itch.io/where-do-you-belong"
+)
+```
+
+### Experience
+
+```python
+from main.models import Experience
+
+Experience.objects.create(
+    title="Teaching Assistant – Calculus I (Short Semester)",
+    category="volunteer",
+    year=2026,
+    status="completed",
+    description="Supported student comprehension of fundamental calculus concepts through guided tutorial sessions and assignment grading during an intensive short-semester course."
+)
+```
+
+Setelah selesai menambahkan data, keluar dari shell dengan:
+
+```python
+exit()
+```
+
+---
+
 ## Pengungkapan Penggunaan AI (AI Disclosure) & Catatan Pengerjaan
 
 ### Pesan Singkat untuk Kak Asdos
 
-Halo Kak! Sebelumnya saya ingin meminta maaf dan jujur bahwa untuk eksekusi kode pada tugas kali ini, saya **SANGAT banyak menggunakan pendekatan vibecoding** (mengandalkan AI untuk merakit syntax HTML/CSS) karena saya deadline. Saya sangat minta maaf untuk itu TT. Saya berjanji ke depannya akan belajar lebih dalam mengenai penulisan syntax secara mandiri dan memperbaiki kualitas kode saya. Terima kasih atas pengertiannya Kak!
+Halo Kak! Kalau di Tugas 1 kemarin saya sempat meminta maaf karena cukup banyak mengandalkan *vibecoding* karena *deadline*, di Tugas 2 ini saya mencoba untuk benar-benar mengubah cara saya mengerjakan tugas.
 
-### Pembagian Pengerjaan
+Sekarang saya mencoba membuat dan memahami kodenya sendiri sebisa saya. Kalau sudah bingung atau menemukan error yang belum saya mengerti, baru saya bertanya kepada AI. Jadi, saya masih menggunakan AI, tetapi saya mencoba untuk tidak langsung meminta AI mengerjakan semuanya.
 
-Untuk Tugas 1 ini, desain awal yaitu, layout, palet warna, gaya *Neo-Brutalism*, sampai hierarki informasinya saya rancang sendiri dulu di Figma. Setelah itu, untuk menerjemahkan rancangan tersebut ke HTML dan CSS, saya banyak menggunakan AI dengan pendekatan vibecoding. Saya menggunakan beberapa AI, yaitu Claude, Gemini, dan OpenAI, karena beberapa bagian membutuhkan beberapa kali percobaan sampai hasilnya sesuai dengan desain yang saya inginkan.
+Untuk bagian UI, saya masih cukup banyak menggunakan bantuan AI, terutama untuk implementasi CSS, *responsive layout*, dan beberapa perbaikan tampilan. Namun, desain dan arahan mengenai tampilan tetap saya tentukan sendiri. Saya juga mencoba membaca *script* yang diberikan AI dan memahami bagian-bagiannya sebisa saya, walaupun saya masih cukup awam tentang hal tersebut.
 
-Cara kerja saya biasanya seperti ini: saya memberikan konteks mengenai desain dan bagian yang ingin dibuat, kemudian AI menghasilkan kodenya. Setelah melihat hasilnya, saya mengecek apakah tampilannya sudah sesuai dengan rancangan saya. Kalau ada yang belum pas atau malah rusak, saya memberikan prompt lanjutan yang lebih spesifik untuk menjelaskan masalah dan perubahan yang saya inginkan.
+### Kapan Saya Menggunakan AI di Tugas Ini?
 
-Hal ini paling sering terjadi pada tampilan *mobile*. Beberapa elemen sempat terlalu sempit atau bertabrakan, misalnya deskripsi yang menutupi foto *background* utama. Untuk memperbaikinya, saya memberikan instruksi yang lebih detail kepada AI, seperti meminta perubahan ukuran *card project*, posisi elemen, `z-index`, serta mengubah susunan *layout* dari horizontal menjadi vertikal pada ukuran layar tertentu.
+Saya menggunakan AI terutama ketika menemukan hal yang belum saya pahami, mengalami error, atau ketika ada pekerjaan yang cukup repetitif.
 
-Selain masalah pada tampilan, saya juga sempat mengalami kendala ketika melakukan push ke PWS karena ada file gambar yang ukurannya terlalu besar dan membuat prosesnya bermasalah. Untuk bagian tersebut, saya juga menggunakan bantuan AI untuk mencari tahu penyebabnya dan membantu membenahinya.
+Beberapa contohnya adalah:
 
-Jadi, keputusan mengenai desain dan tampilan website tetap berasal dari saya, sedangkan proses penulisan dan perbaikan syntax banyak dibantu oleh AI. Prosesnya juga bukan hanya sekali *generate* lalu selesai, tetapi melalui beberapa kali coba, evaluasi hasil, dan pemberian prompt lanjutan.
-
-### Strategi Penggunaan AI
-
-Saya menggunakan AI terutama untuk membantu menerjemahkan desain yang sudah saya buat di Figma menjadi implementasi HTML dan CSS. Saya tidak langsung memberikan satu prompt untuk membuat semuanya sekaligus, tetapi biasanya membaginya menjadi beberapa bagian dan melakukan perbaikan berdasarkan hasil yang diberikan.
-
-Strategi yang paling sering saya gunakan adalah memberikan konteks desain terlebih dahulu, kemudian mengecek hasil implementasinya. Kalau ada bagian yang tidak sesuai, saya mencoba menjelaskan masalahnya secara lebih spesifik pada prompt berikutnya. Semakin jelas masalah yang saya jelaskan, biasanya hasil perbaikannya juga semakin sesuai.
-
-AI saya gunakan untuk membantu beberapa hal, seperti:
-
-* Menyusun struktur HTML berdasarkan rancangan halaman.
-* Menerjemahkan desain visual dari Figma ke CSS.
-* Membantu membuat *responsive layout* untuk ukuran layar yang berbeda.
-* Memperbaiki posisi dan ukuran elemen yang bermasalah.
-* Membantu mencari penyebab error saat proses pengerjaan dan deployment.
-* Membantu merapikan format dan struktur penulisan `README.md`.
-
-Sementara itu, keputusan mengenai tampilan website, seperti struktur halaman, *layout*, gaya *Neo-Brutalism*, palet warna, komposisi elemen, dan hierarki informasi, saya tentukan sendiri melalui proses perancangan di Figma.
+* **Troubleshooting Error & Routing:** Ketika menemukan *error* di terminal atau masih bingung mengenai hubungan `urls.py` pada proyek dengan `urls.py` pada aplikasi, saya menggunakan AI untuk membantu menjelaskan masalah dan alur *routing* tersebut.
+* **Membantu Pekerjaan Repetitif:** Saya menggunakan AI untuk membantu melakukan perubahan yang cukup banyak dan berulang, misalnya ketika mengganti penamaan dari `arts` menjadi `artworks` di beberapa bagian project.
+* **UI dan CSS:** Untuk implementasi tampilan, saya masih banyak menggunakan bantuan AI, terutama dalam mengatur CSS, posisi elemen, dan *responsive layout*. Saya memberikan arahan mengenai tampilan yang saya inginkan, kemudian menggunakan hasil dari AI sebagai dasar untuk diperbaiki kembali.
+* **JavaScript:** Saya juga menggunakan AI ketika ingin memahami atau membuat beberapa interaksi sederhana pada frontend, terutama yang berkaitan dengan event dari mouse dan keyboard.
 
 ### Evaluasi Penggunaan AI
 
-Selama menggunakan AI, saya menyadari bahwa hasil yang diberikan tidak selalu langsung sesuai dengan yang saya inginkan. AI memang sangat membantu mempercepat proses penulisan kode, tetapi AI tidak selalu bisa memahami desain yang saya bayangkan hanya dari satu instruksi.
+Dari Tugas 2 ini, saya merasa cara saya menggunakan AI sudah cukup berbeda dibandingkan Tugas 1. Saya mulai menyadari bahwa kalau langsung meminta AI membuat semuanya, saya memang bisa mendapatkan hasil lebih cepat, tetapi saya sendiri jadi kurang memahami kode yang digunakan.
 
-Masalah yang paling terasa ada pada tampilan *mobile*. Pada awalnya, beberapa elemen menjadi terlalu sempit atau saling bertabrakan. Salah satu contohnya adalah deskripsi yang sempat menutupi foto *background* utama. Ada juga beberapa *card*, gambar, dan tombol yang perlu disesuaikan kembali supaya tetap nyaman dilihat pada layar yang lebih kecil.
+Karena itu, kali ini saya mencoba membiasakan diri untuk mencari tahu terlebih dahulu sebelum bertanya kepada AI. Ketika akhirnya meminta bantuan AI, saya juga mencoba membaca *script* yang diberikan dan memahami sebisanya. Walaupun masih banyak bagian yang belum saya pahami sepenuhnya, setidaknya saya mulai terbiasa melihat kode dan mencoba mencari tahu fungsi dari setiap bagiannya.
 
-Dari situ saya belajar bahwa menggunakan AI untuk coding tetap membutuhkan proses pengecekan. Saya tidak bisa hanya menerima hasil *generate* begitu saja. Saya perlu melihat hasilnya, menemukan bagian yang tidak sesuai, lalu menjelaskan masalah tersebut melalui prompt berikutnya.
+Beberapa hal baru yang saya pahami selama pengerjaan adalah:
 
-Menurut saya, bagian yang paling penting dari proses vibecoding bukan hanya bagaimana mendapatkan kode dengan cepat, tetapi bagaimana saya bisa mengevaluasi hasilnya dan memberikan instruksi yang tepat ketika hasil tersebut belum sesuai.
+* **Modularitas HTML (`include`):** Saya baru mengetahui bahwa file HTML yang panjang dapat dipisahkan menjadi beberapa file yang lebih kecil, misalnya untuk *navbar* atau *footer*, kemudian digunakan kembali dengan `{% include 'nama_file.html' %}`. Menurut saya, ini cukup membantu karena struktur file menjadi lebih rapi dan tidak semuanya berada dalam satu file HTML.
+
+* **Event pada JavaScript:** Saya juga mulai memahami sedikit mengenai bagaimana JavaScript dapat mendeteksi suatu event, misalnya ketika mouse digerakkan atau ketika tombol keyboard ditekan. Sebelumnya saya belum terlalu memahami bagaimana interaksi seperti itu bisa dibuat pada website.
 
 ### Proses Pengerjaan
 
-Secara umum, proses pengerjaan website saya lakukan melalui beberapa tahap:
+Secara umum, proses pengerjaan Tugas 2 saya lakukan melalui beberapa tahap:
 
-1. **Perancangan UI/UX**
+1. **Mencoba Implementasi Sendiri**
 
-   Saya terlebih dahulu membuat rancangan website menggunakan Figma. Pada tahap ini saya menentukan struktur halaman, *layout*, warna, tipografi, komponen, serta gaya visual yang ingin digunakan.
+   Saya mencoba menerapkan materi tersebut ke project saya sendiri. Saya berusaha menulis kode dan memahami alurnya terlebih dahulu sebelum meminta bantuan.
 
-2. **Implementasi Awal**
+2. **Mencari Bantuan Ketika Menemui Masalah**
 
-   Setelah rancangan selesai, saya menggunakan AI untuk membantu menerjemahkan desain tersebut menjadi struktur HTML dan styling CSS.
+   Jika saya menemukan error atau tidak tahu bagaimana cara melanjutkan, saya baru menggunakan AI untuk bertanya mengenai masalah tersebut. Saya mencoba memberikan konteks dan kode yang sedang saya kerjakan agar bantuan yang diberikan lebih sesuai dengan masalahnya.
 
-3. **Evaluasi Tampilan**
+3. **Implementasi dan Perbaikan UI**
 
-   Setelah implementasi awal selesai, saya melihat hasilnya dan membandingkannya dengan rancangan yang sudah saya buat. Saya mengecek tampilan pada *desktop* maupun *mobile* untuk melihat apakah ada elemen yang terlalu besar, terlalu kecil, bertabrakan, atau tidak berada di posisi yang seharusnya.
+   Untuk bagian UI, saya masih menggunakan cukup banyak bantuan AI dalam menerjemahkan desain menjadi HTML dan CSS, termasuk membuat tampilan *responsive*. Saya kemudian melihat hasilnya dan memberikan arahan jika tampilannya belum sesuai dengan desain yang saya inginkan.
 
-4. **Iterasi Prompt**
+54. **Mencoba Memahami Hasil Kode**
 
-   Jika menemukan masalah, saya memberikan prompt lanjutan kepada AI dengan menjelaskan bagian yang bermasalah dan hasil seperti apa yang saya inginkan. Misalnya, ketika beberapa elemen bertabrakan pada layar *mobile*, saya meminta AI menyesuaikan ukuran *card*, posisi elemen, dan susunan *layout* agar dapat beradaptasi dengan ukuran layar yang lebih kecil.
+   Setelah mendapatkan solusi atau kode dari AI, saya mencoba membaca dan memahami *script* tersebut sebisa saya. Walaupun saya masih awam dan belum memahami semua bagian, proses ini membuat saya mulai lebih terbiasa membaca kode daripada hanya langsung menggunakannya.
 
-5. **Perbaikan dan Finalisasi**
-
-   Proses evaluasi dan pemberian prompt dilakukan beberapa kali sampai hasil implementasinya sudah lebih mendekati desain yang saya buat dan dapat ditampilkan dengan baik pada ukuran layar yang berbeda.
-
-Dari keseluruhan proses ini, saya menyadari bahwa AI memang sangat membantu mempercepat proses implementasi, tetapi hasilnya tetap perlu diperiksa dan diarahkan. Saya juga jadi lebih memahami bahwa desain UI/UX yang terlihat sederhana di Figma belum tentu bisa langsung diterapkan begitu saja ke semua ukuran layar. Ada banyak hal yang perlu dipikirkan kembali ketika desain tersebut diimplementasikan menjadi website yang *responsive*.
+Dari keseluruhan proses ini, saya merasa ada perubahan dari cara saya mengerjakan Tugas 1. Saya masih menggunakan AI dan untuk bagian UI bahkan masih banyak bergantung pada bantuan AI, tetapi sekarang saya mencoba untuk tidak langsung menyerahkan seluruh proses pengerjaan kepadanya. Saya mencoba belajar dari tutorial, mengerjakan sendiri terlebih dahulu, lalu menggunakan AI ketika memang membutuhkan bantuan.
 
 ### Styling README.md
 
@@ -139,43 +246,36 @@ Saya juga menggunakan AI untuk membantu merapikan format dan struktur penulisan 
 
 ### Log Obrolan AI
 
-1. [Link Chat 1](https://share.gemini.google/0Gzb6xhpXxTz)
-2. [Link Chat 2](https://claude.ai/share/4fc6e0a6-b626-42b8-9c4b-ee7bf4abcb6a)
-3. [Link Chat 3](https://opncd.ai/share/B04zqg7p)
+1. [Link Chat 1](https://opncd.ai/share/B04zqg7p)
 
 ---
 
 # Pertanyaan Reflektif
 
-## Tugas 1
+## Tugas 2
 
-### 1. Penggunaan Elemen Semantik
+### 1. Alur Request-Response (MVT) pada Django
 
-Penggunaan elemen semantik cukup membantu, terutama karena saya sudah terbiasa merancang UI/UX menggunakan Figma. Ketika membuat desain di Figma, saya biasanya berpikir dalam bentuk bagian-bagian halaman, misalnya bagian navigasi, isi utama, dan bagian tertentu yang memiliki fungsi berbeda. Konsep tersebut cukup membantu ketika saya mulai menyusun struktur HTML.
+Ketika pengguna membuka halaman portofolio, browser terlebih dahulu mengirimkan HTTP request ke website. Request tersebut akan diterima oleh `urls.py` utama pada proyek Django, yang kemudian menentukan aplikasi mana yang menangani URL tersebut. Setelah diarahkan ke `urls.py` milik aplikasi portofolio, URL tersebut dicocokkan dengan pola yang tersedia dan Django akan memanggil view yang sesuai. Jika URL memiliki parameter tertentu, misalnya ID sebuah project, parameter tersebut juga dapat diteruskan ke view agar data yang diproses sesuai dengan project yang diminta.
 
-Awalnya saya masih agak bingung membedakan `<section>` dengan `class`, karena keduanya sama-sama terasa seperti digunakan untuk mengelompokkan elemen. Setelah menggunakannya, saya mulai memahami bahwa `<section>` merupakan bagian dari struktur atau isi halaman, sedangkan `class` lebih berfungsi sebagai penanda yang dapat digunakan untuk memilih dan memberikan styling pada elemen melalui CSS.
+Selanjutnya, view menangani logika yang diperlukan untuk menampilkan halaman. Jika halaman membutuhkan data dari database, view akan meminta data tersebut melalui model. Model menjadi penghubung antara aplikasi dengan database, sehingga data project dapat diambil tanpa harus ditulis langsung di dalam HTML.
 
-Menurut saya, penggunaan elemen semantik membuat struktur HTML lebih mudah dipahami karena saya tidak hanya membuat kumpulan `div` tanpa pembagian yang jelas. Saya jadi lebih terbiasa memikirkan setiap bagian halaman sebagai sebuah struktur yang memiliki fungsi, bukan hanya sebagai elemen yang harus diberi CSS.
+Setelah mendapatkan data yang dibutuhkan, view meneruskannya ke template. Template kemudian menggunakan data tersebut untuk membentuk halaman HTML yang akan ditampilkan kepada pengguna. Hasil akhirnya dikirim kembali sebagai HTTP response ke browser, sehingga pengguna dapat melihat halaman portofolio beserta data project yang sesuai.
 
-### 2. Tantangan Tata Letak pada Mobile
+Dari alur ini saya memahami bahwa setiap bagian dalam MVT memiliki tanggung jawab yang berbeda. `urls.py` menentukan ke mana request diarahkan, view mengatur prosesnya, model menangani data, sedangkan template berfokus pada bagaimana data tersebut ditampilkan.
 
-Tantangan tata letak terbesar adalah memastikan website tetap nyaman dilihat ketika ukuran layar menjadi jauh lebih kecil. Desain yang terlihat baik pada *desktop* tidak selalu bisa langsung digunakan dengan ukuran dan susunan yang sama pada *mobile*. Kalau semua elemen hanya diperkecil, beberapa bagian justru menjadi terlalu sempit atau saling bertabrakan.
+### 2. Mengapa Data (Model dan Temoplate) Dipisahkan?
 
-Ketika menemukan masalah tersebut, saya membandingkan hasil implementasi dengan desain yang saya inginkan, kemudian memberikan prompt lanjutan kepada AI untuk memperbaikinya. Beberapa perubahan yang saya minta antara lain:
+Data untuk bagian portofolio sebaiknya disimpan pada model daripada ditulis langsung di dalam template karena data dan tampilan memiliki fungsi yang berbeda. Jika nama project, deskripsi, gambar, dan informasi lainnya ditulis langsung di dalam HTML, setiap perubahan atau penambahan project akan membuat saya harus mengubah kode template secara manual.
 
-* Mengecilkan ukuran *card project* dan *art* agar lebih proporsional pada layar kecil.
-* Memindahkan deskripsi dan judul proyek ke bawah gambar pada tampilan *mobile*, sedangkan pada *desktop* posisinya berada di samping.
-* Mengubah *layout* deretan tombol dari horizontal menjadi vertikal agar tidak terlalu sempit.
-* Mengatur kembali posisi deskripsi profil karena sebelumnya sempat menabrak dan menutupi foto *background* utama ketika ukuran layar mengecil.
+Hal ini berkaitan dengan keterbatasan static web yang saya temukan pada Tugas 1. Saat jumlah project masih sedikit, melakukan hardcode mungkin masih terasa mudah. Namun, jika jumlah project semakin banyak, cara tersebut akan menjadi semakin sulit untuk dipelihara karena data tersebar di dalam kode HTML.
 
-Dari proses ini saya belajar bahwa *responsive design* bukan hanya tentang membuat semua ukuran menjadi lebih kecil. Struktur dan posisi elemen juga perlu disesuaikan dengan ruang yang tersedia supaya informasi tetap memiliki hierarki yang jelas dan tidak saling bertabrakan.
+Dengan menyimpan data pada model, saya dapat menggunakan satu template untuk menampilkan banyak project dari database menggunakan looping. Jika ingin menambahkan atau mengubah project, yang perlu diubah adalah datanya, bukan struktur HTML untuk setiap project. Menurut saya, cara ini membuat aplikasi lebih mudah dan siap untuk dikembangkan menjadi fitur yang lebih dinamis, seperti pencarian atau filter berdasarkan kategori.
 
-### 3. Batasan Static Web dan Pengembangan Selanjutnya
+### 3. Makemigrations vs Migrate
 
-Batasan utama dari *static web* murni adalah kontennya masih banyak yang di-*hardcode* di dalam HTML. Selama isi portofolionya masih sedikit, cara ini mungkin masih bisa dilakukan, tetapi akan menjadi semakin merepotkan ketika jumlah kontennya bertambah.
+`makemigrations` dan `migrate` sama-sama berkaitan dengan perubahan struktur database, tetapi memiliki fungsi yang berbeda. `makemigrations` digunakan untuk membuat file migrasi berdasarkan perubahan yang dilakukan pada `models.py`. File tersebut berisi instruksi mengenai perubahan struktur database yang perlu dilakukan oleh Django.
 
-Hal ini cukup terasa pada portfolio saya karena ada banyak gambar karya beserta nama dan informasi lainnya. Kalau saya ingin mengganti atau menambahkan sebuah karya, saya perlu menyiapkan gambar dan kemudian menyesuaikan bagian yang berkaitan dengan gambar dan teks tersebut di dalam project. Kalau jumlah project terus bertambah, cara seperti ini akan semakin tidak praktis.
+Sementara itu, `migrate` digunakan untuk menerapkan instruksi dari file migrasi tersebut ke database. Jadi, `makemigrations` dapat dipahami sebagai proses mencatat perubahan model menjadi sebuah migrasi, sedangkan `migrate` adalah proses menjalankan perubahan tersebut pada database.
 
-Karena itu, pengembangan yang paling ingin saya lakukan selanjutnya adalah membuat sistem yang menggunakan **database** dan **panel admin**. Data seperti nama project, deskripsi, dan gambar dapat disimpan sebagai data, bukan ditulis langsung di HTML.
-
-Dengan cara tersebut, halaman website bisa mengambil data dari database secara dinamis. Saya juga bisa menambahkan atau mengubah project melalui form atau panel admin tanpa harus mencari dan mengubah banyak bagian dari kode HTML. Menurut saya, ini akan membuat portfolio lebih mudah dikembangkan ketika jumlah kontennya semakin banyak.
+Sebagai contoh, jika saya menambahkan atribut baru bernama `link_github` pada model project, perubahan tersebut belum langsung membuat kolom baru pada database. Saya perlu menjalankan `makemigrations` terlebih dahulu agar Django membuat file migrasi yang mencatat perubahan tersebut. Setelah itu, saya menjalankan `migrate` agar perubahan tersebut benar-benar diterapkan pada database dan kolom `link_github` dapat digunakan untuk menyimpan data.

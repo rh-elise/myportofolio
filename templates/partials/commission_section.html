@@ -1,0 +1,42 @@
+{% load static %}
+<!-- COMMISSION (gabung artworks, bukan section sendiri) -->
+<div class="container">
+    <div class="commission-grid">
+        <!-- KIRI: gambar, goyang kiri-kanan patah-patah + kedip -->
+        <div class="commission-stage">
+            <div class="commission-sprite is-playing" id="commissionSprite">
+                <img class="commission-frame commission-frame-open"
+                     src="{% static 'img/commission-normal.png' %}"
+                     alt="Commission character"
+                     onerror="this.style.display='none'">
+                <img class="commission-frame commission-frame-blink"
+                     src="{% static 'img/commission-hover.png' %}"
+                     alt=""
+                     onerror="this.style.display='none'">
+                <span class="commission-placeholder">gambar</span>
+            </div>
+            <button class="commission-play" id="commissionPlayBtn" aria-label="Pause animation"><span>&#10074;&#10074;</span></button>
+        </div>
+
+        <!-- KANAN: bubble + tombol sheet -->
+        <div class="commission-right">
+            <div class="commission-bubble">
+                <p><strong>Hey there!</strong> I love creating characters, illustrations, and all sorts of little things. These are some of my favorites! <strong>If you've got an idea of your own, I'd love to hear about it!</strong></p>
+            </div>
+            <a href="https://canva.link/rysphmo8cwn6kia" target="_blank" rel="noopener" class="commission-cta"><span>See my commission sheet &#8599;</span></a>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    var sprite = document.getElementById('commissionSprite');
+    var btn = document.getElementById('commissionPlayBtn');
+    if (!sprite || !btn) return;
+    btn.addEventListener('click', function () {
+        var playing = sprite.classList.toggle('is-playing');
+        btn.innerHTML = playing ? '<span>&#10074;&#10074;</span>' : '<span>&#9654;</span>';
+        btn.setAttribute('aria-label', playing ? 'Pause animation' : 'Play animation');
+    });
+})();
+</script>

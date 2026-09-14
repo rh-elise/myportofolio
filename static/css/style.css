@@ -259,7 +259,7 @@ h1, h2, h3, .brand {
     width: 50px; height: 50px;
     background-color: var(--ink); color: var(--paper);
     display: flex; justify-content: center; align-items: center; text-decoration: none;
-    border: none;
+    border: 3px solid transparent; 
 }
 
 .icon-square svg {
@@ -284,6 +284,7 @@ h1, h2, h3, .brand {
 
 .icon-square:hover {
     background-color: var(--accent); color: var(--paper);
+    border-color: var(--ink);
     box-shadow: 4px 4px 0px var(--ink);
 }
 
@@ -641,6 +642,200 @@ h1, h2, h3, .brand {
     margin: 1rem auto 2rem;
 }
 
+/* COMMISSION */
+/* Layout dua kolom: gambar kiri, bubble kanan */
+.commission-grid {
+    display: flex; gap: 2rem; align-items: flex-start;
+    margin: 2rem 0 4rem 0;
+}
+
+/* Gambar bebas tanpa box, tampil penuh tidak kepotong */
+.commission-stage {
+    position: relative;
+    flex: 0 0 240px; width: 240px;
+}
+
+/* Sprite menampung dua frame */
+.commission-sprite {
+    position: relative;
+}
+
+.commission-sprite img {
+    display: block;
+    width: 100%; height: auto;
+}
+
+/* Frame hover */
+.commission-sprite .commission-frame-blink {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: contain;
+}
+
+/* Teks pengganti kalau gambar belum dipasang */
+.commission-placeholder {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Sembunyikan placeholder */
+.commission-sprite img + img + .commission-placeholder {
+    display: none;
+}
+
+/* Animasi gambar */
+.commission-sprite.is-playing {
+    animation: commission-sway 3.4s steps(2, jump-none) infinite;
+}
+
+@keyframes commission-sway {
+    0% { transform: translate(0, 0) rotate(-3deg); }
+    25% { transform: translate(10px, -8px) rotate(2deg); }
+    50% { transform: translate(-8px, -14px) rotate(-1deg); }
+    75% { transform: translate(6px, -6px) rotate(3deg); }
+    100% { transform: translate(0, -12px) rotate(-3deg); }
+}
+
+/* Kedip otomatis tiap beberapa detik */
+.commission-frame-blink {
+    opacity: 0;
+}
+
+.commission-sprite.is-playing .commission-frame-blink {
+    animation: commission-blink 4.2s steps(1) infinite;
+}
+
+@keyframes commission-blink {
+    0%, 91% { opacity: 0; }
+    92%, 95% { opacity: 1; }
+    96%, 100% { opacity: 0; }
+}
+
+/* Hover: naik dan gambar berubah */
+.commission-stage:hover .commission-sprite.is-playing {
+    animation: commission-hover 2.6s steps(2, jump-none) infinite;
+}
+
+@keyframes commission-hover {
+    0% { transform: translate(0, -12px) rotate(2deg); }
+    30% { transform: translate(-8px, -20px) rotate(-3deg); }
+    60% { transform: translate(8px, -16px) rotate(3deg); }
+    100% { transform: translate(0, -22px) rotate(-2deg); }
+}
+
+.commission-stage:hover .commission-frame-open {
+    opacity: 0;
+}
+
+.commission-stage:hover .commission-frame-blink {
+    opacity: 1;
+    animation: none;
+}
+
+/* Tombol play/pause */
+.commission-play {
+    position: absolute; right: 0.6rem; bottom: 0.6rem;
+    width: 44px; height: 44px;
+    overflow: hidden;
+    background-color: var(--ink); color: var(--paper);
+    border: 3px solid var(--ink);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.commission-play::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url('/static/img/halftone-bg.png'); background-repeat: no-repeat; background-size: 120px auto; background-position: 50% 90%;
+    opacity: 0; transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.commission-play:hover {
+    background-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0px var(--ink);
+}
+
+.commission-play:hover::after {
+    opacity: 0.5;
+}
+
+.commission-play:active {
+    transform: translateY(0);
+    box-shadow: 2px 2px 0px var(--ink);
+}
+
+/* Kolom kanan */
+.commission-right {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Bubble */
+.commission-bubble {
+    background-color: #fff;
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0px var(--ink);
+    padding: 1.2rem 1.6rem;
+}
+
+.commission-bubble p {
+    margin: 0;
+    font-size: 0.95rem; line-height: 1.5;
+    color: #333;
+}
+
+.commission-bubble strong {
+    font-weight: 700;
+    color: var(--ink);
+}
+
+/* Tombol sheet */
+.commission-cta {
+    display: flex; align-items: center; gap: 0.6rem;
+    position: relative; overflow: hidden;
+    width: fit-content;
+    margin: 1.2rem 0 0 auto;
+    background-color: var(--ink);
+    border: 3px solid var(--ink);
+    padding: 0.6rem 1.4rem;
+    font-weight: 700;
+    color: var(--paper);
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.commission-cta > span,
+.commission-play > span {
+    position: relative; z-index: 1;
+}
+
+.commission-cta::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url('/static/img/halftone-bg.png'); background-repeat: repeat-x; background-size: 120px auto; background-position: 0 -170px;
+    opacity: 0; transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.commission-cta:hover {
+    background-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+.commission-cta:hover::after {
+    opacity: 0.5;
+}
+
+.commission-cta:active {
+    transform: translateY(0);
+    box-shadow: 2px 2px 0px var(--ink);
+}
+
 /* EXPERIENCE */
 .exp-section {
     background-color: transparent;
@@ -894,7 +1089,14 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3
 
     /* Artworks */
     .artwork-tab { flex: 1 1 150px; min-width: 0; }
+    .artwork-tab::after { background-size: 100% auto; }
     .art-item { flex: 0 0 220px; height: 150px; }
+
+    /* Commission */
+    .commission-grid { gap: 1.25rem; }
+    .commission-stage { flex: 0 0 180px; width: 180px; }
+    .commission-bubble { padding: 1.4rem 2rem 1.8rem 3.5rem; }
+    .commission-bubble p { font-size: 0.85rem; }
 
     /* Experience: cegah tabrakan nama vs tahun di tablet */
     .exp-card { max-width: 100%; }
@@ -970,6 +1172,14 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3
     .exp-photo { flex: 0 0 104px; height: 104px; }
     .exp-photo img { transform: skewX(6deg) scale(1.3); }
     .exp-desc { font-size: 0.8rem; transform: skewX(6deg); }
+
+    /* Commission: baru di sini gambar pindah ke atas, teks di bawah */
+    .commission-grid { flex-direction: column; gap: 1.25rem; margin: 1.5rem 0 3rem 0; }
+    .commission-stage { flex: none; width: 100%; max-width: 180px; }
+    .commission-bubble { padding: 1.2rem 1.5rem 1.6rem 2.5rem; }
+    .commission-bubble p { font-size: 0.85rem; }
+    .commission-cta { margin: 1rem auto 0 auto; font-size: 0.85rem; padding: 0.55rem 1rem; }
+    .commission-play { width: 38px; height: 38px; font-size: 0.85rem; }
 
     /* Footer */
     .footer-logo { font-size: 1.15rem; }

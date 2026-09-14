@@ -16,10 +16,10 @@ html, body {
 
 /* COLOR PALETTE: navy, maroon, paper */
 :root {
-    --ink: #27374D;
-    --paper: #F0F0F0;
-    --accent: #A80139;
-    --text-muted: #5D6A79;
+    --ink: #151515;
+    --paper: #FFFFFF;
+    --accent: #EB1000;
+    --text-muted: #374151;
 }
 
 /* BODY STYLE */
@@ -70,27 +70,30 @@ h1, h2, h3, .brand {
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 60px), 0 100%); /* Supaya slanted */
 }
 
-/* Strip maroon di bibir atas header */
-.site-header-slanted::before {
-    content: "";
-    display: block;
-    height: 5px;
-    background-color: var(--accent);
-}
-
 /* Layout isi header */
 .header-inner {
-    display: flex; justify-content: space-between; align-items: center;
+    display: flex; justify-content: center; align-items: center;
     padding-top: 0.9rem;
+}
+
+.header-centered {
+    justify-content: center;
+}
+
+.header-centered nav {
+    justify-content: center;
 }
 
 /* Gaya Brand */
 .brand {
-    font-size: 1.6rem; font-weight: 700; color: var(--paper);
+    font-size: 1.8rem; font-weight: 700; color: var(--paper);
     text-decoration: none; /* Menghilangkan garis bawah link */
-    letter-spacing: 1px;
+    letter-spacing: 3px;
     margin: 0;
+    padding-right: 2.5rem;
 }
+
+.header-spacer { display: none; }
 
 /* Jarak antar tombol */
 .site-header-slanted nav {
@@ -135,13 +138,12 @@ h1, h2, h3, .brand {
     content: "";
     position: absolute;
     left: -2vw; right: -2vw;
-    bottom: 4%;
+    bottom: calc(2vw - 3px); /* Tepat di tengah tepi foto (tepi di tengah = 2vw dari bawah) */
     height: 7px;
     background: var(--ink);
-    transform: rotate(-2.3deg); /* Memiringkan garis sejajar dengan foto */
+    transform: rotate(-2.29deg); /* Sejajar tepi foto (atan 4vw/100vw) di semua lebar layar */
     z-index: 6;
     pointer-events: none; /* Supaya garis tidak menghalangi klik */
-    box-shadow: 0 5px 0 #B9C0C9; /* Efek bayangan di bawah garis */
 }
 
 /* Foto background dengan potongan miring */
@@ -149,7 +151,7 @@ h1, h2, h3, .brand {
     background-image: url('/static/img/rheina.png');
     background-color: #d7dbe0; background-size: cover; background-position: center 25%; background-repeat: no-repeat;
     position: relative; padding: 9rem 0 7rem 0;
-    clip-path: polygon(0 60px, 100% 0, 100% calc(100% - 60px), 0 100%); /* Supaya slanted */
+    clip-path: polygon(0 60px, 100% 0, 100% calc(100% - 4vw), 0 100%); /* Bawah pakai vw supaya sudutnya tetap di semua lebar */
 }
 
 /* Overlay duotone: navy kiri memudar ke paper kanan */
@@ -664,13 +666,27 @@ h1, h2, h3, .brand {
     position: absolute; top: -1.2rem; z-index: 2;
     background-color: var(--accent); color: var(--paper);
     font-family: "Freeman", sans-serif; letter-spacing: 2px;
+    line-height: 1.4;
     padding: 0.5rem 2rem;
     border: 3px solid var(--ink);
     transform: skewX(-15deg);
 }
 
-.exp-name { left: -1rem; }
-.exp-year { right: -1rem; }
+.exp-name {
+    left: -1rem;
+    max-width: calc(100% - 190px);
+    overflow-wrap: anywhere;
+}
+
+.exp-year {
+    right: -1rem;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    flex-shrink: 0;
+}
 
 /* Teks banner lurus */
 .exp-name span, .exp-year span {
@@ -879,6 +895,12 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3
     /* Artworks */
     .artwork-tab { flex: 1 1 150px; min-width: 0; }
     .art-item { flex: 0 0 220px; height: 150px; }
+
+    /* Experience: cegah tabrakan nama vs tahun di tablet */
+    .exp-card { max-width: 100%; }
+    .exp-name, .exp-year { font-size: 0.9rem; padding: 0.45rem 1.2rem; letter-spacing: 1px; }
+    .exp-name { left: -0.5rem; max-width: calc(100% - 170px); }
+    .exp-year { right: -0.5rem; max-width: 160px; }
     .site-footer { padding: 6rem 1.5rem 2rem 1.5rem; }
     .footer-grid { flex-direction: column; gap: 2rem; }
 }
@@ -896,8 +918,8 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3
 
     /* Sudut miring diperkecil */
     .site-header-slanted { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), 0 100%); }
-    .hero-slanted-photo { padding: 4rem 0 4rem 0; clip-path: polygon(0 40px, 100% 0, 100% calc(100% - 40px), 0 100%); }
-    .hero-wrapper::after { transform: rotate(-4deg); }
+    .hero-slanted-photo { padding: 4rem 0 4rem 0; clip-path: polygon(0 40px, 100% 0, 100% calc(100% - 10vw), 0 100%); }
+    .hero-wrapper::after { transform: rotate(-5.71deg); bottom: calc(5vw - 3px); }
     .site-footer { clip-path: polygon(0 40px, 100% 0, 100% 100%, 0 100%); }
 
     /* Hero */
@@ -929,12 +951,22 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3
     .empty-box { margin-left: 1rem; width: calc(100% - 1rem); padding: 0.85rem 1rem 0.85rem 2.8rem; }
     .empty-box p { font-size: 0.88rem; }
 
-    /* Experience */
+    /* Experience: nama di atas, tahun pindah ke bawah (tidak tabrakan) */
     .exp-card:first-of-type { margin-top: 2.5rem; }
-    .exp-name, .exp-year { font-size: 0.85rem; padding: 0.4rem 1rem; }
-    .exp-name { left: 0; max-width: calc(100% - 96px); }
-    .exp-year { right: 0; }
-    .exp-body { gap: 0.8rem; padding: 2.8rem 1rem 1.2rem; transform: skewX(-6deg); }
+    .exp-card { display: flex; flex-direction: column; max-width: 100%; }
+    .exp-name, .exp-year {
+        position: static;
+        transform: skewX(-6deg);
+        max-width: 100%;
+        width: fit-content;
+        font-size: 0.85rem; padding: 0.45rem 1rem;
+        letter-spacing: 1px; line-height: 1.4;
+        white-space: normal; overflow: visible; text-overflow: clip;
+    }
+    .exp-name span, .exp-year span { transform: skewX(6deg); }
+    .exp-name { order: 1; align-self: flex-start; margin: 0 0 -0.9rem 0.5rem; }
+    .exp-body { order: 2; gap: 0.8rem; padding: 1.8rem 1rem; transform: skewX(-6deg); }
+    .exp-year { order: 3; align-self: flex-end; margin: -0.9rem 0.5rem 0 0; }
     .exp-photo { flex: 0 0 104px; height: 104px; }
     .exp-photo img { transform: skewX(6deg) scale(1.3); }
     .exp-desc { font-size: 0.8rem; transform: skewX(6deg); }

@@ -1,6 +1,5 @@
 <header class="site-header-slanted">
-    <div class="container header-inner">
-        <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
+    <div class="container header-inner header-centered">
         <!-- NAVIGATION BAR -->
         <nav>
             <a href="{% url 'main:show_main' %}">Profile</a>
@@ -8,6 +7,5 @@
             <a href="{% url 'main:show_experience' %}">Experience</a>
             <a href="{% url 'main:show_artworks' %}">Artworks</a>
         </nav>
-        <div class="header-spacer" aria-hidden="true"></div>
     </div>
 </header>

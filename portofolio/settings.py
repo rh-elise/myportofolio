@@ -148,3 +148,5 @@ WHITENOISE_USE_FINDERS = True
 
 # Primary key bawaan untuk model baru
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS = ["https://rheina-uliana-myportofolio.pws.cs.ui.ac.id"]

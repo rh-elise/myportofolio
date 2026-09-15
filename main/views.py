@@ -82,15 +82,6 @@ def show_artworks(request):
 
     return render(request, "artworks.html", context)
 
-def show_projects(request):
-    context = {
-        "name": "Rheina Uliana",
-        "projects_list": Projects.objects.all(),
-        "tagline" : "Hi! Hello! How are you?"
-    }
-
-    return render(request, "projects.html", context)
-
 def create_project(request):
     form = ProjectForm(request.POST or None)
 
@@ -104,3 +95,41 @@ def create_project(request):
         "form": form,
     }
     return render(request, "projects_form.html", context)
+
+def delete_project(request, project_id):
+    project = get_object_or_404(Projects, pk=project_id)
+
+    if request.method == "POST":
+        project.delete()
+        messages.success(request, "Project berhasil dihapus!")
+        return redirect("main:show_projects")
+
+    return redirect("main:show_projects")
+
+def show_projects(request):
+    json_response = get_projects_json(request)
+
+    projects = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    projects = [project.object for project in projects]
+    title_query = request.GET.get("title", "").strip()
+
+    context = {
+        "name": "Rheina Uliana",
+        "tagline" : "Hi! Hello! How are you?",
+        "projects_list": projects,
+        "title_query": title_query,
+    }
+    return render(request, "projects.html", context)
+
+def get_projects_json(request):
+    title_query = request.GET.get("title", "").strip()
+    projects = Projects.objects.all()
+
+    if title_query:
+        projects = projects.filter(title__icontains=title_query)
+
+    projects_json = serializers.serialize("json", projects)
+    return HttpResponse(projects_json, content_type="application/json")

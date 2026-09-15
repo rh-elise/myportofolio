@@ -104,6 +104,49 @@ class ProjectsTest(TestCase):
 
         self.assertContains(response, "No projects have been added yet.")
 
+    def test_create_project_post(self):
+        response = self.client.post(reverse("main:create_project"), {
+            "title": "Brine and Blade",
+            "description": "Roguelite bullet-hell.",
+            "image": "/static/img/cover-brine-and-blade.png",
+            "link": "https://example.com/brine-and-blade",
+        })
+
+        self.assertRedirects(response, reverse("main:show_projects"))
+        self.assertTrue(Projects.objects.filter(title="Brine and Blade").exists())
+
+    def test_projects_json(self):
+        response = self.client.get(reverse("main:get_projects_json"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/json")
+        self.assertContains(response, self.project.title)
+
+    def test_projects_json_filter(self):
+        response = self.client.get(reverse("main:get_projects_json") + "?title=patient")
+
+        self.assertContains(response, self.project.title)
+
+        response = self.client.get(reverse("main:get_projects_json") + "?title=tidak-ada")
+        self.assertNotContains(response, self.project.title)
+
+    def test_projects_search_empty_message(self):
+        response = self.client.get(reverse("main:show_projects") + "?title=tidak-ada")
+
+        self.assertContains(response, "No project found with that name.")
+
+    def test_delete_project_post(self):
+        response = self.client.post(reverse("main:delete_project", args=[self.project.id]))
+
+        self.assertRedirects(response, reverse("main:show_projects"))
+        self.assertFalse(Projects.objects.filter(pk=self.project.pk).exists())
+
+    def test_delete_project_get_does_nothing(self):
+        response = self.client.get(reverse("main:delete_project", args=[self.project.id]))
+
+        self.assertRedirects(response, reverse("main:show_projects"))
+        self.assertTrue(Projects.objects.filter(pk=self.project.pk).exists())
+
 
 class ArtworksTest(TestCase):
     def setUp(self):

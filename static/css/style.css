@@ -34,6 +34,7 @@ body {
     overflow-x: hidden; /* Mencegah layar bisa digeser ke samping */
     position: relative;
     min-height: 100vh; /* Minimal tinggi selalu selayar penuh */
+    display: flex; flex-direction: column; /* Footer selalu di bawah  */
 
     /* Jarak atas supaya tidak tertabrak Navbar */
     padding-top: 64px;
@@ -336,6 +337,11 @@ h1, h2, h3, .brand {
     z-index: -1; /* Di belakang teks/kartu */
 }
 
+.slanted-section:last-of-type,
+.exp-section:last-of-type {
+    flex: 1 0 auto;
+}
+
 /* PROJECTS */
 .project-showcase {
     display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px;
@@ -552,7 +558,7 @@ h1, h2, h3, .brand {
 .arts-marquee-wrapper {
     width: 100vw; margin-left: calc(-50vw + 50%); overflow: hidden;
     display: flex; flex-direction: column; gap: 2.5rem;
-    padding: 1rem 0 4rem 0;
+    padding: 1rem 0 2rem 0;
 }
 
 .arts-marquee-track {

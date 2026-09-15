@@ -1,20 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-{% include "partials/head.html" %}
+{% block content %}
+<!-- ARTS -->
+<section class="slanted-section" id="artworks">
+    {% include "partials/artworks_section.html" with empty_message="No artworks have been added yet." %}
+    {% include "partials/commission_section.html" %}
+</section>
+{% endblock content %}
 
-<body>
-    {% include "partials/site_header.html" %}
+{% block extra_scripts %}
+{% include "partials/artworks_ui_script.html" %}
+{% endblock extra_scripts %}
 
-    <!-- ARTS -->
-    <section class="slanted-section" id="artworks">
-        {% include "partials/artworks_section.html" with empty_message="No artworks have been added yet." %}
-        {% include "partials/commission_section.html" %}
-    </section>
-
-    {% include "partials/site_footer.html" %}
-
-    {% include "partials/artworks_ui_script.html" %}
-
-</body>
-</html>

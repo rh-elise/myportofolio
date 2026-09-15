@@ -1,40 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-{% include "partials/head.html" %}
-
-<body>
-    {% include "partials/site_header.html" %}
-
-    <!-- EXPERIENCE -->
-    <section class="exp-section" id="experience">
-        <div class="container">
-            <div class="section-title-wrapper">
-                <div class="slanted-title"><span>EXPERIENCE</span></div>
-            </div>
-            {% for exp in experience_list %}
-            <article class="exp-card">
-
-                <!-- BANNER -->
-                <div class="exp-name"><span>{{ exp.title }}</span></div>
-                <div class="exp-year"><span>{{ exp.year }}{% if exp.is_ongoing %}-present{% endif %}</span></div>
-
-                <!-- BODY -->
-                <div class="exp-body">
-                    {% if exp.thumbnail %}
-                    <div class="exp-photo"><img src="{{ exp.thumbnail }}" alt="{{ exp.title }}"></div>
-                    {% endif %}
-                    <p class="exp-desc">{{ exp.description }}</p>
-                </div>
-            </article>
-            
-            {% empty %}
-            {% include "partials/empty_state.html" with message="No experience has been added yet." %}
-            {% endfor %}
+{% block content %}
+<!-- EXPERIENCE -->
+<section class="exp-section" id="experience">
+    <div class="container">
+        <div class="section-title-wrapper">
+            <div class="slanted-title"><span>EXPERIENCE</span></div>
         </div>
-    </section>
+        {% for exp in experience_list %}
+        <article class="exp-card">
 
-    {% include "partials/site_footer.html" %}
+            <!-- BANNER -->
+            <div class="exp-name"><span>{{ exp.title }}</span></div>
+            <div class="exp-year"><span>{{ exp.year }}{% if exp.is_ongoing %}-present{% endif %}</span></div>
 
-</body>
-</html>
+            <!-- BODY -->
+            <div class="exp-body">
+                {% if exp.thumbnail %}
+                <div class="exp-photo"><img src="{{ exp.thumbnail }}" alt="{{ exp.title }}"></div>
+                {% endif %}
+                <p class="exp-desc">{{ exp.description }}</p>
+            </div>
+        </article>
+        
+        {% empty %}
+        {% include "partials/empty_state.html" with message="No experience has been added yet." %}
+        {% endfor %}
+    </div>
+</section>
+{% endblock content %}

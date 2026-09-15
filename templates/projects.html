@@ -1,21 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-{% include "partials/head.html" %}
+{% block content %}
+<!-- PROJECTS -->
+<section class="slanted-section" id="projects">
+    <div class="container">
+        {% include "partials/project_showcase.html" with empty_message="No projects have been added yet." %}
+    </div>
+</section>
+{% endblock content %}
 
-<body>
-    {% include "partials/site_header.html" %}
-
-    <!-- PROJECTS -->
-    <section class="slanted-section" id="projects">
-        <div class="container">
-            {% include "partials/project_showcase.html" with empty_message="No projects have been added yet." %}
-        </div>
-    </section>
-
-    {% include "partials/site_footer.html" %}
-
-    {% include "partials/project_cards_script.html" %}
-
-</body>
-</html>
+{% block extra_scripts %}
+{% include "partials/project_cards_script.html" %}
+{% endblock extra_scripts %}

@@ -20,6 +20,8 @@ html, body {
     --paper: #FFFFFF;
     --accent: #EB1000;
     --text-muted: #374151;
+    --line: #151515; /* Samakan dengan ink */
+    --radius: 0; /* Tema kotak tegas, tanpa lengkung */
 }
 
 /* BODY STYLE */
@@ -36,8 +38,8 @@ body {
     min-height: 100vh; /* Minimal tinggi selalu selayar penuh */
     display: flex; flex-direction: column; /* Footer selalu di bawah  */
 
-    /* Jarak atas supaya tidak tertabrak Navbar */
-    padding-top: 64px;
+    /* Jarak atas supaya tidak tertabrak Navbar - sinkron header 84px */
+    padding-top: 84px;
 }
 
 
@@ -121,7 +123,7 @@ h1, h2, h3, .brand {
 .site-header-slanted nav a::after {
     content: "";
     position: absolute; left: 0; right: 0; bottom: 0; height: 70%;
-    background-image: url('/static/img/halftone-bg.png'); background-size: 140px auto; background-position: 50% 85%; background-repeat: no-repeat;
+    background-image: url('/static/img/halftone-bg.png'); background-size: 140px auto; background-position: 50% 85%; background-repeat: repeat-x;
     opacity: 0;
     pointer-events: none;
 }
@@ -179,7 +181,7 @@ h1, h2, h3, .brand {
 /* Bentuk dasar */
 .box-name {
     background-color: var(--ink); color: var(--paper);
-    padding: 1.2rem 2rem; border: none;
+    padding: 1.2rem 2rem; border: 3px solid var(--ink);
     margin-bottom: 1.5rem;
     box-shadow: 6px 6px 0px var(--ink);
 }
@@ -278,7 +280,7 @@ h1, h2, h3, .brand {
 .icon-square::after {
     content: "";
     position: absolute; inset: 0;
-    background-image: url('/static/img/halftone-bg.png'); background-size: 120px auto; background-position: 50% 88%; background-repeat: no-repeat;
+    background-image: url('/static/img/halftone-bg.png'); background-size: 140px auto; background-position: 50% 85%; background-repeat: repeat-x;
     opacity: 0;
     pointer-events: none;
 }
@@ -310,8 +312,35 @@ h1, h2, h3, .brand {
 
 /* Layout judul section*/
 .section-title-wrapper {
-    margin-bottom: 2rem;
+    margin-bottom: 2.8rem;
     text-align: center;
+}
+
+/* Jarak khusus - samakan projects/artworks/experience biar agak jauh - FIX exp = artworks */
+#projects .section-title-wrapper,
+#artworks .section-title-wrapper,
+#experience .section-title-wrapper,
+.exp-section .section-title-wrapper {
+    margin-bottom: 3rem;
+}
+
+#projects .project-header {
+    margin-bottom: 3rem;
+}
+
+/* Experience: jarak title -> isi harus sama kayak artworks (tabs 3rem / marquee).
+   Jangan pakai margin-top tambahan di card pertama, biar kosong & isi sama */
+#experience .exp-card:first-of-type {
+    margin-top: 0;
+}
+
+.exp-section {
+    padding-top: 2rem;
+}
+
+.exp-section .container .section-title-wrapper + .exp-card,
+.exp-section .container .section-title-wrapper + .empty-wrap {
+    margin-top: 0;
 }
 
 /* Jarak antar section */
@@ -326,15 +355,20 @@ h1, h2, h3, .brand {
 #artworks { position: relative; scroll-margin-top: 90px; margin-top: 4rem; }
 #experience { margin-top: 4rem; }
 
-/* Halftone di section paling bawah tiap halaman */
+/* Halftone di section paling bawah tiap halaman - hanya jika content tinggi, jangan ganggu empty */
 .slanted-section:last-of-type::after,
 .exp-section:last-of-type::after {
     content: "";
     position: absolute; left: 0; right: 0; bottom: 0; height: 200px;
     background-image: url('/static/img/halftone-bg.png'); background-repeat: no-repeat; background-size: 100% auto; background-position: 50% 80%;
-    opacity: 0.45;
+    opacity: 0.22;
     pointer-events: none;
     z-index: -1; /* Di belakang teks/kartu */
+}
+
+.slanted-section:last-of-type:has(.empty-wrap)::after,
+.exp-section:last-of-type:has(.empty-wrap)::after {
+    opacity: 0.08;
 }
 
 .slanted-section:last-of-type,
@@ -414,13 +448,17 @@ h1, h2, h3, .brand {
     z-index: -1;
 }
 
-/* Teks bubble */
+/* Teks bubble - clamp 2 baris agar judul panjang tidak jebol */
 .title-flag h3 {
     margin: 0 auto;
     font-family: "Freeman", sans-serif; font-weight: 400;
     font-size: 1.35rem; letter-spacing: 2px;
     color: var(--accent); text-transform: uppercase;
-    white-space: nowrap;
+    white-space: normal;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 /* Kotak deskripsi projects terpilih */
@@ -440,6 +478,11 @@ h1, h2, h3, .brand {
     margin: 0;
     font-weight: 700; font-size: 0.95rem;
     color: var(--ink);
+    max-width: 65ch;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* Halftone di bawah box deskripsi projects terpilih */
@@ -507,46 +550,249 @@ h1, h2, h3, .brand {
     background-color: var(--accent);
 }
 
-/* PROJECT */
+/* Tombol hapus kecil di sudut kartu - idle paper agar Play lebih menonjol */
+.mini-card-delete {
+    position: absolute; top: 6px; right: 6px; z-index: 2;
+    width: 32px; height: 32px; line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+    background-color: var(--paper); color: var(--ink);
+    border: 3px solid var(--ink);
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mini-card-delete:hover {
+    background-color: var(--accent); color: var(--paper);
+}
+
+/* PROJECT FORM - Outer big box + inner boxes */
+.project-form-outer {
+    position: relative;
+    background-color: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0px var(--ink);
+    padding: 2.2rem 2rem 2.8rem;
+    overflow: hidden;
+}
+
+.project-form-outer::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
+    background-image: url('/static/img/halftone-bg.png');
+    background-repeat: no-repeat;
+    background-position: 50% 74%;
+    background-size: 100% auto;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
 .project-form {
     width: 100%;
     max-width: 100%;
-    margin-top: 1.5rem;
+    position: relative;
+    z-index: 1;
 }
 
 .form-group {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.4rem;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
     font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.form-group label::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background-color: var(--accent);
+    flex-shrink: 0;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
     box-sizing: border-box;
-    padding: 0.7rem;
-    border: 1px solid var(--accent);
+    padding: 0.9rem 1.1rem;
+    border: 3px solid var(--ink);
     border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
     font: inherit;
-    transition:
-        border-color 0.2s ease,
-        outline-color 0.2s ease;
+    font-weight: 600;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    box-shadow: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.form-group textarea {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+    font-size: 0.92rem;
+}
+
+.form-group input:hover,
+.form-group textarea:hover {
+    border-color: var(--ink);
+    box-shadow: 4px 4px 0px var(--ink);
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-    outline: 2px solid var(--accent);
+    outline: none;
     border-color: var(--accent);
+    box-shadow: 6px 6px 0px var(--ink);
+    transform: translateY(-2px);
 }
 
 .form-error {
-    color: #b42318;
+    display: inline-block;
+    background-color: #FFF0F0;
+    border: 2px solid var(--accent);
+    padding: 0.35rem 0.6rem;
+    color: #9B0A00;
     font-size: 0.85rem;
-    margin-top: 0.35rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+    box-shadow: 3px 3px 0px var(--ink);
+}
+
+.form-actions {
+    display: flex;
+    gap: 0.9rem;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 1.8rem;
+    flex-wrap: wrap;
+}
+
+.form-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--ink);
+    color: var(--paper);
+    border: 3px solid var(--ink);
+    padding: 0.65rem 1.4rem;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-submit > span {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.form-submit::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url('/static/img/halftone-bg.png');
+    background-repeat: repeat-x;
+    background-size: 140px auto;
+    background-position: 50% 85%;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.form-submit:hover {
+    background-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+.form-submit:hover::after {
+    opacity: 0.55;
+}
+
+.form-submit:active {
+    transform: translateY(0);
+    box-shadow: 2px 2px 0px var(--ink);
+}
+
+.form-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--paper);
+    color: var(--ink);
+    border: 3px solid var(--ink);
+    padding: 0.65rem 1.2rem;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: none;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-cancel::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url('/static/img/halftone-bg.png');
+    background-repeat: repeat-x;
+    background-size: 140px auto;
+    background-position: 50% 85%;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.form-cancel:hover {
+    background-color: var(--ink);
+    color: var(--paper);
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+.form-cancel:hover::after {
+    opacity: 0.35;
+}
+
+.form-cancel:active {
+    transform: translateY(0);
+    box-shadow: 2px 2px 0px var(--ink);
+}
+
+@media (max-width: 600px) {
+    .project-form-outer {
+        padding: 1.4rem 1.1rem 2rem;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions .form-submit,
+    .form-actions .form-cancel {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 .button {
@@ -567,6 +813,373 @@ h1, h2, h3, .brand {
     background: var(--ink);
 }
 
+/* PROJECT MODAL - search tengah panjang, tambah pojok kanan */
+.project-header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 760px) auto;
+    align-items: center;
+    gap: 1.2rem;
+    margin-top: 0.8rem;
+    margin-bottom: 3rem;
+}
+
+.project-header .project-search {
+    grid-column: 2;
+    justify-self: stretch;
+    width: 100%;
+    max-width: 760px;
+}
+
+.project-header .project-add-button {
+    grid-column: 3;
+    justify-self: end;
+    white-space: nowrap;
+}
+
+.project-header h1 {
+    margin-bottom: 0;
+}
+
+.project-add-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--ink);
+    color: var(--paper);
+    border: 3px solid var(--ink);
+    padding: 0.6rem 1.4rem;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-add-button > span {
+    position: relative;
+    z-index: 1;
+}
+
+.project-add-button::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url('/static/img/halftone-bg.png');
+    background-repeat: repeat-x;
+    background-size: 140px auto;
+    background-position: 50% 85%;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.project-add-button:hover {
+    background-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+.project-add-button:hover::after {
+    opacity: 0.55;
+}
+
+.project-add-button:active {
+    transform: translateY(0);
+    box-shadow: 2px 2px 0px var(--ink);
+}
+
+.project-add-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background-color: var(--paper);
+    color: var(--ink);
+    font-size: 1.1rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.project-add-icon svg {
+    width: 14px;
+    height: 14px;
+    display: block;
+}
+
+.project-add-button:hover .project-add-icon,
+.form-submit:hover .project-add-icon {
+    background-color: var(--paper);
+    color: var(--accent);
+}
+
+.project-search {
+    display: flex;
+    gap: 0.75rem;
+    align-items: stretch;
+    flex: 1;
+    max-width: 760px;
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+.project-search__input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.6rem 1rem;
+    border: 3px solid var(--ink);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 600;
+    box-shadow: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.project-search__input::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.project-search__input:hover {
+    box-shadow: 4px 4px 0px var(--ink);
+}
+
+.project-search__input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 6px 6px 0px var(--ink);
+    transform: translateY(-2px);
+}
+
+.project-search__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--ink);
+    color: var(--paper);
+    border: 3px solid var(--ink);
+    padding: 0.6rem 1.2rem;
+    min-height: 44px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-search__button > span {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.project-search__button::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url('/static/img/halftone-bg.png');
+    background-repeat: repeat-x;
+    background-size: 140px auto;
+    background-position: 50% 85%;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.project-search__button:hover {
+    background-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+.project-search__button:hover::after {
+    opacity: 0.55;
+}
+
+.project-search__button:active {
+    transform: translateY(0);
+    box-shadow: 2px 2px 0px var(--ink);
+}
+
+.project-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 1rem;
+}
+
+.project-actions .button {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.project-card-actions {
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+}
+
+.hide {
+    display: none !important;
+}
+
+.project-actions .experience-status {
+    margin-top: 0;
+}
+
+.project-delete-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 1rem;
+    border: 0;
+    background: transparent;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-delete-modal:popover-open {
+    display: flex;
+}
+
+.project-delete-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: rgba(28, 25, 23, 0.58);
+    cursor: default;
+}
+
+.project-delete-modal__content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 480px);
+    padding: 1.5rem;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+.project-delete-modal__content h2 {
+    margin: 0 0 0.75rem;
+    font-family:
+        "Freeman",
+        sans-serif;
+    font-size: 1.35rem;
+    letter-spacing: 1px;
+}
+
+.project-delete-modal__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.project-delete-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.button-danger {
+    background: #9B0A00;
+}
+
+@media (max-width: 900px) {
+    .project-header {
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+    }
+
+    .project-header .project-search {
+        grid-column: 1;
+        justify-self: stretch;
+        max-width: 100%;
+        order: 1;
+    }
+
+    .project-header .project-add-button {
+        grid-column: 1;
+        justify-self: stretch;
+        width: 100%;
+        justify-content: center;
+        order: 2;
+    }
+}
+
+@media (max-width: 600px) {
+    .project-header {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .project-search {
+        flex-direction: column;
+        max-width: 100%;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .project-search .button,
+    .project-search__button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .project-delete-modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .project-delete-modal__content {
+        width: 100%;
+        padding: 1.25rem;
+        border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .project-delete-modal__actions {
+        flex-direction: column-reverse;
+    }
+
+    .project-delete-modal__actions .button {
+        width: 100%;
+        text-align: center;
+    }
+}
+
 /* ARTS */
 /* Tab kategori */
 .artworks-tabs {
@@ -575,9 +1188,12 @@ h1, h2, h3, .brand {
     margin-bottom: 3rem;
 }
 
-/* Tombol tab kategori */
+/* Tombol tab kategori - min 44px + ellipsis agar kategori panjang tidak wrap */
 .artwork-tab {
     flex: 0 0 auto; width: auto; min-width: 170px;
+    max-width: 240px;
+    min-height: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
     padding: 0.8rem 1.5rem; font-size: 1.15rem;
     text-align: center; text-transform: capitalize; /* Label rata tengah, huruf depan besar */
     background-color: var(--ink); color: var(--paper);
@@ -585,6 +1201,7 @@ h1, h2, h3, .brand {
     transform: skewX(12deg); /* Supaya miring */
     font-family: "Space Grotesk", sans-serif; font-weight: 700; letter-spacing: 0.05em;
     cursor: pointer; text-decoration: none;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
 /* Teks tab lurus */
@@ -604,7 +1221,7 @@ h1, h2, h3, .brand {
 .artwork-tab::after {
     content: "";
     position: absolute; inset: 0;
-    background-image: url('/static/img/halftone-bg.png'); background-size: 200px auto; background-position: 50% 88%; background-repeat: no-repeat;
+    background-image: url('/static/img/halftone-bg.png'); background-size: 140px auto; background-position: 50% 85%; background-repeat: repeat-x;
     opacity: 0;
     pointer-events: none;
 }
@@ -703,10 +1320,14 @@ h1, h2, h3, .brand {
     width: 100%; height: auto;
 }
 
-/* Galeri artworks full-bleed */
+/* Galeri artworks full-bleed - gap disamakan experience (title 3rem saja) */
+.arts-marquee-wrapper:has(.empty-wrap) {
+    padding-top: 0;
+}
+
 .arts-marquee-wrapper .empty-wrap {
     width: min(620px, calc(100% - 4rem));
-    margin: 1rem auto 2rem;
+    margin: 0 auto 2rem;
 }
 
 /* COMMISSION */
@@ -815,7 +1436,7 @@ h1, h2, h3, .brand {
 .commission-play::after {
     content: "";
     position: absolute; inset: 0;
-    background-image: url('/static/img/halftone-bg.png'); background-repeat: no-repeat; background-size: 120px auto; background-position: 50% 90%;
+    background-image: url('/static/img/halftone-bg.png'); background-repeat: repeat-x; background-size: 140px auto; background-position: 50% 85%;
     opacity: 0; transition: opacity 0.2s ease;
     pointer-events: none;
 }
@@ -883,7 +1504,7 @@ h1, h2, h3, .brand {
 .commission-cta::after {
     content: "";
     position: absolute; inset: 0;
-    background-image: url('/static/img/halftone-bg.png'); background-repeat: repeat-x; background-size: 120px auto; background-position: 0 -170px;
+    background-image: url('/static/img/halftone-bg.png'); background-repeat: repeat-x; background-size: 140px auto; background-position: 50% 85%;
     opacity: 0; transition: opacity 0.2s ease;
     pointer-events: none;
 }
@@ -918,9 +1539,9 @@ h1, h2, h3, .brand {
     margin: 0 auto 3rem;
 }
 
-/* Menambah ruang */
+/* Menambah ruang - disamakan 0, jarak diatur via title + 3rem di atas agar sama artworks */
 .exp-card:first-of-type {
-    margin-top: 3rem;
+    margin-top: 0;
 }
 
 /* Banner nama dan tahun */
@@ -988,7 +1609,7 @@ h1, h2, h3, .brand {
 /* FOOTER */
 .site-footer {
     position: relative; z-index: 3;
-    background-color: var(--ink); color: #888; padding: 8rem 112px 3rem 112px;
+    background-color: var(--ink); color: #BBBBBB; padding: 8rem 112px 3rem 112px;
     clip-path: polygon(0 60px, 100% 0, 100% 100%, 0 100%); /* Supaya slanted */
     margin-top: -5rem; }
 
@@ -1031,7 +1652,7 @@ h1, h2, h3, .brand {
     margin-bottom: 0.8rem;
 }
 .footer-col a {
-    color: #aaa;
+    color: #BBBBBB;
     text-decoration: none;
     margin-bottom: 0.35rem;
 }
@@ -1043,6 +1664,79 @@ h1, h2, h3, .brand {
 }
 .footer-bottom p {
     font-size: 0.85rem;
+    color: #BBBBBB;
+}
+
+/* TOAST - feedback messages brutalism */
+.toast-stack {
+    position: fixed;
+    top: 84px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: min(560px, calc(100% - 2rem));
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    background-color: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0px var(--ink);
+    padding: 0.8rem 1rem;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--ink);
+    pointer-events: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.toast::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: 0; height: 8px;
+    background-image: url('/static/img/halftone-bg.png');
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: 50% 74%;
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.toast--success {
+    border-left: 8px solid var(--accent);
+}
+
+.toast--error {
+    border-left: 8px solid #9B0A00;
+}
+
+.toast__dot {
+    width: 10px; height: 10px;
+    background-color: var(--accent);
+    flex-shrink: 0;
+}
+
+.toast__text { flex: 1; }
+
+.toast__close {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    font-size: 1.1rem; line-height: 1;
+    cursor: pointer;
+}
+
+.toast__close:hover {
+    background: var(--ink);
+    color: var(--paper);
 }
 
 /* ANIMASI */
@@ -1054,9 +1748,11 @@ html { scroll-behavior: smooth; }
 
 /* Tombol nav: naik, bayangan, dan halftone */
 .site-header-slanted nav a { transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; }
-.site-header-slanted nav a:hover { transform: translateY(-2px); box-shadow: 3px 3px 0 rgba(0,0,0,0.45); }
+.site-header-slanted nav a:hover { transform: translateY(-2px); box-shadow: 3px 3px 0 var(--ink); }
 .site-header-slanted nav a:hover::after { opacity: 0.8; }
-.site-header-slanted nav a:active { transform: translateY(0); box-shadow: none; background-color: #7e0c2b; }
+.site-header-slanted nav a:active { transform: translateY(0); box-shadow: none; background-color: var(--ink); }
+.site-header-slanted nav a.is-active,
+.site-header-slanted nav a[aria-current="page"] { background-color: var(--accent); color: var(--paper); }
 .site-header-slanted nav a:active::after { opacity: 0; }
 
 /* Ikon: naik, bayangan, dan halftone */
@@ -1097,7 +1793,7 @@ html { scroll-behavior: smooth; }
 .project-link::after {
     content: "";
     position: absolute; inset: 0;
-    background-image: url('/static/img/halftone-bg.png'); background-repeat: no-repeat; background-size: 100% auto; background-position: 50% 85%;
+    background-image: url('/static/img/halftone-bg.png'); background-repeat: repeat-x; background-size: 140px auto; background-position: 50% 85%;
     opacity: 0; transition: opacity 0.2s ease;
     pointer-events: none;
 }
@@ -1108,13 +1804,13 @@ html { scroll-behavior: smooth; }
 
 /* Link footer: merah dan geser ke kanan */
 .footer-col a { transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; margin-left: -0.6rem; padding: 0.15rem 0.6rem; display: inline-block; }
-.footer-col a:hover { background-color: var(--accent); color: var(--paper); transform: translateX(5px); box-shadow: 3px 3px 0 rgba(0,0,0,0.45); }
+.footer-col a:hover { background-color: var(--accent); color: var(--paper); transform: translateX(5px); box-shadow: 3px 3px 0 var(--ink); }
 
 /* Ditekan: mengecil */
 .icon-square:active { transform: translateY(-1px) scale(0.96); }
 .project-link:active { transform: translateY(-1px) scale(0.96); box-shadow: 2px 2px 0px var(--ink); }
 .mini-card:active { transform: skewX(-12deg) translateY(-1px) scale(0.96); }
-.art-tab:active { transform: skewX(12deg) translateY(-1px) scale(0.96); }
+.artwork-tab:active { transform: skewX(12deg) translateY(-1px) scale(0.96); }
 .art-item:active { transform: skewX(-12deg) translateY(-1px) scale(0.96); }
 
 a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
@@ -1221,7 +1917,7 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3
     .empty-box p { font-size: 0.88rem; }
 
     /* Experience: nama di atas, tahun pindah ke bawah (tidak tabrakan) */
-    .exp-card:first-of-type { margin-top: 2.5rem; }
+    .exp-card:first-of-type { margin-top: 3rem; }
     .exp-card { display: flex; flex-direction: column; max-width: 100%; }
     .exp-name, .exp-year {
         position: static;

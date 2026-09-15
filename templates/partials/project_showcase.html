@@ -3,6 +3,25 @@
     <div class="slanted-title"><span>PROJECTS</span></div>
 </div>
 
+<div class="project-header">
+    <form method="get"
+            action="{% url 'main:show_projects' %}"
+            class="project-search">
+        <input type="search"
+                name="title"
+                value="{{ title_query }}"
+                placeholder="Cari berdasarkan nama proyek"
+                class="project-search__input"
+                aria-label="Cari berdasarkan nama proyek">
+        <button type="submit" class="project-search__button" aria-label="Cari proyek"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20L16.6 16.6"/></svg> Cari</span></button>
+    </form>
+    <a href="{% url 'main:create_project' %}"
+        class="project-add-button">
+        <span class="project-add-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+        <span>Tambah Proyek</span>
+    </a>
+</div>
+
 <!-- SHOWCASE -->
 {% if projects_list %}
 <div class="project-showcase">
@@ -25,7 +44,9 @@
                 <p id="projectHeroDesc">{{ projects_list.0.description }}</p>
 
                 <!-- PLAY LINK -->
+                {% if projects_list.0.link %}
                 <a id="projectHeroLink" class="project-link" href="{{ projects_list.0.link }}" target="_blank" rel="noopener">Play &#8599;</a>
+                {% endif %}
             </div>
         </div>
 
@@ -37,11 +58,19 @@
                 data-img="{{ proj.image }}" data-link="{{ proj.link }}">
                 <img src="{{ proj.image }}" alt="{{ proj.title }}">
                 <span class="mini-card-label">{{ proj.title }}</span>
+                <button type="button" class="mini-card-delete"
+                    popovertarget="delete-project-{{ proj.id }}"
+                    aria-label="Hapus {{ proj.title }}" title="Hapus proyek">&times;</button>
             </div>
+            {% include "partials/project_delete_modal.html" with project=proj %}
             {% endfor %}
         </div>
     </div>
 </div>
 {% else %}
+{% if title_query %}
+{% include "partials/empty_state.html" with message="No project found with that name." %}
+{% else %}
 {% include "partials/empty_state.html" with message=empty_message %}
+{% endif %}
 {% endif %}

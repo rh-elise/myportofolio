@@ -2,10 +2,10 @@
     <div class="container header-inner header-centered">
         <!-- NAVIGATION BAR -->
         <nav>
-            <a href="{% url 'main:show_main' %}">Profile</a>
-            <a href="{% url 'main:show_projects' %}">Projects</a>
-            <a href="{% url 'main:show_experience' %}">Experience</a>
-            <a href="{% url 'main:show_artworks' %}">Artworks</a>
+            <a href="{% url 'main:show_main' %}" {% if request.resolver_match.url_name == 'show_main' %}class="is-active" aria-current="page"{% endif %}>Profile</a>
+            <a href="{% url 'main:show_projects' %}" {% if request.resolver_match.url_name == 'show_projects' or request.resolver_match.url_name == 'create_project' %}class="is-active" aria-current="page"{% endif %}>Projects</a>
+            <a href="{% url 'main:show_experience' %}" {% if request.resolver_match.url_name == 'show_experience' %}class="is-active" aria-current="page"{% endif %}>Experience</a>
+            <a href="{% url 'main:show_artworks' %}" {% if request.resolver_match.url_name == 'show_artworks' %}class="is-active" aria-current="page"{% endif %}>Artworks</a>
         </nav>
     </div>
 </header>

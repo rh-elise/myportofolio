@@ -2,25 +2,32 @@
 
 {% block content %}
     <main>
-        <section class="experience-section">
+        <section class="slanted-section" id="projects">
             <div class="container">
-                <h1>Add New Projects</h1>
-                <form method="post"
-                      action="{% url 'main:create_project' %}"
-                      class="project-form">
-                    {% csrf_token %}
-                    {% for field in form %}
-                        <div class="form-group">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {% for error in field.errors %}
-                                <p class="form-error">{{ error }}</p>
-                            {% endfor %}
+                <div class="section-title-wrapper">
+                    <div class="slanted-title"><span>ADD NEW PROJECTS</span></div>
+                </div>
+
+                <div class="project-form-outer">
+                    <form method="post"
+                          action="{% url 'main:create_project' %}"
+                          class="project-form">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% for error in field.errors %}
+                                    <p class="form-error">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                        <div class="form-actions">
+                            <a href="{% url 'main:show_projects' %}" class="form-cancel">Batal</a>
+                            <button type="submit" class="form-submit"><span><span class="project-add-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span> Tambah Project</span></button>
                         </div>
-                    {% endfor %}
-                    <button type="submit" class="button">Tambah Project</button>
-                    <a href="{% url 'main:show_projects' %}" class="button button-secondary">Batal</a>
-                </form>
+                    </form>
+                </div>
             </div>
         </section>
     </main>

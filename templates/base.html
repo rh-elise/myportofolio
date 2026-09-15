@@ -7,10 +7,22 @@
 <body>
     {% include "partials/site_header.html" %}
 
+    {% if messages %}
+    <div class="toast-stack" aria-live="polite" aria-atomic="true">
+        {% for message in messages %}
+        <div class="toast toast--{{ message.tags|default:'info' }}" role="status">
+            <span class="toast__dot" aria-hidden="true"></span>
+            <span class="toast__text">{{ message }}</span>
+            <button type="button" class="toast__close" onclick="this.parentElement.remove()" aria-label="Dismiss notification">×</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     {% block content %}{% endblock content %}
     
     {% include "partials/site_footer.html" %}
-    
+
     {% block extra_scripts %}{% endblock extra_scripts %}
 </body>
 

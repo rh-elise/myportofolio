@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 
-from main.forms import ProjectForm
+from main.forms import ProjectForm, ExperienceForm
 from main.models import Artworks, Experience, Projects
 
 # ---------------------------------------------------------------------------
@@ -64,18 +64,64 @@ def show_main(request: HttpRequest) -> HttpResponse:
     context = {
         **PROFILE,
         "projects_list": Projects.objects.all(),
+        "experience_list": Experience.objects.all(),
     }
     context.update(_artwork_context(request.GET.get("category", "")))
     return render(request, "index.html", context)
 
 
 def show_experience(request: HttpRequest) -> HttpResponse:
+    json_response = get_experience_json(request)
+    exps = [e.object for e in serializers.deserialize("json", json_response.content.decode("utf-8"))]
+    title_query = request.GET.get("title", "").strip()
     context = {
         "name": PROFILE["name"],
         "tagline": PROFILE["tagline"],
-        "experience_list": Experience.objects.all(),
+        "experience_list": exps,
+        "title_query": title_query,
     }
     return render(request, "experience.html", context)
+
+
+def get_experience_json(request: HttpRequest) -> HttpResponse:
+    """API JSON untuk experience - dipakai filter & testing."""
+    title_query = request.GET.get("title", "").strip()
+    qs = Experience.objects.all()
+    if title_query:
+        qs = qs.filter(title__icontains=title_query)
+    data = serializers.serialize("json", qs)
+    return HttpResponse(data, content_type="application/json")
+
+
+def create_experience(request: HttpRequest) -> HttpResponse:
+    form = ExperienceForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "New experience added!")
+        return redirect("main:show_experience")
+
+    context = {"name": PROFILE["name"], "form": form}
+    return render(request, "experience_form.html", context)
+
+
+def update_experience(request: HttpRequest, experience_id: int) -> HttpResponse:
+    experience = get_object_or_404(Experience, pk=experience_id)
+    form = ExperienceForm(request.POST or None, instance=experience)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Experience updated!")
+        return redirect("main:show_experience")
+
+    context = {"name": PROFILE["name"], "form": form}
+    return render(request, "experience_form.html", context)
+
+
+def delete_experience(request: HttpRequest, experience_id: int) -> HttpResponse:
+    experience = get_object_or_404(Experience, pk=experience_id)
+    if request.method == "POST":
+        experience.delete()
+        messages.success(request, "Experience deleted successfully!")
+    return redirect("main:show_experience")
 
 
 def show_artworks(request: HttpRequest) -> HttpResponse:
@@ -88,12 +134,9 @@ def show_artworks(request: HttpRequest) -> HttpResponse:
 
 
 def show_projects(request: HttpRequest) -> HttpResponse:
-    """Daftar projects dengan filter judul via query param ?title=."""
+    json_response = get_projects_json(request)
+    projects = [p.object for p in serializers.deserialize("json", json_response.content.decode("utf-8"))]
     title_query = request.GET.get("title", "").strip()
-    projects = Projects.objects.all()
-    if title_query:
-        projects = projects.filter(title__icontains=title_query)
-
     context = {
         "name": PROFILE["name"],
         "tagline": PROFILE["tagline"],
@@ -109,7 +152,6 @@ def get_projects_json(request: HttpRequest) -> HttpResponse:
     projects = Projects.objects.all()
     if title_query:
         projects = projects.filter(title__icontains=title_query)
-
     data = serializers.serialize("json", projects)
     return HttpResponse(data, content_type="application/json")
 
@@ -125,9 +167,21 @@ def create_project(request: HttpRequest) -> HttpResponse:
     return render(request, "projects_form.html", context)
 
 
+def update_project(request: HttpRequest, project_id: int) -> HttpResponse:
+    project = get_object_or_404(Projects, pk=project_id)
+    form = ProjectForm(request.POST or None, instance=project)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Project updated!")
+        return redirect("main:show_projects")
+
+    context = {"name": PROFILE["name"], "form": form}
+    return render(request, "projects_form.html", context)
+
+
 def delete_project(request: HttpRequest, project_id: int) -> HttpResponse:
     project = get_object_or_404(Projects, pk=project_id)
     if request.method == "POST":
         project.delete()
-        messages.success(request, "Project deleted!")
+        messages.success(request, "Project deleted successfully!")
     return redirect("main:show_projects")

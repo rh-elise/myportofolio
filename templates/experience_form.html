@@ -2,10 +2,10 @@
 
 {% block content %}
     <main>
-        <section class="slanted-section" id="projects">
+        <section class="slanted-section" id="experience">
             <div class="container">
                 <div class="section-title-wrapper">
-                    <div class="slanted-title"><span>{% if form.instance.pk %}EDIT PROJECT{% else %}ADD NEW PROJECTS{% endif %}</span></div>
+                    <div class="slanted-title"><span>{% if form.instance.pk %}EDIT EXPERIENCE{% else %}ADD NEW EXPERIENCE{% endif %}</span></div>
                 </div>
 
                 <div class="project-form-outer">
@@ -21,8 +21,8 @@
                             </div>
                         {% endfor %}
                         <div class="form-actions">
-                            <a href="{% url 'main:show_projects' %}" class="form-cancel">Cancel</a>
-                            <button type="submit" class="form-submit"><span>{% if form.instance.pk %}Update{% else %}Add{% endif %} Project</span></button>
+                            <a href="{% url 'main:show_experience' %}" class="form-cancel">Cancel</a>
+                            <button type="submit" class="form-submit"><span>{% if form.instance.pk %}Update{% else %}Add{% endif %} Experience</span></button>
                         </div>
                     </form>
                 </div>

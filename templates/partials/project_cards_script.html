@@ -18,11 +18,11 @@
 
     cards.forEach((card) => {
         card.addEventListener('click', (event) => {
-            if (event.target.closest('.mini-card-delete')) return;
+            if (event.target.closest('.mini-card-menu')) return;
             selectCard(card);
         });
         card.addEventListener('keydown', (event) => {
-            if (event.target.closest('.mini-card-delete')) return;
+            if (event.target.closest('.mini-card-menu')) return;
             if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
                 selectCard(card);

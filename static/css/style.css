@@ -1,5 +1,4 @@
-/* BASE */
-/* Menyiapkan ukuran kanvas utama */
+/* Base */
 html, body {
     margin: 0;
     padding: 0;
@@ -7,14 +6,14 @@ html, body {
     height: 100%;
 }
 
-/* Mereset jarak bawaan & memastikan kotak tidak melar (border-box) */
+/* Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* COLOR PALETTE: navy, maroon, paper */
+/* Palette */
 :root {
     --ink: #151515;
     --paper: #FFFFFF;
@@ -24,7 +23,7 @@ html, body {
     --radius: 0; /* Tema kotak tegas, tanpa lengkung */
 }
 
-/* BODY STYLE */
+/* Body */
 body {
     /* Tipografi */
     font-family: "Space Grotesk", sans-serif;
@@ -32,7 +31,7 @@ body {
     background-color: var(--paper);
     line-height: 1.6;
 
-    /* Layout */
+    
     overflow-x: hidden; /* Mencegah layar bisa digeser ke samping */
     position: relative;
     min-height: 100vh; /* Minimal tinggi selalu selayar penuh */
@@ -42,30 +41,26 @@ body {
     padding-top: 84px;
 }
 
-
-/* LAYOUT DASAR */
 main {
     position: relative;
     z-index: 2;
     overflow: clip;
 }
 
-/* TYPOGRAPHY */
+/* Typography */
 h1, h2, h3, .brand {
     font-family: "Freeman", sans-serif;
     font-weight: 400;
 }
 
-/* Pembatas ruang konten khusus Desktop */
+/* Container - desktop */
 .container {
     width: 100%;
     margin: 0 auto;
     padding: 0 112px;
 }
 
-
-/* HEADER */
-/* Bentuk dadn posisi dasar */
+/* Header */
 .site-header-slanted {
     background-color: var(--ink);
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -73,7 +68,6 @@ h1, h2, h3, .brand {
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 60px), 0 100%); /* Supaya slanted */
 }
 
-/* Layout isi header */
 .header-inner {
     display: flex; justify-content: center; align-items: center;
     padding-top: 0.9rem;
@@ -87,7 +81,6 @@ h1, h2, h3, .brand {
     justify-content: center;
 }
 
-/* Gaya Brand */
 .brand {
     font-size: 1.8rem; font-weight: 700; color: var(--paper);
     text-decoration: none; /* Menghilangkan garis bawah link */
@@ -98,24 +91,20 @@ h1, h2, h3, .brand {
 
 .header-spacer { display: none; }
 
-/* Jarak antar tombol */
 .site-header-slanted nav {
     display: flex; gap: 2rem;
 }
 
-/* Gaya tulisan tombol */
 .site-header-slanted nav a {
     color: var(--paper); text-decoration: none;
     font-size: 1.05rem; font-weight: 600; text-transform: uppercase;
     padding: 0.35rem 0.9rem; display: inline-block;
 }
 
-/* Efek saat tombol di hover */
 .site-header-slanted nav a:hover {
     background-color: var(--accent); color: var(--paper);
 }
 
-/* Wadah lapisan dots hover */
 .site-header-slanted nav a {
     position: relative; overflow: hidden;
 }
@@ -128,15 +117,12 @@ h1, h2, h3, .brand {
     pointer-events: none;
 }
 
-
-/* HERO SECTION (Banner Profil) */
-/* Pembungkus hero section */
+/* Hero */
 .hero-wrapper {
     position: relative;
     z-index: 5;
 }
 
-/* Garis aksen miring di bagian bawah foto banner */
 .hero-wrapper::after {
     content: "";
     position: absolute;
@@ -149,7 +135,6 @@ h1, h2, h3, .brand {
     pointer-events: none; /* Supaya garis tidak menghalangi klik */
 }
 
-/* Foto background dengan potongan miring */
 .hero-slanted-photo {
     background-image: url('/static/img/rheina.png');
     background-color: #d7dbe0; background-size: cover; background-position: center 25%; background-repeat: no-repeat;
@@ -157,7 +142,6 @@ h1, h2, h3, .brand {
     clip-path: polygon(0 60px, 100% 0, 100% calc(100% - 4vw), 0 100%); /* Bawah pakai vw supaya sudutnya tetap di semua lebar */
 }
 
-/* Overlay duotone: navy kiri memudar ke paper kanan */
 .hero-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -165,20 +149,16 @@ h1, h2, h3, .brand {
     background: linear-gradient(100deg, rgba(39,55,77,0.35) 0%, rgba(39,55,77,0.12) 35%, rgba(240,240,240,0.80) 65%);
 }
 
-/* Supaya isinya ke sebelah kanan */
 .hero-content-right {
     position: relative;
     z-index: 2;
     display: flex; justify-content: flex-end;
 }
 
-/* Supaya ukurannya pas */
 .hero-boxes {
     max-width: 550px; display: flex; flex-direction: column; width: 100%;
 }
 
-/* HERO CONTENT KOTAK */
-/* Bentuk dasar */
 .box-name {
     background-color: var(--ink); color: var(--paper);
     padding: 1.2rem 2rem; border: 3px solid var(--ink);
@@ -193,7 +173,6 @@ h1, h2, h3, .brand {
     text-transform: uppercase;
 }
 
-/* Kotak deskripsi */
 .box-desc {
     position: relative;
     overflow: hidden; /* Menahan pita dots di dalam box */
@@ -203,14 +182,12 @@ h1, h2, h3, .brand {
     box-shadow: 6px 6px 0px var(--ink);
 }
 
-/* Teks kecil di atas judul */
 .hero-kicker {
     font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase;
     color: var(--accent); font-weight: 800;
     margin-bottom: 1.5rem;
 }
 
-/* Membuat titik kotak di sebelah teks kicker */
 .hero-kicker::before {
     content: "";
     display: inline-block;
@@ -219,7 +196,6 @@ h1, h2, h3, .brand {
     margin-right: 10px;
 }
 
-/* Pita dots di kaki box profile */
 .box-desc::after {
     content: "";
     position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
@@ -228,17 +204,15 @@ h1, h2, h3, .brand {
     pointer-events: none;
 }
 
-/* Teks bio */
 .box-desc .bio {
     color: var(--text-muted);
     margin-bottom: 1.5rem;
     font-size: 1.05rem; line-height: 1.7;
 }
 
-/* Daftar info singkat */
 .meta-list {
     display: flex; gap: 3rem;
-    border-left: 3px solid var(--accent); /* Garis vertikal di kiri */
+    border-left: 3px solid var(--accent);
     padding-left: 1.5rem;
 }
 
@@ -253,7 +227,7 @@ h1, h2, h3, .brand {
     margin: 0;
 }
 
-/* CONTACT */
+/* Contact */
 .box-icons {
     display: flex; gap: 0.8rem;
 }
@@ -291,8 +265,7 @@ h1, h2, h3, .brand {
     box-shadow: 4px 4px 0px var(--ink);
 }
 
-
-/* JUDUL SECTION */
+/* Section title */
 .slanted-title {
     display: inline-block; background-color: var(--accent); color: var(--paper);
     background-image: url('/static/img/halftone-bg.png');
@@ -304,19 +277,16 @@ h1, h2, h3, .brand {
     border: 3px solid var(--ink);
 }
 
-/* Teks di dalam banner lurus */
 .slanted-title span {
     display: inline-block;
     transform: skewX(15deg);
 }
 
-/* Layout judul section*/
 .section-title-wrapper {
     margin-bottom: 2.8rem;
     text-align: center;
 }
 
-/* Jarak khusus - samakan projects/artworks/experience biar agak jauh - FIX exp = artworks */
 #projects .section-title-wrapper,
 #artworks .section-title-wrapper,
 #experience .section-title-wrapper,
@@ -328,8 +298,6 @@ h1, h2, h3, .brand {
     margin-bottom: 3rem;
 }
 
-/* Experience: jarak title -> isi harus sama kayak artworks (tabs 3rem / marquee).
-   Jangan pakai margin-top tambahan di card pertama, biar kosong & isi sama */
 #experience .exp-card:first-of-type {
     margin-top: 0;
 }
@@ -343,7 +311,6 @@ h1, h2, h3, .brand {
     margin-top: 0;
 }
 
-/* Jarak antar section */
 .slanted-section {
     background-color: transparent;
     padding: 2rem 0;
@@ -355,7 +322,7 @@ h1, h2, h3, .brand {
 #artworks { position: relative; scroll-margin-top: 90px; margin-top: 4rem; }
 #experience { margin-top: 4rem; }
 
-/* Halftone di section paling bawah tiap halaman - hanya jika content tinggi, jangan ganggu empty */
+/* Halftone backdrop */
 .slanted-section:last-of-type::after,
 .exp-section:last-of-type::after {
     content: "";
@@ -377,13 +344,12 @@ h1, h2, h3, .brand {
     padding-bottom: 5rem;
 }
 
-/* PROJECTS */
+/* Projects */
 .project-showcase {
     display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px;
     position: relative; min-height: 420px; align-items: stretch; overflow: visible;
 }
 
-/* Layout projects terpilih */
 .project-left-col {
     grid-column: 1 / 5;
     position: relative; z-index: 1;
@@ -391,7 +357,6 @@ h1, h2, h3, .brand {
     align-self: stretch;
 }
 
-/* Foto projects terpilih */
 .project-selected-image {
     position: absolute; top: 0; bottom: -2rem; left: 0; right: 0;
     background: var(--ink);
@@ -416,7 +381,6 @@ h1, h2, h3, .brand {
     z-index: 2; pointer-events: none;
 }
 
-/* Judul, deskripsi, dan kartu */
 .project-right-col {
     grid-column: 5 / 13;
     display: flex; flex-direction: column; gap: 1.5rem;
@@ -428,7 +392,6 @@ h1, h2, h3, .brand {
     display: flex; flex-direction: column;
 }
 
-/* Bubble nama projects terpilih */
 .title-flag {
     position: relative; z-index: 10;
     display: inline-flex; align-items: center; justify-content: center; text-align: center;
@@ -439,7 +402,6 @@ h1, h2, h3, .brand {
     max-width: calc(100% - 0.4rem);
 }
 
-/* Gambar bubble background nama projects terpilih*/
 .title-flag-bg {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -448,7 +410,6 @@ h1, h2, h3, .brand {
     z-index: -1;
 }
 
-/* Teks bubble - clamp 2 baris agar judul panjang tidak jebol */
 .title-flag h3 {
     margin: 0 auto;
     font-family: "Freeman", sans-serif; font-weight: 400;
@@ -461,7 +422,6 @@ h1, h2, h3, .brand {
     -webkit-box-orient: vertical;
 }
 
-/* Kotak deskripsi projects terpilih */
 .desc-box {
     position: relative; z-index: 1;
     background-color: var(--paper);
@@ -485,7 +445,6 @@ h1, h2, h3, .brand {
     overflow: hidden;
 }
 
-/* Halftone di bawah box deskripsi projects terpilih */
 .desc-box::after {
     content: "";
     position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
@@ -494,7 +453,7 @@ h1, h2, h3, .brand {
     pointer-events: none;
 }
 
-/* MINI CARDS PROJECT */
+/* Mini cards */
 .project-mini-cards {
     display: flex;
     overflow-x: auto; overflow-y: hidden; /* Bisa digeser ke samping */
@@ -504,7 +463,6 @@ h1, h2, h3, .brand {
     scrollbar-width: thin;
 }
 
-/* Kartu miring */
 .mini-card {
     position: relative; z-index: 10;
     flex: 0 0 150px; height: 178px;
@@ -515,7 +473,6 @@ h1, h2, h3, .brand {
     transform: skewX(-12deg);
 }
 
-/* Foto projects lurus */
 .mini-card img {
     position: absolute; inset: 0;
     width: 100%; height: 100%; object-fit: cover;
@@ -523,7 +480,6 @@ h1, h2, h3, .brand {
     pointer-events: none;
 }
 
-/* Label judul project */
 .mini-card-label {
     position: absolute;
     left: -16px; right: -16px; bottom: 0; /* Dilebarkan mengikuti miring card */
@@ -538,7 +494,6 @@ h1, h2, h3, .brand {
     pointer-events: none;
 }
 
-/* Kartu yang sedang dipilih */
 .mini-card.is-active {
     border-color: var(--ink);
     box-shadow: 6px 6px 0px var(--ink);
@@ -550,7 +505,6 @@ h1, h2, h3, .brand {
     background-color: var(--accent);
 }
 
-/* Tombol hapus kecil di sudut kartu - idle paper agar Play lebih menonjol */
 .mini-card-delete {
     position: absolute; top: 6px; right: 6px; z-index: 2;
     width: 32px; height: 32px; line-height: 1;
@@ -566,7 +520,7 @@ h1, h2, h3, .brand {
     background-color: var(--accent); color: var(--paper);
 }
 
-/* PROJECT FORM - Outer big box + inner boxes */
+/* Project form */
 .project-form-outer {
     position: relative;
     background-color: var(--paper);
@@ -813,7 +767,7 @@ h1, h2, h3, .brand {
     background: var(--ink);
 }
 
-/* PROJECT MODAL - search tengah panjang, tambah pojok kanan */
+/* Project header & search */
 .project-header {
     width: 100%;
     display: grid;
@@ -1180,15 +1134,13 @@ h1, h2, h3, .brand {
     }
 }
 
-/* ARTS */
-/* Tab kategori */
+/* Artworks */
 .artworks-tabs {
     display: flex; justify-content: center;
     gap: 1.5rem; flex-wrap: wrap;
     margin-bottom: 3rem;
 }
 
-/* Tombol tab kategori - min 44px + ellipsis agar kategori panjang tidak wrap */
 .artwork-tab {
     flex: 0 0 auto; width: auto; min-width: 170px;
     max-width: 240px;
@@ -1204,7 +1156,6 @@ h1, h2, h3, .brand {
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-/* Teks tab lurus */
 .artwork-tab span {
     display: inline-block;
     transform: skewX(-12deg);
@@ -1226,13 +1177,11 @@ h1, h2, h3, .brand {
     pointer-events: none;
 }
 
-/* Tab kategori yang dipilih*/
 .artwork-tab.is-active {
     background-color: var(--accent); color: var(--paper);
     box-shadow: 6px 6px 0px var(--ink);
 }
 
-/* GALERI */
 .arts-marquee-wrapper {
     width: 100vw; margin-left: calc(-50vw + 50%); overflow: hidden;
     display: flex; flex-direction: column; gap: 2.5rem;
@@ -1243,7 +1192,6 @@ h1, h2, h3, .brand {
     display: flex; width: max-content;
 }
 
-/* Kartu galeri */
 .art-item {
     margin-right: 1.5rem;
     position: relative; flex: 0 0 240px; height: 155px;
@@ -1252,20 +1200,17 @@ h1, h2, h3, .brand {
     transform: skewX(-12deg); /* Supaya miring */
 }
 
-/* Foto kartu lurus */
 .art-item img {
     width: 100%; height: 100%; object-fit: cover; display: block;
     transform: skewX(12deg) scale(1.25);
 }
 
-/* Video di kartu galeri diperlakukan seperti foto */
 .art-item video {
     width: 100%; height: 100%; object-fit: cover; display: block;
     transform: skewX(12deg) scale(1.25);
     pointer-events: none;
 }
 
-/* Judul di bawah foto */
 .art-item figcaption {
     position: absolute;
     left: -16px; right: -16px; bottom: 0; /* Dilebarkan mengikuti miring card */
@@ -1281,15 +1226,13 @@ h1, h2, h3, .brand {
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-/* EMPTY STATE */
-/* Layout tengah */
+/* Empty state */
 .empty-wrap {
     position: relative;
     width: min(620px, calc(100% - 3rem));
     margin: 1rem auto 2rem;
 }
 
-/* Box text */
 .empty-box {
     position: relative; z-index: 1;
     background-color: var(--paper);
@@ -1307,7 +1250,6 @@ h1, h2, h3, .brand {
     color: var(--ink);
 }
 
-/* Bubble warning */
 .empty-flag {
     position: relative; z-index: 2;
     width: 148px;
@@ -1320,7 +1262,6 @@ h1, h2, h3, .brand {
     width: 100%; height: auto;
 }
 
-/* Galeri artworks full-bleed - gap disamakan experience (title 3rem saja) */
 .arts-marquee-wrapper:has(.empty-wrap) {
     padding-top: 0;
 }
@@ -1330,20 +1271,17 @@ h1, h2, h3, .brand {
     margin: 0 auto 2rem;
 }
 
-/* COMMISSION */
-/* Layout dua kolom: gambar kiri, bubble kanan */
+/* Commission */
 .commission-grid {
     display: flex; gap: 2rem; align-items: flex-start;
     margin: 2rem 0 4rem 0;
 }
 
-/* Gambar bebas tanpa box, tampil penuh tidak kepotong */
 .commission-stage {
     position: relative;
     flex: 0 0 240px; width: 240px;
 }
 
-/* Sprite menampung dua frame */
 .commission-sprite {
     position: relative;
 }
@@ -1353,13 +1291,11 @@ h1, h2, h3, .brand {
     width: 100%; height: auto;
 }
 
-/* Frame hover */
 .commission-sprite .commission-frame-blink {
     position: absolute; inset: 0;
     width: 100%; height: 100%; object-fit: contain;
 }
 
-/* Teks pengganti kalau gambar belum dipasang */
 .commission-placeholder {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
@@ -1367,12 +1303,10 @@ h1, h2, h3, .brand {
     color: #333;
 }
 
-/* Sembunyikan placeholder */
 .commission-sprite img + img + .commission-placeholder {
     display: none;
 }
 
-/* Animasi gambar */
 .commission-sprite.is-playing {
     animation: commission-sway 3.4s steps(2, jump-none) infinite;
 }
@@ -1385,7 +1319,6 @@ h1, h2, h3, .brand {
     100% { transform: translate(0, -12px) rotate(-3deg); }
 }
 
-/* Kedip otomatis tiap beberapa detik */
 .commission-frame-blink {
     opacity: 0;
 }
@@ -1400,7 +1333,6 @@ h1, h2, h3, .brand {
     96%, 100% { opacity: 0; }
 }
 
-/* Hover: naik dan gambar berubah */
 .commission-stage:hover .commission-sprite.is-playing {
     animation: commission-hover 2.6s steps(2, jump-none) infinite;
 }
@@ -1421,7 +1353,6 @@ h1, h2, h3, .brand {
     animation: none;
 }
 
-/* Tombol play/pause */
 .commission-play {
     position: absolute; right: 0.6rem; bottom: 0.6rem;
     width: 44px; height: 44px;
@@ -1456,13 +1387,11 @@ h1, h2, h3, .brand {
     box-shadow: 2px 2px 0px var(--ink);
 }
 
-/* Kolom kanan */
 .commission-right {
     flex: 1;
     min-width: 0;
 }
 
-/* Bubble */
 .commission-bubble {
     background-color: #fff;
     border: 3px solid var(--ink);
@@ -1481,7 +1410,6 @@ h1, h2, h3, .brand {
     color: var(--ink);
 }
 
-/* Tombol sheet */
 .commission-cta {
     display: flex; align-items: center; gap: 0.6rem;
     position: relative; overflow: hidden;
@@ -1524,7 +1452,7 @@ h1, h2, h3, .brand {
     box-shadow: 2px 2px 0px var(--ink);
 }
 
-/* EXPERIENCE */
+/* Experience */
 .exp-section {
     background-color: transparent;
     padding: 2rem 0;
@@ -1532,19 +1460,16 @@ h1, h2, h3, .brand {
     position: relative; 
 }
 
-/* Layout */
 .exp-card {
     position: relative;
     max-width: 800px;
     margin: 0 auto 3rem;
 }
 
-/* Menambah ruang - disamakan 0, jarak diatur via title + 3rem di atas agar sama artworks */
 .exp-card:first-of-type {
     margin-top: 0;
 }
 
-/* Banner nama dan tahun */
 .exp-name, .exp-year {
     position: absolute; top: -1.2rem; z-index: 2;
     background-color: var(--accent); color: var(--paper);
@@ -1571,13 +1496,11 @@ h1, h2, h3, .brand {
     flex-shrink: 0;
 }
 
-/* Teks banner lurus */
 .exp-name span, .exp-year span {
     display: inline-block;
     transform: skewX(15deg);
 }
 
-/* Box utama */
 .exp-body {
     display: flex; gap: 1.5rem; align-items: center;
     background-color: var(--paper);
@@ -1587,7 +1510,6 @@ h1, h2, h3, .brand {
     transform: skewX(-12deg); /* Supaya miring */
 }
 
-/* Foto logo */
 .exp-photo {
     flex: 0 0 160px; height: 140px;
     overflow: hidden;
@@ -1598,7 +1520,6 @@ h1, h2, h3, .brand {
     transform: skewX(12deg) scale(1.3);
 }
 
-/* Teks lurus */
 .exp-desc {
     margin: 0;
     font-size: 0.95rem;
@@ -1606,14 +1527,13 @@ h1, h2, h3, .brand {
     transform: skewX(12deg);
 }
 
-/* FOOTER */
+/* Footer */
 .site-footer {
     position: relative; z-index: 3;
     background-color: var(--ink); color: #BBBBBB; padding: 8rem 112px 3rem 112px;
     clip-path: polygon(0 60px, 100% 0, 100% 100%, 0 100%); /* Supaya slanted */
     margin-top: -5rem; }
 
-/* Grid untuk isi footer */
 .footer-grid {
     display: flex; justify-content: space-between; gap: 3rem;
     border-bottom: 1px solid rgba(250, 246, 240, 0.15);
@@ -1631,7 +1551,6 @@ h1, h2, h3, .brand {
     margin-bottom: 0.9rem;
 }
 
-/* Kotak kecil di sebelah teks footer */
 .footer-logo::before {
     content: "";
     display: inline-block; width: 11px; height: 11px;
@@ -1643,7 +1562,6 @@ h1, h2, h3, .brand {
     font-size: 0.95rem;
 }
 
-/* Kolom link footer */
 .footer-col {
     display: flex; flex-direction: column;
 }
@@ -1667,7 +1585,7 @@ h1, h2, h3, .brand {
     color: #BBBBBB;
 }
 
-/* TOAST - feedback messages brutalism */
+/* Toast */
 .toast-stack {
     position: fixed;
     top: 84px;
@@ -1739,14 +1657,12 @@ h1, h2, h3, .brand {
     color: var(--paper);
 }
 
-/* ANIMASI */
+/* Animations */
 html { scroll-behavior: smooth; }
 
-/* Brand ikut naik saat hover */
 .brand { transition: color 0.2s ease, transform 0.2s ease; }
 .brand:hover { color: var(--accent); transform: translateY(-2px); }
 
-/* Tombol nav: naik, bayangan, dan halftone */
 .site-header-slanted nav a { transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; }
 .site-header-slanted nav a:hover { transform: translateY(-2px); box-shadow: 3px 3px 0 var(--ink); }
 .site-header-slanted nav a:hover::after { opacity: 0.8; }
@@ -1755,27 +1671,22 @@ html { scroll-behavior: smooth; }
 .site-header-slanted nav a[aria-current="page"] { background-color: var(--accent); color: var(--paper); }
 .site-header-slanted nav a:active::after { opacity: 0; }
 
-/* Ikon: naik, bayangan, dan halftone */
 .icon-square { transition: all 0.2s ease; }
 .icon-square:hover { transform: translateY(-4px); }
 .icon-square:hover::after { opacity: 0.8; }
 
-/* Tab: naik, bayangan, dan halftonel */
 .artwork-tab { transition: all 0.2s ease; }
 .artwork-tab:hover { background-color: var(--accent); color: var(--paper); transform: skewX(12deg) translateY(-5px); box-shadow: 6px 6px 0px var(--ink); }
 .artwork-tab:hover::after { opacity: 0.7; }
 
-/* Kartu project: naik dan foto membesar */
 .mini-card { transition: all 0.2s ease; }
 .mini-card img { transition: transform 0.2s ease; }
 .mini-card:hover { transform: skewX(-12deg) translateY(-5px); box-shadow: 6px 6px 0px var(--ink); }
 .mini-card:hover img { transform: skewX(12deg) scale(1.38); }
 
-/* Kartu galeri: naik */
 .art-item { transition: all 0.2s ease; }
 .art-item:hover { transform: skewX(-12deg) translateY(-5px); box-shadow: 6px 6px 0px var(--ink); }
 
-/* Tombol project: naik dan halftone */
 .project-link {
     display: block; width: fit-content;
     margin-left: auto; margin-top: 0.9rem;
@@ -1802,11 +1713,9 @@ html { scroll-behavior: smooth; }
 .project-link:hover::after { opacity: 0.7; }
 .project-link:active { transform: translateY(-1px); box-shadow: 2px 2px 0px var(--ink); }
 
-/* Link footer: merah dan geser ke kanan */
 .footer-col a { transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; margin-left: -0.6rem; padding: 0.15rem 0.6rem; display: inline-block; }
 .footer-col a:hover { background-color: var(--accent); color: var(--paper); transform: translateX(5px); box-shadow: 3px 3px 0 var(--ink); }
 
-/* Ditekan: mengecil */
 .icon-square:active { transform: translateY(-1px) scale(0.96); }
 .project-link:active { transform: translateY(-1px) scale(0.96); box-shadow: 2px 2px 0px var(--ink); }
 .mini-card:active { transform: skewX(-12deg) translateY(-1px) scale(0.96); }
@@ -1816,13 +1725,12 @@ html { scroll-behavior: smooth; }
 a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 .project-link:focus-visible, .artwork-tab.is-active:focus-visible { outline-color: var(--ink); }
 
-
-/* MARQUEE */
+/* Marquee */
 .arts-marquee-track { animation: scroll 32s linear infinite; }
 .reverse-track { animation-direction: reverse; animation-duration: 36s; }
 @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-/* RESPONSIVE tablet (<=900px)*/
+/* Responsive: tablet */
 @media (max-width: 900px) {
     .container { padding: 0 1.5rem; }
 
@@ -1870,7 +1778,7 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3
     .footer-grid { flex-direction: column; gap: 2rem; }
 }
 
-/* RESPONSIVE HP (<=600px) */
+/* Responsive: mobile */
 @media (max-width: 600px) {
     body { padding-top: 84px; } /* Navbar dua baris */
     .container { padding: 0 1rem; }

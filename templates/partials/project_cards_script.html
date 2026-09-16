@@ -1,6 +1,4 @@
-<!-- SCRIPT PROJECTS -->
 <script>
-    // PROJECT ELEMENT
     const mainImg = document.getElementById('projectSelectedImg');
     const mainTitle = document.getElementById('projectHeroTitle');
     const mainDesc = document.getElementById('projectHeroDesc');
@@ -8,29 +6,22 @@
     const cards = document.querySelectorAll('.mini-card');
 
     function selectCard(card) {
-        // Mengganti card yang active
-        cards.forEach(function (c) {
-            c.classList.remove('is-active');
-        });
+        cards.forEach((c) => c.classList.remove('is-active'));
         card.classList.add('is-active');
-        
-        // Mengambil data card
+
         mainImg.src = card.getAttribute('data-img');
+        mainImg.alt = card.getAttribute('data-title');
         mainTitle.textContent = card.getAttribute('data-title').toUpperCase();
         mainDesc.textContent = card.getAttribute('data-desc');
-        mainLink.href = card.getAttribute('data-link');
+        if (mainLink) mainLink.href = card.getAttribute('data-link');
     }
-    
-    // Fungsi foreach untuk card
-    cards.forEach(function (card) {
-        // Event mouse
-        card.addEventListener('click', function (event) {
+
+    cards.forEach((card) => {
+        card.addEventListener('click', (event) => {
             if (event.target.closest('.mini-card-delete')) return;
             selectCard(card);
         });
-
-        // Event keyboard
-        card.addEventListener('keydown', function (event) {
+        card.addEventListener('keydown', (event) => {
             if (event.target.closest('.mini-card-delete')) return;
             if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();

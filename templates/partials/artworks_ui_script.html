@@ -1,20 +1,15 @@
-<!-- SCRIPT ARTS -->
 <script>
-    // Ingat posisi scroll
     (function () {
-        
-        var KEY = 'artsScroll';
-        var tabs = document.querySelectorAll('.artwork-tab');
+        const KEY = 'artsScroll';
+        const tabs = document.querySelectorAll('.artwork-tab');
 
-        // Event mouse
-        tabs.forEach(function (tab) {
-            tab.addEventListener('click', function () {
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
                 try { sessionStorage.setItem(KEY, String(window.scrollY)); } catch (e) {}
             });
         });
 
-        // Menyimpan posisi ke session storage
-        var saved = null;
+        let saved = null;
         try { saved = sessionStorage.getItem(KEY); } catch (e) {}
         if (saved !== null) {
             document.documentElement.style.scrollBehavior = 'auto';
@@ -24,11 +19,10 @@
         }
     })();
 
-    // Gandakan isi marquee sampai selebar 2x layar supaya looping
     (function () {
-        document.querySelectorAll('.arts-marquee-track').forEach(function (track) {
+        document.querySelectorAll('.arts-marquee-track').forEach((track) => {
             if (!track.children.length) return;
-            var guard = 0;
+            let guard = 0;
             while (track.scrollWidth < window.innerWidth * 2 && guard < 6) {
                 track.innerHTML += track.innerHTML;
                 guard++;

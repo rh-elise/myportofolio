@@ -1,7 +1,6 @@
 <header class="site-header-slanted">
     <div class="container header-inner header-centered">
-        <!-- NAVIGATION BAR -->
-        <nav>
+        <nav aria-label="Primary">
             <a href="{% url 'main:show_main' %}" {% if request.resolver_match.url_name == 'show_main' %}class="is-active" aria-current="page"{% endif %}>Profile</a>
             <a href="{% url 'main:show_projects' %}" {% if request.resolver_match.url_name == 'show_projects' or request.resolver_match.url_name == 'create_project' %}class="is-active" aria-current="page"{% endif %}>Projects</a>
             <a href="{% url 'main:show_experience' %}" {% if request.resolver_match.url_name == 'show_experience' %}class="is-active" aria-current="page"{% endif %}>Experience</a>

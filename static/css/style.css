@@ -294,7 +294,9 @@ h1, h2, h3, .brand {
     margin-bottom: 3rem;
 }
 
-#projects .project-header {
+#projects .project-header,
+#experience .project-header,
+.exp-section .project-header {
     margin-bottom: 3rem;
 }
 
@@ -515,11 +517,67 @@ h1, h2, h3, .brand {
     border: 3px solid var(--ink);
     font-size: 1rem; font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .mini-card-delete:hover {
     background-color: var(--accent); color: var(--paper);
+    box-shadow: 4px 4px 0px var(--ink);
+}
+
+.mini-card-menu {
+    position: absolute; top: 6px; right: 6px; z-index: 2;
+}
+
+.mini-card-menu > summary {
+    list-style: none;
+}
+
+.mini-card-menu > summary::-webkit-details-marker {
+    display: none;
+}
+
+.mini-card-menu .mini-card-delete {
+    position: static;
+}
+
+.mini-card-menu__list {
+    position: absolute; top: 36px; right: 0;
+    display: flex; flex-direction: column;
+    min-width: 110px;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0px var(--ink);
+}
+
+.mini-card-menu__list a,
+.mini-card-menu__list button {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    padding: 0.45rem 0.8rem;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: left;
+    text-decoration: none;
+    background: var(--paper);
+    color: var(--ink);
+    border: 0;
+    cursor: pointer;
+}
+
+.mini-card-menu__list a span,
+.mini-card-menu__list button span {
+    width: 1.1em;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.mini-card-menu__list a:hover,
+.mini-card-menu__list button:hover {
+    background: var(--ink);
+    color: var(--paper);
 }
 
 /* Project form */
@@ -575,7 +633,8 @@ h1, h2, h3, .brand {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     width: 100%;
     box-sizing: border-box;
     padding: 0.9rem 1.1rem;
@@ -1562,16 +1621,15 @@ h1, h2, h3, .brand {
 
 .exp-name {
     left: -1rem;
-    max-width: calc(100% - 190px);
+    max-width: calc(100% - 260px);
     overflow-wrap: anywhere;
 }
 
 .exp-year {
     right: -1rem;
-    max-width: 180px;
+    max-width: 250px;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow: visible;
     text-align: center;
     flex-shrink: 0;
 }
@@ -1582,12 +1640,82 @@ h1, h2, h3, .brand {
 }
 
 .exp-body {
+    position: relative;
     display: flex; gap: 1.5rem; align-items: center;
     background-color: var(--paper);
     border: 3px solid var(--ink);
     box-shadow: 6px 6px 0px var(--ink);
     padding: 2.5rem 2rem 2rem;
     transform: skewX(-12deg); /* Supaya miring */
+}
+
+.exp-menu {
+    position: absolute; top: 2.4rem; right: 1.2rem; z-index: 2;
+}
+
+.exp-menu > summary {
+    list-style: none;
+    width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--paper);
+    color: var(--ink);
+    border: 3px solid var(--ink);
+    font-size: 1rem; font-weight: 700; line-height: 1;
+    cursor: pointer;
+}
+
+.exp-menu > summary::-webkit-details-marker {
+    display: none;
+}
+
+.exp-menu > summary:hover {
+    background: var(--accent);
+    color: var(--paper);
+    box-shadow: 4px 4px 0px var(--ink);
+}
+
+.exp-menu__list {
+    position: absolute; top: 38px; right: 0;
+    display: flex; flex-direction: column;
+    min-width: 110px;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0px var(--ink);
+}
+
+.exp-menu__list a,
+.exp-menu__list button {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    padding: 0.45rem 0.8rem;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: left;
+    text-decoration: none;
+    background: var(--paper);
+    color: var(--ink);
+    border: 0;
+    cursor: pointer;
+}
+
+.exp-menu__list a span,
+.exp-menu__list button span {
+    width: 1.1em;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.exp-menu__list a:hover,
+.exp-menu__list button:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.exp-menu__list form {
+    margin: 0;
 }
 
 .exp-photo {
@@ -1852,8 +1980,8 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3
     /* Experience: cegah tabrakan nama vs tahun di tablet */
     .exp-card { max-width: 100%; }
     .exp-name, .exp-year { font-size: 0.9rem; padding: 0.45rem 1.2rem; letter-spacing: 1px; }
-    .exp-name { left: -0.5rem; max-width: calc(100% - 170px); }
-    .exp-year { right: -0.5rem; max-width: 160px; }
+    .exp-name { left: -0.5rem; max-width: calc(100% - 230px); }
+    .exp-year { right: -0.5rem; max-width: 220px; overflow: visible; }
     .site-footer { padding: 6rem 1.5rem 2rem 1.5rem; }
     .footer-grid { flex-direction: column; gap: 2rem; }
 }

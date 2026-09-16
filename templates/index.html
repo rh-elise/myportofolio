@@ -37,10 +37,10 @@
     </div>
 </main>
 
-<!-- PROJECTS -->
+<!-- PROJECTS (profile: read-only, no search/add/delete) -->
 <section class="slanted-section" id="projects">
     <div class="container">
-        {% include "partials/project_showcase.html" with empty_message="No projects have been added yet." %}
+        {% include "partials/project_showcase.html" with empty_message="No projects have been added yet." hide_controls=True %}
     </div>
 </section>
 

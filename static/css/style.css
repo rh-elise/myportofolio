@@ -419,6 +419,7 @@ h1, h2, h3, .brand {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 
@@ -441,6 +442,7 @@ h1, h2, h3, .brand {
     max-width: 65ch;
     display: -webkit-box;
     -webkit-line-clamp: 6;
+    line-clamp: 6;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -1026,21 +1028,54 @@ h1, h2, h3, .brand {
     position: relative;
     z-index: 1;
     width: min(100%, 480px);
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem 1.6rem;
     background: var(--paper);
     border: 3px solid var(--ink);
     border-radius: var(--radius);
     box-shadow: 6px 6px 0px var(--ink);
+    overflow: visible;
+}
+
+.project-delete-modal__content::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: 0; height: 18px;
+    background-image: url('/static/img/halftone-bg.png');
+    background-repeat: no-repeat; background-position: 50% 74%; background-size: 100% auto;
+    opacity: 0.35; pointer-events: none;
+}
+
+.project-delete-modal__flag {
+    position: absolute;
+    top: -65px; left: -30px;
+    width: 148px;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.project-delete-modal__flag img {
+    display: block; width: 100%; height: 100%;
 }
 
 .project-delete-modal__content h2 {
-    margin: 0 0 0.75rem;
-    font-family:
-        "Freeman",
-        sans-serif;
-    font-size: 1.35rem;
+    margin: 2rem 0 0.75rem;
+    font-family: "Freeman", sans-serif;
+    font-size: 1.4rem;
     letter-spacing: 1px;
 }
+
+.project-delete-modal__desc {
+    margin: 0 0 1rem;
+    font-size: 0.95rem; line-height: 1.65; color: var(--ink);
+}
+
+.project-delete-modal__desc span {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+.project-delete-modal__desc strong { color: var(--ink); word-break: break-word; }
 
 .project-delete-modal__close {
     position: absolute;
@@ -1060,12 +1095,56 @@ h1, h2, h3, .brand {
     cursor: pointer;
 }
 
+.project-delete-modal__close:hover { color: var(--accent); }
+
 .project-delete-modal__actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
     margin-top: 1.5rem;
+    position: relative; z-index: 1;
 }
+
+.project-delete-modal__btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    padding: 0.6rem 1.2rem;
+    font: inherit; font-weight: 700; font-size: 0.92rem;
+    border: 3px solid var(--ink);
+    cursor: pointer; white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-delete-modal__btn > span { position: relative; z-index: 1; }
+
+.project-delete-modal__btn::after {
+    content: ""; position: absolute; inset: 0;
+    background-image: url('/static/img/halftone-bg.png');
+    background-repeat: repeat-x; background-size: 140px auto; background-position: 50% 85%;
+    opacity: 0; transition: opacity 0.2s ease; pointer-events: none;
+}
+
+/* Batal: hitam -> merah + bayangan (sesuai request) */
+.project-delete-modal__btn--ghost {
+    background: var(--ink); color: var(--paper);
+}
+.project-delete-modal__btn--ghost:hover {
+    background: var(--accent); color: var(--paper);
+    transform: translateY(-4px); box-shadow: 6px 6px 0 var(--ink);
+}
+.project-delete-modal__btn--ghost:hover::after { opacity: 0.55; }
+.project-delete-modal__btn--ghost:active { transform: translateY(0); box-shadow: 2px 2px 0 var(--ink); }
+
+/* Ya, Hapus: paper -> hitam (gaya Batal di add project) */
+.project-delete-modal__btn--danger {
+    background: var(--paper); color: var(--ink);
+}
+.project-delete-modal__btn--danger:hover {
+    background: var(--ink); color: var(--paper);
+    transform: translateY(-4px); box-shadow: 6px 6px 0 var(--ink);
+}
+.project-delete-modal__btn--danger:hover::after { opacity: 0.35; }
+.project-delete-modal__btn--danger:active { transform: translateY(0); box-shadow: 2px 2px 0 var(--ink); }
 
 .button-danger {
     background: #9B0A00;
@@ -1252,6 +1331,7 @@ h1, h2, h3, .brand {
 
 .empty-flag {
     position: relative; z-index: 2;
+    top: 10px; left: 20px;
     width: 148px;
     margin-left: 0;
     margin-bottom: -1.8rem; 

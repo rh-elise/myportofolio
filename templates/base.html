@@ -17,6 +17,19 @@
         </div>
         {% endfor %}
     </div>
+    <script>
+        (function() {
+            var toasts = document.querySelectorAll('.toast');
+            toasts.forEach(function(toast) {
+                setTimeout(function() {
+                    toast.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(-8px)';
+                    setTimeout(function() { toast.remove(); }, 380);
+                }, 3000);
+            });
+        })();
+    </script>
     {% endif %}
 
     {% block content %}{% endblock content %}

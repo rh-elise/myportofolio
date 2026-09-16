@@ -129,5 +129,5 @@ def delete_project(request: HttpRequest, project_id: int) -> HttpResponse:
     project = get_object_or_404(Projects, pk=project_id)
     if request.method == "POST":
         project.delete()
-        messages.success(request, "Project berhasil dihapus!")
+        messages.success(request, "Project deleted!")
     return redirect("main:show_projects")

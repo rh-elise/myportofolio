@@ -189,56 +189,54 @@ exit()
 
 ### Pesan Singkat untuk Kak Asdos
 
-Halo Kak! Kalau di Tugas 1 kemarin saya sempat meminta maaf karena cukup banyak mengandalkan *vibecoding* karena *deadline*, di Tugas 2 ini saya mencoba untuk benar-benar mengubah cara saya mengerjakan tugas.
+Halo Kak! Melanjutkan progres dari Tugas 2, di Tugas 3 ini saya masih terus berusaha mengurangi kebiasaan *vibecoding*. Saya mencoba mengerjakan tutorialnya secara perlahan agar lebih memahami alur kerja Django secara keseluruhan. Sejauh ini, pemahaman saya mengenai alur dari URL → View → Model → Template sudah mulai membaik.
 
-Sekarang saya mencoba membuat dan memahami kodenya sendiri sebisa saya. Kalau sudah bingung atau menemukan error yang belum saya mengerti, baru saya bertanya kepada AI. Jadi, saya masih menggunakan AI, tetapi saya mencoba untuk tidak langsung meminta AI mengerjakan semuanya.
+Namun, untuk Tugas 3 ini saya masih harus mengakui bahwa saya cukup banyak membutuhkan bantuan AI, terutama ketika berhadapan dengan logika di `views.py` dan saat mengatur *styling* pada frontend.
 
-Untuk bagian UI, saya masih cukup banyak menggunakan bantuan AI, terutama untuk implementasi CSS, *responsive layout*, dan beberapa perbaikan tampilan. Namun, desain dan arahan mengenai tampilan tetap saya tentukan sendiri. Saya juga mencoba membaca *script* yang diberikan AI dan memahami bagian-bagiannya sebisa saya, walaupun saya masih cukup awam tentang hal tersebut.
+### Kapan dan Bagaimana Saya Menggunakan AI di Tugas Ini?
 
-### Kapan Saya Menggunakan AI di Tugas Ini?
+**Logika Views (Update, Delete, & JSON)**
 
-Saya menggunakan AI terutama ketika menemukan hal yang belum saya pahami, mengalami error, atau ketika ada pekerjaan yang cukup repetitif.
+Awalnya saya mencoba menulis kode sendiri, tetapi karena implementasinya cukup berbeda dari materi sebelumnya, saya masih kebingungan pada bagian Update dan Delete. Saya juga mengalami kesulitan ketika membuat fungsi untuk mengambil data dalam bentuk JSON. Sebagai contoh, pada kode berikut:
 
-Beberapa contohnya adalah:
+```python
+def get_projects_json(request: HttpRequest) -> HttpResponse:
 
-* **Troubleshooting Error & Routing:** Ketika menemukan *error* di terminal atau masih bingung mengenai hubungan `urls.py` pada proyek dengan `urls.py` pada aplikasi, saya menggunakan AI untuk membantu menjelaskan masalah dan alur *routing* tersebut.
-* **Membantu Pekerjaan Repetitif:** Saya menggunakan AI untuk membantu melakukan perubahan yang cukup banyak dan berulang, misalnya ketika mengganti penamaan dari `arts` menjadi `artworks` di beberapa bagian project.
-* **UI dan CSS:** Untuk implementasi tampilan, saya masih banyak menggunakan bantuan AI, terutama dalam mengatur CSS, posisi elemen, dan *responsive layout*. Saya memberikan arahan mengenai tampilan yang saya inginkan, kemudian menggunakan hasil dari AI sebagai dasar untuk diperbaiki kembali.
-* **JavaScript:** Saya juga menggunakan AI ketika ingin memahami atau membuat beberapa interaksi sederhana pada frontend, terutama yang berkaitan dengan event dari mouse dan keyboard.
+    title_query = request.GET.get("title", "").strip()
 
-### Evaluasi Penggunaan AI
+    projects = Projects.objects.all()
 
-Dari Tugas 2 ini, saya merasa cara saya menggunakan AI sudah cukup berbeda dibandingkan Tugas 1. Saya mulai menyadari bahwa kalau langsung meminta AI membuat semuanya, saya memang bisa mendapatkan hasil lebih cepat, tetapi saya sendiri jadi kurang memahami kode yang digunakan.
+    if title_query:
+        projects = projects.filter(title__icontains=title_query)
 
-Karena itu, kali ini saya mencoba membiasakan diri untuk mencari tahu terlebih dahulu sebelum bertanya kepada AI. Ketika akhirnya meminta bantuan AI, saya juga mencoba membaca *script* yang diberikan dan memahami sebisanya. Walaupun masih banyak bagian yang belum saya pahami sepenuhnya, setidaknya saya mulai terbiasa melihat kode dan mencoba mencari tahu fungsi dari setiap bagiannya.
+    data = serializers.serialize("json", projects)
 
-Beberapa hal baru yang saya pahami selama pengerjaan adalah:
+    return HttpResponse(data, content_type="application/json")
+```
 
-* **Modularitas HTML (`include`):** Saya baru mengetahui bahwa file HTML yang panjang dapat dipisahkan menjadi beberapa file yang lebih kecil, misalnya untuk *navbar* atau *footer*, kemudian digunakan kembali dengan `{% include 'nama_file.html' %}`. Menurut saya, ini cukup membantu karena struktur file menjadi lebih rapi dan tidak semuanya berada dalam satu file HTML.
+Saya masih kurang memahami maksud dari beberapa bagian seperti `request.GET.get()` dan `serializers.serialize()`. Karena itu, saya memberikan instruksi kepada AI untuk membantu membuat fungsi tersebut sekaligus meminta penjelasan mengenai alasan setiap bagian kode digunakan.
 
-* **Event pada JavaScript:** Saya juga mulai memahami sedikit mengenai bagaimana JavaScript dapat mendeteksi suatu event, misalnya ketika mouse digerakkan atau ketika tombol keyboard ditekan. Sebelumnya saya belum terlalu memahami bagaimana interaksi seperti itu bisa dibuat pada website.
+Jadi, pada bagian ini AI tidak hanya saya gunakan untuk mendapatkan kode yang bisa langsung dijalankan, tetapi juga sebagai tempat untuk menanyakan bagian yang belum saya pahami. Setelah mendapatkan penjelasan, saya mencoba mengikuti kembali alur kode tersebut agar lebih memahami prosesnya.
 
-### Proses Pengerjaan
+**Data Cleaning pada Forms**
 
-Secara umum, proses pengerjaan Tugas 2 saya lakukan melalui beberapa tahap:
+Saya juga menggunakan AI untuk membantu memahami proses data cleaning atau validasi pada `forms.py`, terutama agar input yang diberikan pengguna sesuai dengan kebutuhan aplikasi. Ketika terjadi error saat form di-submit, saya biasanya menyalin pesan error tersebut ke AI dan menanyakan kemungkinan letak kesalahannya.
 
-1. **Mencoba Implementasi Sendiri**
+Setelah itu, saya mencoba melihat kembali kode yang bermasalah dan memahami penyebab error tersebut, bukan hanya mengganti kode berdasarkan jawaban AI.
 
-   Saya mencoba menerapkan materi tersebut ke project saya sendiri. Saya berusaha menulis kode dan memahami alurnya terlebih dahulu sebelum meminta bantuan.
+**HTML & CSS (Masih Banyak Dibantu AI)**
 
-2. **Mencari Bantuan Ketika Menemui Masalah**
+Untuk urusan tampilan seperti *styling* form, pembuatan tombol Delete, dan *responsive layout*, saya masih cukup banyak bergantung pada AI. Tema Neo-Brutalism yang saya gunakan juga membuat bagian CSS cukup kompleks untuk saya implementasikan sendiri dari awal.
 
-   Jika saya menemukan error atau tidak tahu bagaimana cara melanjutkan, saya baru menggunakan AI untuk bertanya mengenai masalah tersebut. Saya mencoba memberikan konteks dan kode yang sedang saya kerjakan agar bantuan yang diberikan lebih sesuai dengan masalahnya.
+Meskipun begitu, saya tetap mencoba membaca struktur HTML yang dihasilkan dan memahami bagian mana yang menggunakan `extends`, `include`, maupun struktur template Django lainnya. Jadi, pada bagian frontend saya memang masih membutuhkan banyak bantuan AI, tetapi saya berusaha tidak hanya mengambil hasil akhirnya tanpa melihat bagaimana kode tersebut digunakan.
 
-3. **Implementasi dan Perbaikan UI**
+### Refleksi Diri
 
-   Untuk bagian UI, saya masih menggunakan cukup banyak bantuan AI dalam menerjemahkan desain menjadi HTML dan CSS, termasuk membuat tampilan *responsive*. Saya kemudian melihat hasilnya dan memberikan arahan jika tampilannya belum sesuai dengan desain yang saya inginkan.
+Proses pengerjaan Tugas 3 membuat saya semakin sadar bahwa bagian backend dan logika pengolahan data cukup *tricky*, terutama ketika mulai berhadapan dengan Primary Key, proses Update dan Delete, serta pengembalian data dalam bentuk JSON.
 
-54. **Mencoba Memahami Hasil Kode**
+Saya memang masih cukup bergantung pada AI, terutama untuk bagian tampilan dan beberapa logika di `views.py`. Namun, dibandingkan tugas-tugas awal, saya mulai mengubah cara menggunakan AI. Ketika menemukan kode yang belum saya pahami, saya mencoba menanyakan alasan kode tersebut ditulis dan mengikuti alurnya kembali, bukan hanya menempelkan kode sampai program berhasil dijalankan.
 
-   Setelah mendapatkan solusi atau kode dari AI, saya mencoba membaca dan memahami *script* tersebut sebisa saya. Walaupun saya masih awam dan belum memahami semua bagian, proses ini membuat saya mulai lebih terbiasa membaca kode daripada hanya langsung menggunakannya.
-
-Dari keseluruhan proses ini, saya merasa ada perubahan dari cara saya mengerjakan Tugas 1. Saya masih menggunakan AI dan untuk bagian UI bahkan masih banyak bergantung pada bantuan AI, tetapi sekarang saya mencoba untuk tidak langsung menyerahkan seluruh proses pengerjaan kepadanya. Saya mencoba belajar dari tutorial, mengerjakan sendiri terlebih dahulu, lalu menggunakan AI ketika memang membutuhkan bantuan.
+Menurut saya, perubahan kecil ini membuat proses pengerjaan terasa lebih membantu untuk belajar. Saya memang belum sepenuhnya bisa membuat semua bagian tanpa bantuan AI, tetapi setidaknya saya mulai lebih terbiasa membaca kode, mencari tahu penyebab error, dan memahami hubungan antarbagian dalam Django.
 
 ### Styling README.md
 
@@ -246,36 +244,48 @@ Saya juga menggunakan AI untuk membantu merapikan format dan struktur penulisan 
 
 ### Log Obrolan AI
 
-1. [Link Chat 1](https://opncd.ai/share/B04zqg7p)
+1. [Link Chat 1](https://opncd.ai/share/hvIrr8IH)
+1. [Link Chat 2](https://opncd.ai/share/0BwNh7SM)
+
 
 ---
 
 # Pertanyaan Reflektif
 
-## Tugas 2
+## Tugas 3
 
-### 1. Alur Request-Response (MVT) pada Django
+### 1. Mengapa Menggunakan ModelForm, dan Mengapa Wajib Ada `{% csrf_token %}`?
 
-Ketika pengguna membuka halaman portofolio, browser terlebih dahulu mengirimkan HTTP request ke website. Request tersebut akan diterima oleh `urls.py` utama pada proyek Django, yang kemudian menentukan aplikasi mana yang menangani URL tersebut. Setelah diarahkan ke `urls.py` milik aplikasi portofolio, URL tersebut dicocokkan dengan pola yang tersedia dan Django akan memanggil view yang sesuai. Jika URL memiliki parameter tertentu, misalnya ID sebuah project, parameter tersebut juga dapat diteruskan ke view agar data yang diproses sesuai dengan project yang diminta.
+Menurut saya, penggunaan ModelForm membuat proses pembuatan form menjadi jauh lebih jelas dan terstruktur. Dari tutorial yang saya ikuti, saya memahami bahwa ModelForm dapat menggunakan struktur yang sudah didefinisikan pada `models.py` untuk membentuk form secara otomatis. Hal ini cukup terasa ketika saya membuat form untuk data Experience dan Projects, karena saya tidak perlu membuat setiap input dari awal secara manual.
 
-Selanjutnya, view menangani logika yang diperlukan untuk menampilkan halaman. Jika halaman membutuhkan data dari database, view akan meminta data tersebut melalui model. Model menjadi penghubung antara aplikasi dengan database, sehingga data project dapat diambil tanpa harus ditulis langsung di dalam HTML.
+Jika menggunakan form HTML biasa, saya perlu menuliskan setiap tag `<input>`, menentukan tipe input, serta mengatur bagaimana data tersebut nantinya diproses. Dengan ModelForm, sebagian proses tersebut sudah ditangani oleh Django berdasarkan field yang terdapat pada model. Menurut saya, hal ini membuat kode menjadi lebih ringkas dan mengurangi pekerjaan yang sebenarnya berulang.
 
-Setelah mendapatkan data yang dibutuhkan, view meneruskannya ke template. Template kemudian menggunakan data tersebut untuk membentuk halaman HTML yang akan ditampilkan kepada pengguna. Hasil akhirnya dikirim kembali sebagai HTTP response ke browser, sehingga pengguna dapat melihat halaman portofolio beserta data project yang sesuai.
+Walaupun begitu, saya masih menemukan kesulitan pada bagian tampilan. ModelForm membantu dari sisi struktur dan proses pengolahan data, tetapi tampilannya tetap perlu saya sesuaikan dengan desain portofolio yang menggunakan tema Neo-Brutalism. Pada bagian *styling* inilah saya masih cukup banyak menggunakan AI untuk membantu memperbaiki CSS agar tampilan form sesuai dengan desain yang saya inginkan.
 
-Dari alur ini saya memahami bahwa setiap bagian dalam MVT memiliki tanggung jawab yang berbeda. `urls.py` menentukan ke mana request diarahkan, view mengatur prosesnya, model menangani data, sedangkan template berfokus pada bagaimana data tersebut ditampilkan.
+Untuk `{% csrf_token %}`, saya belum memahami seluruh detail teknisnya, tetapi dari yang saya pelajari, token ini digunakan sebagai salah satu mekanisme keamanan pada form Django untuk mencegah *Cross-Site Request Forgery* (CSRF). Secara sederhana, token tersebut dapat dianalogikan seperti tiket yang diberikan kepada pengguna ketika membuka halaman form. Saat form dikirim, Django akan memeriksa token tersebut untuk memastikan bahwa request berasal dari halaman yang memang diizinkan. Jika token tidak sesuai atau tidak ada, request dapat ditolak.
 
-### 2. Mengapa Data (Model dan Temoplate) Dipisahkan?
+Dari sini saya memahami bahwa `{% csrf_token %}` bukan sekadar bagian yang harus ditambahkan agar form dapat berjalan, tetapi merupakan bagian dari mekanisme keamanan ketika aplikasi menerima data dari pengguna.
 
-Data untuk bagian portofolio sebaiknya disimpan pada model daripada ditulis langsung di dalam template karena data dan tampilan memiliki fungsi yang berbeda. Jika nama project, deskripsi, gambar, dan informasi lainnya ditulis langsung di dalam HTML, setiap perubahan atau penambahan project akan membuat saya harus mengubah kode template secara manual.
+### 2. Mengapa JSON Lebih Disukai Dibandingkan XML?
 
-Hal ini berkaitan dengan keterbatasan static web yang saya temukan pada Tugas 1. Saat jumlah project masih sedikit, melakukan hardcode mungkin masih terasa mudah. Namun, jika jumlah project semakin banyak, cara tersebut akan menjadi semakin sulit untuk dipelihara karena data tersebar di dalam kode HTML.
+Menurut saya, JSON lebih praktis digunakan dibandingkan XML untuk pertukaran data karena strukturnya lebih ringkas dan mudah dibaca. XML menggunakan tag pembuka dan penutup untuk setiap data, misalnya `<nama>Rheina</nama>`. Jika data yang dikirim cukup banyak, penggunaan tag tersebut membuat struktur XML menjadi lebih panjang.
 
-Dengan menyimpan data pada model, saya dapat menggunakan satu template untuk menampilkan banyak project dari database menggunakan looping. Jika ingin menambahkan atau mengubah project, yang perlu diubah adalah datanya, bukan struktur HTML untuk setiap project. Menurut saya, cara ini membuat aplikasi lebih mudah dan siap untuk dikembangkan menjadi fitur yang lebih dinamis, seperti pencarian atau filter berdasarkan kategori.
+JSON menggunakan struktur key-value, misalnya `"nama": "Rheina"`. Bentuknya juga cukup familiar karena mirip dengan dictionary pada Python maupun object pada JavaScript. Karena struktur datanya lebih sederhana dan ringkas, JSON terasa lebih mudah dibaca ketika saya melihat data yang dikembalikan oleh sebuah web.
 
-### 3. Makemigrations vs Migrate
+Hal ini juga relevan dengan proses pengembangan portofolio saya karena saya mulai mempelajari penggunaan JavaScript untuk berinteraksi dengan data dari backend. Format JSON dapat digunakan untuk mengirim data dari Django ke frontend sehingga data tersebut dapat diolah kembali tanpa harus menuliskan seluruh data secara langsung di dalam HTML.
 
-`makemigrations` dan `migrate` sama-sama berkaitan dengan perubahan struktur database, tetapi memiliki fungsi yang berbeda. `makemigrations` digunakan untuk membuat file migrasi berdasarkan perubahan yang dilakukan pada `models.py`. File tersebut berisi instruksi mengenai perubahan struktur database yang perlu dilakukan oleh Django.
+Dari perbandingan tersebut, saya memahami bahwa JSON bukan berarti selalu lebih baik dalam semua kondisi, tetapi lebih praktis untuk kebutuhan pertukaran data pada aplikasi web yang sedang saya kerjakan karena bentuknya sederhana dan mudah diproses oleh JavaScript.
 
-Sementara itu, `migrate` digunakan untuk menerapkan instruksi dari file migrasi tersebut ke database. Jadi, `makemigrations` dapat dipahami sebagai proses mencatat perubahan model menjadi sebuah migrasi, sedangkan `migrate` adalah proses menjalankan perubahan tersebut pada database.
+### 3. Alur Mengembalikan Data Portofolio dalam Bentuk JSON
 
-Sebagai contoh, jika saya menambahkan atribut baru bernama `link_github` pada model project, perubahan tersebut belum langsung membuat kolom baru pada database. Saya perlu menjalankan `makemigrations` terlebih dahulu agar Django membuat file migrasi yang mencatat perubahan tersebut. Setelah itu, saya menjalankan `migrate` agar perubahan tersebut benar-benar diterapkan pada database dan kolom `link_github` dapat digunakan untuk menyimpan data.
+Setelah mencoba memahami implementasinya, saya melihat bahwa proses mengembalikan data portofolio dalam bentuk JSON masih mengikuti alur request dan response pada Django.
+
+Pertama, pengguna atau frontend mengirim request ke URL tertentu. Request tersebut kemudian diarahkan melalui `urls.py` menuju view yang sesuai, misalnya fungsi `get_projects_json`.
+
+Selanjutnya, view meminta data project melalui model. Django kemudian mengambil data tersebut dari database. Pada tahap ini, data yang diperoleh masih berupa QuerySet, yaitu struktur data yang digunakan Django untuk merepresentasikan hasil query dari database.
+
+Karena data tersebut masih dalam bentuk objek Python, data perlu diubah menjadi format yang dapat digunakan oleh frontend. Proses perubahan struktur data tersebut disebut serialisasi. Dalam kasus ini, data project diubah menjadi JSON sehingga dapat dikirim melalui HTTP response.
+
+Setelah proses tersebut selesai, view mengembalikan data dalam bentuk `HttpResponse` dengan `content_type="application/json"`. Browser atau frontend kemudian dapat menerima response tersebut dan menggunakan data JSON yang diberikan.
+
+Dari alur ini saya memahami bahwa prosesnya kurang lebih tetap mengikuti konsep MVT yang sebelumnya saya pelajari. Perbedaannya terletak pada hasil akhirnya. Jika pada halaman biasa view mengirim data ke template untuk menghasilkan HTML, pada endpoint JSON view mengubah data menjadi JSON dan mengembalikannya sebagai response yang dapat digunakan oleh frontend.

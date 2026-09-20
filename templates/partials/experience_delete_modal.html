@@ -1,0 +1,37 @@
+<div id="delete-experience-{{ exp.id }}"
+     class="project-delete-modal"
+     popover="auto"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="delete-experience-title-{{ exp.id }}">
+    <button type="button"
+            class="project-delete-modal__backdrop"
+            popovertarget="delete-experience-{{ exp.id }}"
+            popovertargetaction="hide"
+            aria-label="Close delete confirmation"></button>
+    <div class="project-delete-modal__content">
+        <button type="button"
+                class="project-delete-modal__close"
+                popovertarget="delete-experience-{{ exp.id }}"
+                popovertargetaction="hide"
+                aria-label="Close delete confirmation">×</button>
+        <div class="project-delete-modal__flag" aria-hidden="true">
+            <img src="/static/img/warning-flag.svg" alt="">
+        </div>
+        <h2 id="delete-experience-title-{{ exp.id }}">Delete this experience?</h2>
+        <p class="project-delete-modal__desc">
+            Are you sure you want to delete “<strong>{{ exp.title }}</strong>”?<br>
+            <span>This experience will be permanently deleted and cannot be recovered.</span>
+        </p>
+        <div class="project-delete-modal__actions">
+            <button type="button"
+                    class="project-delete-modal__btn project-delete-modal__btn--ghost"
+                    popovertarget="delete-experience-{{ exp.id }}"
+                    popovertargetaction="hide"><span>Cancel</span></button>
+            <form method="post" action="{% url 'main:delete_experience' exp.id %}">
+                {% csrf_token %}
+                <button type="submit" class="project-delete-modal__btn project-delete-modal__btn--danger"><span>Yes, Delete</span></button>
+            </form>
+        </div>
+    </div>
+</div>

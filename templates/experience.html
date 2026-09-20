@@ -28,11 +28,14 @@
                     <summary aria-label="Options for {{ exp.title }}" title="Options">&#8942;</summary>
                     <div class="exp-menu__list">
                         <a href="{% url 'main:update_experience' exp.id %}"><span aria-hidden="true">&#9998;</span>Edit</a>
-                        <form method="post" action="{% url 'main:delete_experience' exp.id %}">{% csrf_token %}<button type="submit"><span aria-hidden="true">&times;</span>Delete</button></form>
+                        <button type="button"
+                            popovertarget="delete-experience-{{ exp.id }}"
+                            aria-label="Delete {{ exp.title }}"><span aria-hidden="true">&times;</span>Delete</button>
                     </div>
                 </details>
             </div>
         </article>
+        {% include "partials/experience_delete_modal.html" with exp=exp %}
         {% empty %}
         {% if title_query %}
         {% include "partials/empty_state.html" with message="No experience found with that title." %}

@@ -105,11 +105,14 @@ class ProjectsTest(TestCase):
         self.assertContains(response, "No projects have been added yet.")
 
     def test_create_project_post(self):
+        from django.conf import settings
+
         response = self.client.post(reverse("main:create_project"), {
             "title": "Brine and Blade",
             "description": "Roguelite bullet-hell.",
             "image": "/static/img/cover-brine-and-blade.png",
             "link": "https://example.com/brine-and-blade",
+            "passcode": settings.PORTFOLIO_PASSCODE,
         })
 
         self.assertRedirects(response, reverse("main:show_projects"))

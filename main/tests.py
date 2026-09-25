@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
@@ -83,6 +84,10 @@ class ExperienceTest(TestCase):
 
 class ProjectsTest(TestCase):
     def setUp(self):
+        self.admin = User.objects.create_superuser(
+            username="admin", password="pass12345", email="admin@example.com"
+        )
+        self.client.force_login(self.admin)
         self.project = Projects.objects.create(
             title="Save the Patient!",
             description="A survival game about a doctor enduring a nonstop three-day shift.",
@@ -149,6 +154,42 @@ class ProjectsTest(TestCase):
 
         self.assertRedirects(response, reverse("main:show_projects"))
         self.assertTrue(Projects.objects.filter(pk=self.project.pk).exists())
+
+    def test_create_project_requires_login(self):
+        self.client.logout()
+        response = self.client.get(reverse("main:create_project"))
+
+        self.assertRedirects(response, "/login/?next=/projects/add/")
+
+    def test_create_project_forbidden_for_normal_user(self):
+        self.client.logout()
+        User.objects.create_user(username="user", password="pass12345")
+        self.client.login(username="user", password="pass12345")
+        response = self.client.get(reverse("main:create_project"))
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_toggle_star_post(self):
+        response = self.client.post(reverse("main:toggle_star", args=[self.project.id]))
+
+        self.assertRedirects(response, reverse("main:show_projects"))
+        self.assertTrue(self.project.starred_by.filter(pk=self.admin.pk).exists())
+
+    def test_toggle_star_json_no_reload(self):
+        response = self.client.post(
+            reverse("main:toggle_star", args=[self.project.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/json")
+        self.assertEqual(response.json(), {"starred": True, "count": 1})
+
+    def test_toggle_star_requires_login(self):
+        self.client.logout()
+        response = self.client.post(reverse("main:toggle_star", args=[self.project.id]))
+
+        self.assertRedirects(response, f"/login/?next=/projects/{self.project.id}/star/")
 
 
 class ArtworksTest(TestCase):

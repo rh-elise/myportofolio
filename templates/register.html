@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>Register</title>
+{% endblock meta %}
+{% block content %}
+    <main>
+        <section class="slanted-section">
+            <div class="container">
+                <div class="section-title-wrapper">
+                    <div class="slanted-title"><span>Sign Up</span></div>
+                </div>
+
+                <div class="project-form-outer">
+                    <form method="post" action="{% url 'main:register' %}" class="project-form">
+                    {% csrf_token %}
+                    {% for error in form.non_field_errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="form-help">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <p class="form-error">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                        <div class="form-actions">
+                            <button type="submit" class="form-submit">Sign Up</button>
+                        </div>
+                    </form>
+                    <p class="auth-switch">Already have an account? <a href="{% url 'main:login' %}">Log in here!</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock content %}

@@ -1,10 +1,21 @@
 <header class="site-header-slanted">
     <div class="container header-inner header-centered">
+        {% if user.is_authenticated %}
+        <span class="nav-user">Hi! {{ user.username }}</span>
+        {% endif %}
         <nav aria-label="Primary">
             <a href="{% url 'main:show_main' %}" {% if request.resolver_match.url_name == 'show_main' %}class="is-active" aria-current="page"{% endif %}>Profile</a>
             <a href="{% url 'main:show_projects' %}" {% if request.resolver_match.url_name == 'show_projects' or request.resolver_match.url_name == 'create_project' %}class="is-active" aria-current="page"{% endif %}>Projects</a>
             <a href="{% url 'main:show_experience' %}" {% if request.resolver_match.url_name == 'show_experience' %}class="is-active" aria-current="page"{% endif %}>Experience</a>
             <a href="{% url 'main:show_artworks' %}" {% if request.resolver_match.url_name == 'show_artworks' %}class="is-active" aria-current="page"{% endif %}>Artworks</a>
+            
+            {% if user.is_authenticated %}
+                <a href="{% url 'main:logout' %}" {% if request.resolver_match.url_name == 'logout' %}class="is-active" aria-current="page"{% endif %} >Logout</a>
+            {% else %}
+                <a href="{% url 'main:login' %}" {% if request.resolver_match.url_name == 'login' %}class="is-active" aria-current="page"{% endif %} >Login</a>
+                <a href="{% url 'main:register' %}"{% if request.resolver_match.url_name == 'register' %}class="is-active" aria-current="page"{% endif %} >Register</a>
+            {% endif %}
+        
         </nav>
     </div>
 </header>

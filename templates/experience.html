@@ -12,7 +12,9 @@
                 <input type="search" name="title" value="{{ title_query }}" placeholder="Search by title..." class="project-search__input" aria-label="Search experience">
                 <button type="submit" class="project-search__button"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20L16.6 16.6"/></svg> Search</span></button>
             </form>
+            {% if user.is_superuser %}
             <a href="{% url 'main:create_experience' %}" class="project-add-button"><span class="project-add-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span>Add Experience</span></a>
+            {% endif %}
         </div>
 
         {% for exp in experience_list %}
@@ -24,6 +26,7 @@
                 <div class="exp-photo"><img src="{{ exp.thumbnail }}" alt="{{ exp.title }}"></div>
                 {% endif %}
                 <p class="exp-desc">{{ exp.description }}</p>
+                {% if user.is_superuser %}
                 <details class="exp-menu">
                     <summary aria-label="Options for {{ exp.title }}" title="Options">&#8942;</summary>
                     <div class="exp-menu__list">
@@ -33,6 +36,7 @@
                             aria-label="Delete {{ exp.title }}"><span aria-hidden="true">&times;</span>Delete</button>
                     </div>
                 </details>
+                {% endif %}
             </div>
         </article>
         {% include "partials/experience_delete_modal.html" with exp=exp %}

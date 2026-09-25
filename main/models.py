@@ -1,4 +1,6 @@
+from django.contrib.auth.models import User
 from django.db import models
+
 
 
 class Projects(models.Model):
@@ -8,6 +10,9 @@ class Projects(models.Model):
     description = models.TextField()
     image = models.CharField(max_length=255, help_text="Path statis, mis. /static/img/cover-*.png")
     link = models.URLField(max_length=255, blank=True, help_text="External Game URL")
+    starred_by = models.ManyToManyField(
+                User, related_name="starred_projects", blank=True
+            )
 
     class Meta:
         verbose_name_plural = "Projects"

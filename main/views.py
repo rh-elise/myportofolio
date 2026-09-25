@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 
@@ -264,12 +264,7 @@ def toggle_star(request, project_id):
     if request.method == "POST":
         if request.user in project.starred_by.all():
             project.starred_by.remove(request.user)
-            starred = False
         else:
             project.starred_by.add(request.user)
-            starred = True
-
-        if request.headers.get("x-requested-with") == "XMLHttpRequest":
-            return JsonResponse({"starred": starred, "count": project.starred_by.count()})
 
     return redirect("main:show_projects")

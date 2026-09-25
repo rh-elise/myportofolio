@@ -3,6 +3,11 @@
     const mainTitle = document.getElementById('projectHeroTitle');
     const mainDesc = document.getElementById('projectHeroDesc');
     const mainLink = document.getElementById('projectHeroLink');
+    const heroStarForm = document.getElementById('heroStarForm');
+    const heroStarBtn = document.getElementById('heroStarBtn');
+    const heroStarIcon = document.getElementById('heroStarIcon');
+    const heroStarLabel = document.getElementById('heroStarLabel');
+    const heroStarCount = document.getElementById('heroStarCount');
     const cards = document.querySelectorAll('.mini-card');
 
     function selectCard(card) {
@@ -14,15 +19,26 @@
         mainTitle.textContent = card.getAttribute('data-title').toUpperCase();
         mainDesc.textContent = card.getAttribute('data-desc');
         if (mainLink) mainLink.href = card.getAttribute('data-link');
+
+        if (heroStarForm) {
+            const starred = card.getAttribute('data-starred') === 'true';
+            const count = card.getAttribute('data-count');
+            heroStarForm.action = '/projects/' + card.getAttribute('data-id') + '/star/';
+            heroStarBtn.classList.toggle('is-starred', starred);
+            heroStarIcon.textContent = starred ? '★' : '☆';
+            heroStarLabel.textContent = starred ? 'Starred' : 'Star';
+            heroStarCount.textContent = count;
+            heroStarBtn.title = 'Stars: ' + count;
+        }
     }
 
     cards.forEach((card) => {
         card.addEventListener('click', (event) => {
-            if (event.target.closest('.mini-card-menu')) return;
+            if (event.target.closest('.mini-card-menu, .star-form')) return;
             selectCard(card);
         });
         card.addEventListener('keydown', (event) => {
-            if (event.target.closest('.mini-card-menu')) return;
+            if (event.target.closest('.mini-card-menu, .star-form')) return;
             if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
                 selectCard(card);

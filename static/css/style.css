@@ -580,6 +580,125 @@ h1, h2, h3, .brand {
     color: var(--paper);
 }
 
+/* Bintang putih dulu, merah kalau di-star */
+.star-form {
+    display: inline;
+}
+
+.button.button-star {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    position: relative;
+    overflow: hidden;
+    background: var(--paper);
+    color: var(--ink);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button.button-star > span {
+    position: relative;
+    z-index: 1;
+}
+
+.button.button-star::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url('/static/img/halftone-bg.png');
+    background-repeat: repeat-x;
+    background-size: 140px auto;
+    background-position: 50% 85%;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.button.button-star:hover {
+    background-color: var(--accent);
+    color: var(--paper);
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+.button.button-star:hover::after {
+    opacity: 0.55;
+}
+
+.button.button-star:active {
+    transform: translateY(0);
+    box-shadow: 2px 2px 0px var(--ink);
+}
+
+.button.button-star.is-starred {
+    background: var(--accent);
+    color: var(--paper);
+}
+
+/* Total bintang pojok kiri atas mini card */
+.mini-card .star-form {
+    position: absolute; top: 6px; left: 6px; z-index: 2;
+}
+
+.mini-card .button-star {
+    border: 3px solid var(--ink);
+    padding: 0.15rem 0.5rem;
+    font-size: 0.8rem;
+    box-shadow: none;
+}
+
+/* Badge mini statis, tanpa efek hover */
+.mini-card .button-star:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.mini-card .button-star:hover::after {
+    opacity: 0;
+}
+
+.mini-card .button-star:not(.is-starred):hover {
+    background: var(--paper);
+    color: var(--ink);
+}
+
+/* Bintang pojok kanan atas deskripsi, sejajar tombol play */
+.hero-star {
+    position: absolute; top: 1rem; right: 1.5rem; z-index: 2;
+}
+
+.hero-star .button-star {
+    border: 3px solid var(--ink);
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    box-shadow: none;
+}
+
+.hero-star .button-star:hover {
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+/* Tautan pindah login/register */
+.auth-switch {
+    margin-top: 1.2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+}
+
+.auth-switch a {
+    color: var(--ink);
+    font-weight: 700;
+    text-underline-offset: 3px;
+}
+
+.auth-switch a:hover {
+    background: var(--accent);
+    color: var(--paper);
+    text-decoration: none;
+}
+
 /* Project form */
 .project-form-outer {
     position: relative;
@@ -832,7 +951,7 @@ h1, h2, h3, .brand {
 .project-header {
     width: 100%;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 760px) auto;
+    grid-template-columns: 1fr minmax(0, 760px) 1fr;
     align-items: center;
     gap: 1.2rem;
     margin-top: 0.8rem;
@@ -1875,8 +1994,39 @@ html { scroll-behavior: smooth; }
 .site-header-slanted nav a:hover { transform: translateY(-2px); box-shadow: 3px 3px 0 var(--ink); }
 .site-header-slanted nav a:hover::after { opacity: 0.8; }
 .site-header-slanted nav a:active { transform: translateY(0); box-shadow: none; background-color: var(--ink); }
-.site-header-slanted nav a.is-active,
-.site-header-slanted nav a[aria-current="page"] { background-color: var(--accent); color: var(--paper); }
+    .site-header-slanted nav a.is-active,
+    .site-header-slanted nav a[aria-current="page"] { background-color: var(--accent); color: var(--paper); }
+
+/* Sapaan akun pojok kiri navbar */
+.header-inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+}
+
+.header-inner nav {
+    grid-column: 2;
+}
+
+.nav-user {
+    grid-column: 1;
+    justify-self: start;
+    max-width: 30vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--paper);
+    font-size: 1.05rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.nav-user::before {
+    content: "";
+    display: inline-block;
+    width: 10px; height: 10px;
+    background-color: var(--accent);
+    margin-right: 10px;
+}
 .site-header-slanted nav a:active::after { opacity: 0; }
 
 .icon-square { transition: all 0.2s ease; }
@@ -1993,6 +2143,14 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible { outline: 3
 
     /* Header: logo dan menu mengecil, boleh turun dua baris */
     .header-inner { flex-wrap: wrap; row-gap: 0.5rem; }
+    .header-inner { grid-template-columns: 1fr; justify-items: center; }
+    .header-inner nav { grid-column: 1; }
+    .nav-user {
+        grid-column: 1;
+        max-width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+    }
     .brand { font-size: 1.3rem; }
     .site-header-slanted nav { gap: 0.4rem; flex-wrap: wrap; }
     .site-header-slanted nav a { font-size: 0.8rem; padding: 0.3rem 0.6rem; }

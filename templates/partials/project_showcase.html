@@ -16,11 +16,13 @@
                 aria-label="Search by project name">
         <button type="submit" class="project-search__button" aria-label="Search projects"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20L16.6 16.6"/></svg> Search</span></button>
     </form>
-    <a href="{% url 'main:create_project' %}"
-        class="project-add-button">
-        <span class="project-add-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
-        <span>Add Project</span>
-    </a>
+    {% if user.is_superuser %}
+        <a href="{% url 'main:create_project' %}"
+            class="project-add-button">
+            <span class="project-add-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+            <span>Add Project</span>
+        </a>
+    {% endif %} 
 </div>
 {% endif %}
 
@@ -43,6 +45,18 @@
             </div>
 
             <div class="desc-box">
+                <!-- STAR -->
+                <form id="heroStarForm" method="post" action="{% url 'main:toggle_star' projects_list.0.id %}" class="star-form hero-star">
+                    {% csrf_token %}
+                    <button id="heroStarBtn" type="submit"
+                            class="button button-star{% if user in projects_list.0.starred_by.all %} is-starred{% endif %}"
+                            title="Stars: {{ projects_list.0.starred_by.count }}"
+                            aria-label="Star {{ projects_list.0.title }}">
+                        <span id="heroStarIcon" aria-hidden="true">{% if user in projects_list.0.starred_by.all %}★{% else %}☆{% endif %}</span>
+                        <span id="heroStarLabel">{% if user in projects_list.0.starred_by.all %}Starred{% else %}Star{% endif %}</span>
+                        <span id="heroStarCount">{{ projects_list.0.starred_by.count }}</span>
+                    </button>
+                </form>
                 <p id="projectHeroDesc">{{ projects_list.0.description }}</p>
 
                 <!-- PLAY LINK -->
@@ -57,19 +71,26 @@
             {% for proj in projects_list %}
             <div class="mini-card {% if forloop.first %}is-active{% endif %}" tabindex="0" role="button"
                 data-title="{{ proj.title }}" data-desc="{{ proj.description }}"
-                data-img="{{ proj.image }}" data-link="{{ proj.link }}">
+                data-img="{{ proj.image }}" data-link="{{ proj.link }}"
+                data-id="{{ proj.id }}" data-count="{{ proj.starred_by.count }}"
+                data-starred="{% if user in proj.starred_by.all %}true{% else %}false{% endif %}">
                 <img src="{{ proj.image }}" alt="{{ proj.title }}">
                 <span class="mini-card-label">{{ proj.title }}</span>
-                {% if not hide_controls %}
-                <details class="mini-card-menu">
-                    <summary class="mini-card-delete" aria-label="Options for {{ proj.title }}" title="Options">&#8942;</summary>
-                    <div class="mini-card-menu__list">
-                        <a href="{% url 'main:update_project' proj.id %}"><span aria-hidden="true">&#9998;</span>Edit</a>
-                        <button type="button"
-                            popovertarget="delete-project-{{ proj.id }}"
-                            aria-label="Delete {{ proj.title }}"><span aria-hidden="true">&times;</span>Delete</button>
-                    </div>
-                </details>
+
+                {% include "partials/project_star.html" with project=proj %}
+
+                {% if user.is_superuser %}
+                    {% if not hide_controls %}
+                    <details class="mini-card-menu">
+                        <summary class="mini-card-delete" aria-label="Options for {{ proj.title }}" title="Options">&#8942;</summary>
+                        <div class="mini-card-menu__list">
+                            <a href="{% url 'main:update_project' proj.id %}"><span aria-hidden="true">&#9998;</span>Edit</a>
+                            <button type="button"
+                                popovertarget="delete-project-{{ proj.id }}"
+                                aria-label="Delete {{ proj.title }}"><span aria-hidden="true">&times;</span>Delete</button>
+                        </div>
+                    </details>
+                    {% endif %}
                 {% endif %}
             </div>
             {% if not hide_controls %}

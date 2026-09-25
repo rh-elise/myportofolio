@@ -1,5 +1,4 @@
 from django import forms
-from django.conf import settings
 from django.forms import ModelForm, TextInput, Textarea, URLInput
 
 from main.models import Projects, Experience
@@ -7,11 +6,6 @@ from main.models import Projects, Experience
 
 class ProjectForm(ModelForm):
     """Form tambah project - validasi agar data konsisten."""
-
-    passcode = forms.CharField(
-        label="Passcode",
-        widget=forms.PasswordInput(attrs={"placeholder": "Enter passcode to submit"}),
-    )
 
     class Meta:
         model = Projects
@@ -46,19 +40,9 @@ class ProjectForm(ModelForm):
             raise forms.ValidationError("Cover must be a /static/... path or http(s) URL.")
         return image
 
-    def clean_passcode(self) -> str:
-        if self.cleaned_data["passcode"] != settings.PORTFOLIO_PASSCODE:
-            raise forms.ValidationError("Wrong passcode.")
-        return self.cleaned_data["passcode"]
-
 
 class ExperienceForm(ModelForm):
     """Form tambah experience - validasi agar data konsisten."""
-
-    passcode = forms.CharField(
-        label="Passcode",
-        widget=forms.PasswordInput(attrs={"placeholder": "Enter passcode to submit"}),
-    )
 
     class Meta:
         model = Experience
@@ -97,8 +81,3 @@ class ExperienceForm(ModelForm):
         if thumbnail and not (thumbnail.startswith("/static/") or thumbnail.startswith("http")):
             raise forms.ValidationError("Cover must be a /static/... path or http(s) URL.")
         return thumbnail
-
-    def clean_passcode(self) -> str:
-        if self.cleaned_data["passcode"] != settings.PORTFOLIO_PASSCODE:
-            raise forms.ValidationError("Wrong passcode.")
-        return self.cleaned_data["passcode"]

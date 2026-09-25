@@ -17,7 +17,6 @@ SECRET_KEY = os.getenv("SECRET_KEY", "")
 if PRODUCTION and (not SECRET_KEY or SECRET_KEY.startswith("django-insecure")):
     raise ValueError("SECRET_KEY must be set in production.")
 SECRET_KEY = SECRET_KEY or "django-insecure-dev-only"
-PORTFOLIO_PASSCODE = os.getenv("PORTFOLIO_PASSCODE", "dev-pass")
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "rheina-uliana-myportofolio.pws.cs.ui.ac.id"]
 CSRF_TRUSTED_ORIGINS = ["https://rheina-uliana-myportofolio.pws.cs.ui.ac.id"]

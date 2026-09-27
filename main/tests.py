@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, Permission, User
 from django.test import TestCase
 from django.urls import reverse
 
@@ -165,6 +165,60 @@ class ProjectsTest(TestCase):
         response = self.client.get(reverse("main:create_project"))
 
         self.assertEqual(response.status_code, 403)
+
+    def login_as_editor(self):
+        group, _ = Group.objects.get_or_create(name="Editor")
+        group.permissions.add(
+            Permission.objects.get(codename="change_projects"),
+            Permission.objects.get(codename="change_experience"),
+        )
+        editor = User.objects.create_user(username="editor", password="pass12345")
+        editor.groups.add(group)
+        self.client.force_login(editor)
+
+    def test_editor_cannot_open_add_project(self):
+        self.login_as_editor()
+        response = self.client.get(reverse("main:create_project"))
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_editor_cannot_create_project(self):
+        self.login_as_editor()
+        response = self.client.post(reverse("main:create_project"), {
+            "title": "Brine and Blade",
+            "description": "Roguelite bullet-hell.",
+            "image": "/static/img/cover-brine-and-blade.png",
+            "link": "https://example.com/brine-and-blade",
+        })
+
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(Projects.objects.filter(title="Brine and Blade").exists())
+
+    def test_editor_can_update_project(self):
+        self.login_as_editor()
+        response = self.client.post(reverse("main:update_project", args=[self.project.id]), {
+            "title": "Save the Patient! (Remastered)",
+            "description": self.project.description,
+            "image": self.project.image,
+            "link": self.project.link,
+        })
+
+        self.assertRedirects(response, reverse("main:show_projects"))
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.title, "Save the Patient! (Remastered)")
+
+    def test_editor_cannot_delete_experience(self):
+        experience = Experience.objects.create(
+            title="Teaching Assistant - Calculus",
+            description="Supported student comprehension.",
+            category="part-time",
+            year=2026,
+        )
+        self.login_as_editor()
+        response = self.client.post(reverse("main:delete_experience", args=[experience.id]))
+
+        self.assertEqual(response.status_code, 403)
+        self.assertTrue(Experience.objects.filter(pk=experience.pk).exists())
 
     def test_toggle_star_post(self):
         response = self.client.post(reverse("main:toggle_star", args=[self.project.id]))

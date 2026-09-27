@@ -79,15 +79,18 @@
 
                 {% include "partials/project_star.html" with project=proj %}
 
-                {% if user.is_superuser %}
+                {% if perms.main.change_projects %}
                     {% if not hide_controls %}
                     <details class="mini-card-menu">
                         <summary class="mini-card-delete" aria-label="Options for {{ proj.title }}" title="Options">&#8942;</summary>
                         <div class="mini-card-menu__list">
                             <a href="{% url 'main:update_project' proj.id %}"><span aria-hidden="true">&#9998;</span>Edit</a>
+
+                            {% if user.is_superuser %}
                             <button type="button"
                                 popovertarget="delete-project-{{ proj.id }}"
                                 aria-label="Delete {{ proj.title }}"><span aria-hidden="true">&times;</span>Delete</button>
+                            {% endif %}
                         </div>
                     </details>
                     {% endif %}

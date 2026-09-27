@@ -156,9 +156,9 @@ def create_experience(request: HttpRequest) -> HttpResponse:
 
 @login_required(login_url="/login/")
 def update_experience(request: HttpRequest, experience_id: int) -> HttpResponse:
-    if not request.user.is_superuser:
-        raise PermissionDenied
-    
+    if not request.user.has_perm("main.change_experience"):
+            raise PermissionDenied
+
     experience = get_object_or_404(Experience, pk=experience_id)
     form = ExperienceForm(request.POST or None, instance=experience)
     if request.method == "POST" and form.is_valid():
@@ -231,7 +231,7 @@ def create_project(request: HttpRequest) -> HttpResponse:
 
 @login_required(login_url="/login/")
 def update_project(request: HttpRequest, project_id: int) -> HttpResponse:
-    if not request.user.is_superuser:
+    if not request.user.has_perm("main.change_projects"):
         raise PermissionDenied
 
     project = get_object_or_404(Projects, pk=project_id)

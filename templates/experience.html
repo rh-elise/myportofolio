@@ -26,14 +26,16 @@
                 <div class="exp-photo"><img src="{{ exp.thumbnail }}" alt="{{ exp.title }}"></div>
                 {% endif %}
                 <p class="exp-desc">{{ exp.description }}</p>
-                {% if user.is_superuser %}
+                {% if perms.main.change_experience %}
                 <details class="exp-menu">
                     <summary aria-label="Options for {{ exp.title }}" title="Options">&#8942;</summary>
                     <div class="exp-menu__list">
                         <a href="{% url 'main:update_experience' exp.id %}"><span aria-hidden="true">&#9998;</span>Edit</a>
+                        {% if user.is_superuser %}
                         <button type="button"
                             popovertarget="delete-experience-{{ exp.id }}"
                             aria-label="Delete {{ exp.title }}"><span aria-hidden="true">&times;</span>Delete</button>
+                        {% endif %}
                     </div>
                 </details>
                 {% endif %}

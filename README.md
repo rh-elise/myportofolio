@@ -60,6 +60,11 @@ Setelah server berhasil dijalankan, buka browser dan akses:
 
 `http://localhost:8000/`
 
+### 7. Buat Grup Editor (via Admin)
+
+```bash
+    python manage.py createsuperuser
+
 ---
 
 ## Contoh Data Dummy (untuk Testing)
@@ -187,8 +192,6 @@ exit()
 
 ## Pengungkapan Penggunaan AI (AI Disclosure) & Catatan Pengerjaan
 
-## Pengungkapan Penggunaan AI (AI Disclosure) & Catatan Pengerjaan
-
 ### Pesan Singkat untuk Kak Asdos
 
 Halo Kak! Melanjutkan progres dari Tugas 3, di Tugas 4 ini saya masih berusaha mengurangi kebiasaan *vibecoding*. Saya mencoba mengerjakan bagian yang saya pahami terlebih dahulu, kemudian menggunakan AI ketika menemukan error atau bagian yang belum saya mengerti. Di Tugas 4 ini, AI paling banyak saya gunakan untuk membantu debugging, memahami permission, dan menerjemahkan rancangan tampilan yang saya inginkan ke dalam CSS.
@@ -226,8 +229,6 @@ Saya kemudian menggunakan AI untuk memeriksa kembali apakah pembatasan tersebut 
 Saya menggunakan AI untuk membantu menuliskan test untuk permission Editor dengan mengikuti pola test 403 yang sudah saya buat sebelumnya. Saya memberikan struktur test lama tersebut dan meminta AI menyesuaikannya untuk beberapa kondisi baru, yaitu Editor tidak dapat membuka halaman tambah, tidak dapat melakukan create, dapat melakukan update, dan tidak dapat melakukan delete experience.
 
 AI membantu menyesuaikan struktur test dan helper `login_as_editor`, sedangkan saya menjalankan test tersebut pada project untuk memastikan hasilnya sesuai. Hasil akhirnya adalah `29/29 OK`.
-
-### Refleksi Diri
 
 ### Refleksi Diri
 

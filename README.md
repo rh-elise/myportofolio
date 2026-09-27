@@ -187,56 +187,58 @@ exit()
 
 ## Pengungkapan Penggunaan AI (AI Disclosure) & Catatan Pengerjaan
 
+## Pengungkapan Penggunaan AI (AI Disclosure) & Catatan Pengerjaan
+
 ### Pesan Singkat untuk Kak Asdos
 
-Halo Kak! Melanjutkan progres dari Tugas 2, di Tugas 3 ini saya masih terus berusaha mengurangi kebiasaan *vibecoding*. Saya mencoba mengerjakan tutorialnya secara perlahan agar lebih memahami alur kerja Django secara keseluruhan. Sejauh ini, pemahaman saya mengenai alur dari URL → View → Model → Template sudah mulai membaik.
-
-Namun, untuk Tugas 3 ini saya masih harus mengakui bahwa saya cukup banyak membutuhkan bantuan AI, terutama ketika berhadapan dengan logika di `views.py` dan saat mengatur *styling* pada frontend.
+Halo Kak! Melanjutkan progres dari Tugas 3, di Tugas 4 ini saya masih berusaha mengurangi kebiasaan *vibecoding*. Saya mencoba mengerjakan bagian yang saya pahami terlebih dahulu, kemudian menggunakan AI ketika menemukan error atau bagian yang belum saya mengerti. Di Tugas 4 ini, AI paling banyak saya gunakan untuk membantu debugging, memahami permission, dan menerjemahkan rancangan tampilan yang saya inginkan ke dalam CSS.
 
 ### Kapan dan Bagaimana Saya Menggunakan AI di Tugas Ini?
 
-**Logika Views (Update, Delete, & JSON)**
+**Superuser & Login**
 
-Awalnya saya mencoba menulis kode sendiri, tetapi karena implementasinya cukup berbeda dari materi sebelumnya, saya masih kebingungan pada bagian Update dan Delete. Saya juga mengalami kesulitan ketika membuat fungsi untuk mengambil data dalam bentuk JSON. Sebagai contoh, pada kode berikut:
+Saya menggunakan AI untuk memahami cara membuat superuser dan perbedaan ketika menjalankan perintah secara lokal dan melalui Terminal PWS karena keduanya menggunakan database yang berbeda. Saya juga menanyakan arti `is_superuser` serta cara mengisi prompt ketika menjalankan `createsuperuser`.
 
-```python
-def get_projects_json(request: HttpRequest) -> HttpResponse:
+**Debug Star (NoReverseMatch)**
 
-    title_query = request.GET.get("title", "").strip()
+Ketika halaman `/projects/` mengalami error `NoReverseMatch`, saya memberikan traceback kepada AI untuk membantu mencari penyebabnya. Dari proses debugging tersebut ditemukan dua masalah: URL `toggle_star` masih menggunakan `<uuid:...>`, sedangkan ID pada model saya menggunakan `int`, dan pada `{% include ... with project=project %}` nama variabel yang digunakan tidak sesuai dengan variabel loop, yaitu `proj`.
 
-    projects = Projects.objects.all()
+Saya kemudian mengecek kembali view dan model untuk memastikan bagian tersebut memang sesuai dengan struktur project saya. Setelah itu, saya memperbaiki bagian yang bermasalah berdasarkan hasil pengecekan tersebut.
 
-    if title_query:
-        projects = projects.filter(title__icontains=title_query)
+**Styling Star & Navbar**
 
-    data = serializers.serialize("json", projects)
+Untuk tampilan, saya menentukan sendiri desain yang ingin digunakan. Misalnya, badge star menggunakan `☆/★` dan jumlah star diletakkan di pojok mini card, tombol pada hero berubah dari putih menjadi merah, serta sapaan `Hi! username` diletakkan di bagian kiri navbar tanpa latar merah.
 
-    return HttpResponse(data, content_type="application/json")
-```
+Saya menggunakan AI untuk membantu menerjemahkan rancangan tersebut ke dalam CSS. Ketika hasilnya tidak sesuai, saya memberikan screenshot dan kode yang sedang digunakan agar AI membantu mencari penyebabnya. Salah satu contohnya adalah ketika badge mini card ikut berubah menjadi merah karena aturan `.button` menimpa `.button-star`, atau ketika tampilan search berubah menjadi input yang terlalu polos.
 
-Saya masih kurang memahami maksud dari beberapa bagian seperti `request.GET.get()` dan `serializers.serialize()`. Karena itu, saya memberikan instruksi kepada AI untuk membantu membuat fungsi tersebut sekaligus meminta penjelasan mengenai alasan setiap bagian kode digunakan.
+Dari proses ini, saya tidak hanya meminta CSS baru, tetapi juga mencoba memahami selector mana yang menyebabkan konflik dan mengapa perubahan pada satu class dapat memengaruhi elemen lain.
 
-Jadi, pada bagian ini AI tidak hanya saya gunakan untuk mendapatkan kode yang bisa langsung dijalankan, tetapi juga sebagai tempat untuk menanyakan bagian yang belum saya pahami. Setelah mendapatkan penjelasan, saya mencoba mengikuti kembali alur kode tersebut agar lebih memahami prosesnya.
+**Pembagian Peran Editor**
 
-**Data Cleaning pada Forms**
+Pada bagian permission Editor, saya menggunakan AI sebagai teman diskusi untuk menentukan pembagian akses yang sesuai dengan kebutuhan tugas. Saya meminta AI membantu membandingkan penggunaan `has_perm("main.change_projects")` dengan pengecekan group secara langsung.
 
-Saya juga menggunakan AI untuk membantu memahami proses data cleaning atau validasi pada `forms.py`, terutama agar input yang diberikan pengguna sesuai dengan kebutuhan aplikasi. Ketika terjadi error saat form di-submit, saya biasanya menyalin pesan error tersebut ke AI dan menanyakan kemungkinan letak kesalahannya.
+Dari diskusi tersebut, saya memahami bahwa Editor seharusnya memiliki akses untuk melakukan update, tetapi tidak memiliki akses untuk create atau delete. Setelah memahami pembagiannya, saya sendiri yang menerapkan perubahan pada `views.py` dan template.
 
-Setelah itu, saya mencoba melihat kembali kode yang bermasalah dan memahami penyebab error tersebut, bukan hanya mengganti kode berdasarkan jawaban AI.
+Saya kemudian menggunakan AI untuk memeriksa kembali apakah pembatasan tersebut sudah konsisten, misalnya `update_*` dapat dilakukan Editor, sedangkan `create_*` dan `delete_*` tetap dibatasi untuk Owner.
 
-**HTML & CSS (Masih Banyak Dibantu AI)**
+**Test Peran Editor**
 
-Untuk urusan tampilan seperti *styling* form, pembuatan tombol Delete, dan *responsive layout*, saya masih cukup banyak bergantung pada AI. Tema Neo-Brutalism yang saya gunakan juga membuat bagian CSS cukup kompleks untuk saya implementasikan sendiri dari awal.
+Saya menggunakan AI untuk membantu menuliskan test untuk permission Editor dengan mengikuti pola test 403 yang sudah saya buat sebelumnya. Saya memberikan struktur test lama tersebut dan meminta AI menyesuaikannya untuk beberapa kondisi baru, yaitu Editor tidak dapat membuka halaman tambah, tidak dapat melakukan create, dapat melakukan update, dan tidak dapat melakukan delete experience.
 
-Meskipun begitu, saya tetap mencoba membaca struktur HTML yang dihasilkan dan memahami bagian mana yang menggunakan `extends`, `include`, maupun struktur template Django lainnya. Jadi, pada bagian frontend saya memang masih membutuhkan banyak bantuan AI, tetapi saya berusaha tidak hanya mengambil hasil akhirnya tanpa melihat bagaimana kode tersebut digunakan.
+AI membantu menyesuaikan struktur test dan helper `login_as_editor`, sedangkan saya menjalankan test tersebut pada project untuk memastikan hasilnya sesuai. Hasil akhirnya adalah `29/29 OK`.
 
 ### Refleksi Diri
 
-Proses pengerjaan Tugas 3 membuat saya semakin sadar bahwa bagian backend dan logika pengolahan data cukup *tricky*, terutama ketika mulai berhadapan dengan Primary Key, proses Update dan Delete, serta pengembalian data dalam bentuk JSON.
+### Refleksi Diri
 
-Saya memang masih cukup bergantung pada AI, terutama untuk bagian tampilan dan beberapa logika di `views.py`. Namun, dibandingkan tugas-tugas awal, saya mulai mengubah cara menggunakan AI. Ketika menemukan kode yang belum saya pahami, saya mencoba menanyakan alasan kode tersebut ditulis dan mengikuti alurnya kembali, bukan hanya menempelkan kode sampai program berhasil dijalankan.
+Pada tugas 4 beberapa masalah yang muncul tidak terlihat dari bagian kode yang sedang saya kerjakan. Misalnya, error pada `toggle_star` ternyata berkaitan dengan tipe ID yang digunakan, sedangkan masalah pada template disebabkan oleh nama variabel yang berbeda.
 
-Menurut saya, perubahan kecil ini membuat proses pengerjaan terasa lebih membantu untuk belajar. Saya memang belum sepenuhnya bisa membuat semua bagian tanpa bantuan AI, tetapi setidaknya saya mulai lebih terbiasa membaca kode, mencari tahu penyebab error, dan memahami hubungan antarbagian dalam Django.
+Untuk bagian styling, saya juga beberapa kali mendapatkan hasil yang tidak sesuai dengan yang saya bayangkan. Ketika menggunakan AI untuk membantu memperbaiki tampilan, saya tetap perlu melihat kembali CSS yang sudah ada dan menyesuaikannya dengan struktur project saya.
+
+Saya masih cukup sering menggunakan AI selama pengerjaan Tugas 4, terutama ketika menemui error atau ketika saya belum tahu cara menerapkan sesuatu. Bedanya, sekarang saya lebih sering memberikan kode atau error yang memang sedang saya hadapi daripada meminta seluruh bagian dibuat dari awal.
+
+Saya rasa cara ini masih belum membuat saya sepenuhnya lepas dari bantuan AI, tetapi setidaknya saya jadi lebih terbiasa membaca error, mencari bagian yang bermasalah, dan memahami perubahan yang saya lakukan pada project.
+
 
 ### Styling README.md
 
@@ -244,13 +246,73 @@ Saya juga menggunakan AI untuk membantu merapikan format dan struktur penulisan 
 
 ### Log Obrolan AI
 
-1. [Link Chat 1](https://opncd.ai/share/hvIrr8IH)
-1. [Link Chat 2](https://opncd.ai/share/0BwNh7SM)
+1. [Link Chat 1](https://opncd.ai/share/0BwNh7SM)
 
 
 ---
 
 # Pertanyaan Reflektif
+
+## Tugas 1
+
+### 1. Penggunaan Elemen Semantik
+
+Penggunaan elemen semantik cukup membantu, terutama karena saya sudah terbiasa merancang UI/UX menggunakan Figma. Ketika membuat desain di Figma, saya biasanya berpikir dalam bentuk bagian-bagian halaman, misalnya bagian navigasi, isi utama, dan bagian tertentu yang memiliki fungsi berbeda. Konsep tersebut cukup membantu ketika saya mulai menyusun struktur HTML.
+
+Awalnya saya masih agak bingung membedakan `<section>` dengan `class`, karena keduanya sama-sama terasa seperti digunakan untuk mengelompokkan elemen. Setelah menggunakannya, saya mulai memahami bahwa `<section>` merupakan bagian dari struktur atau isi halaman, sedangkan `class` lebih berfungsi sebagai penanda yang dapat digunakan untuk memilih dan memberikan styling pada elemen melalui CSS.
+
+Menurut saya, penggunaan elemen semantik membuat struktur HTML lebih mudah dipahami karena saya tidak hanya membuat kumpulan `div` tanpa pembagian yang jelas. Saya jadi lebih terbiasa memikirkan setiap bagian halaman sebagai sebuah struktur yang memiliki fungsi, bukan hanya sebagai elemen yang harus diberi CSS.
+
+### 2. Tantangan Tata Letak pada Mobile
+
+Tantangan tata letak terbesar adalah memastikan website tetap nyaman dilihat ketika ukuran layar menjadi jauh lebih kecil. Desain yang terlihat baik pada *desktop* tidak selalu bisa langsung digunakan dengan ukuran dan susunan yang sama pada *mobile*. Kalau semua elemen hanya diperkecil, beberapa bagian justru menjadi terlalu sempit atau saling bertabrakan.
+
+Ketika menemukan masalah tersebut, saya membandingkan hasil implementasi dengan desain yang saya inginkan, kemudian memberikan prompt lanjutan kepada AI untuk memperbaikinya. Beberapa perubahan yang saya minta antara lain:
+
+* Mengecilkan ukuran *card project* dan *art* agar lebih proporsional pada layar kecil.
+* Memindahkan deskripsi dan judul proyek ke bawah gambar pada tampilan *mobile*, sedangkan pada *desktop* posisinya berada di samping.
+* Mengubah *layout* deretan tombol dari horizontal menjadi vertikal agar tidak terlalu sempit.
+* Mengatur kembali posisi deskripsi profil karena sebelumnya sempat menabrak dan menutupi foto *background* utama ketika ukuran layar mengecil.
+
+Dari proses ini saya belajar bahwa *responsive design* bukan hanya tentang membuat semua ukuran menjadi lebih kecil. Struktur dan posisi elemen juga perlu disesuaikan dengan ruang yang tersedia supaya informasi tetap memiliki hierarki yang jelas dan tidak saling bertabrakan.
+
+### 3. Batasan Static Web dan Pengembangan Selanjutnya
+
+Batasan utama dari *static web* murni adalah kontennya masih banyak yang di-*hardcode* di dalam HTML. Selama isi portofolionya masih sedikit, cara ini mungkin masih bisa dilakukan, tetapi akan menjadi semakin merepotkan ketika jumlah kontennya bertambah.
+
+Hal ini cukup terasa pada portfolio saya karena ada banyak gambar karya beserta nama dan informasi lainnya. Kalau saya ingin mengganti atau menambahkan sebuah karya, saya perlu menyiapkan gambar dan kemudian menyesuaikan bagian yang berkaitan dengan gambar dan teks tersebut di dalam project. Kalau jumlah project terus bertambah, cara seperti ini akan semakin tidak praktis.
+
+Karena itu, pengembangan yang paling ingin saya lakukan selanjutnya adalah membuat sistem yang menggunakan **database** dan **panel admin**. Data seperti nama project, deskripsi, dan gambar dapat disimpan sebagai data, bukan ditulis langsung di HTML.
+
+Dengan cara tersebut, halaman website bisa mengambil data dari database secara dinamis. Saya juga bisa menambahkan atau mengubah project melalui form atau panel admin tanpa harus mencari dan mengubah banyak bagian dari kode HTML. Menurut saya, ini akan membuat portfolio lebih mudah dikembangkan ketika jumlah kontennya semakin banyak.
+
+## Tugas 2
+
+### 1. Alur Request-Response (MVT) pada Django
+
+Ketika pengguna membuka halaman portofolio, browser terlebih dahulu mengirimkan HTTP request ke website. Request tersebut akan diterima oleh `urls.py` utama pada proyek Django, yang kemudian menentukan aplikasi mana yang menangani URL tersebut. Setelah diarahkan ke `urls.py` milik aplikasi portofolio, URL tersebut dicocokkan dengan pola yang tersedia dan Django akan memanggil view yang sesuai. Jika URL memiliki parameter tertentu, misalnya ID sebuah project, parameter tersebut juga dapat diteruskan ke view agar data yang diproses sesuai dengan project yang diminta.
+
+Selanjutnya, view menangani logika yang diperlukan untuk menampilkan halaman. Jika halaman membutuhkan data dari database, view akan meminta data tersebut melalui model. Model menjadi penghubung antara aplikasi dengan database, sehingga data project dapat diambil tanpa harus ditulis langsung di dalam HTML.
+
+Setelah mendapatkan data yang dibutuhkan, view meneruskannya ke template. Template kemudian menggunakan data tersebut untuk membentuk halaman HTML yang akan ditampilkan kepada pengguna. Hasil akhirnya dikirim kembali sebagai HTTP response ke browser, sehingga pengguna dapat melihat halaman portofolio beserta data project yang sesuai.
+
+Dari alur ini saya memahami bahwa setiap bagian dalam MVT memiliki tanggung jawab yang berbeda. `urls.py` menentukan ke mana request diarahkan, view mengatur prosesnya, model menangani data, sedangkan template berfokus pada bagaimana data tersebut ditampilkan.
+
+### 2. Mengapa Data (Model dan Temoplate) Dipisahkan?
+
+Data untuk bagian portofolio sebaiknya disimpan pada model daripada ditulis langsung di dalam template karena data dan tampilan memiliki fungsi yang berbeda. Jika nama project, deskripsi, gambar, dan informasi lainnya ditulis langsung di dalam HTML, setiap perubahan atau penambahan project akan membuat saya harus mengubah kode template secara manual.
+
+Hal ini berkaitan dengan keterbatasan static web yang saya temukan pada Tugas 1. Saat jumlah project masih sedikit, melakukan hardcode mungkin masih terasa mudah. Namun, jika jumlah project semakin banyak, cara tersebut akan menjadi semakin sulit untuk dipelihara karena data tersebar di dalam kode HTML.
+
+Dengan menyimpan data pada model, saya dapat menggunakan satu template untuk menampilkan banyak project dari database menggunakan looping. Jika ingin menambahkan atau mengubah project, yang perlu diubah adalah datanya, bukan struktur HTML untuk setiap project. Menurut saya, cara ini membuat aplikasi lebih mudah dan siap untuk dikembangkan menjadi fitur yang lebih dinamis, seperti pencarian atau filter berdasarkan kategori.
+
+### 3. Makemigrations vs Migrate
+
+`makemigrations` dan `migrate` sama-sama berkaitan dengan perubahan struktur database, tetapi memiliki fungsi yang berbeda. `makemigrations` digunakan untuk membuat file migrasi berdasarkan perubahan yang dilakukan pada `models.py`. File tersebut berisi instruksi mengenai perubahan struktur database yang perlu dilakukan oleh Django.
+
+Sementara itu, `migrate` digunakan untuk menerapkan instruksi dari file migrasi tersebut ke database. Jadi, `makemigrations` dapat dipahami sebagai proses mencatat perubahan model menjadi sebuah migrasi, sedangkan `migrate` adalah proses menjalankan perubahan tersebut pada database.
+
+Sebagai contoh, jika saya menambahkan atribut baru bernama `link_github` pada model project, perubahan tersebut belum langsung membuat kolom baru pada database. Saya perlu menjalankan `makemigrations` terlebih dahulu agar Django membuat file migrasi yang mencatat perubahan tersebut. Setelah itu, saya menjalankan `migrate` agar perubahan tersebut benar-benar diterapkan pada database dan kolom `link_github` dapat digunakan untuk menyimpan data.
 
 ## Tugas 3
 

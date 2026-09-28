@@ -1,14 +1,16 @@
 <script>
-    const mainImg = document.getElementById('projectSelectedImg');
-    const mainTitle = document.getElementById('projectHeroTitle');
-    const mainDesc = document.getElementById('projectHeroDesc');
-    const mainLink = document.getElementById('projectHeroLink');
-    const heroStarForm = document.getElementById('heroStarForm');
-    const heroStarBtn = document.getElementById('heroStarBtn');
-    const heroStarIcon = document.getElementById('heroStarIcon');
-    const heroStarLabel = document.getElementById('heroStarLabel');
-    const heroStarCount = document.getElementById('heroStarCount');
-    const cards = document.querySelectorAll('.mini-card');
+    const SEARCH_DEBOUNCE_DELAY = 300;
+
+    let mainImg = document.getElementById('projectSelectedImg');
+    let mainTitle = document.getElementById('projectHeroTitle');
+    let mainDesc = document.getElementById('projectHeroDesc');
+    let mainLink = document.getElementById('projectHeroLink');
+    let heroStarForm = document.getElementById('heroStarForm');
+    let heroStarBtn = document.getElementById('heroStarBtn');
+    let heroStarIcon = document.getElementById('heroStarIcon');
+    let heroStarLabel = document.getElementById('heroStarLabel');
+    let heroStarCount = document.getElementById('heroStarCount');
+    let cards = [];
 
     function selectCard(card) {
         cards.forEach((c) => c.classList.remove('is-active'));
@@ -32,17 +34,146 @@
         }
     }
 
-    cards.forEach((card) => {
-        card.addEventListener('click', (event) => {
-            if (event.target.closest('.mini-card-menu, .star-form')) return;
-            selectCard(card);
-        });
-        card.addEventListener('keydown', (event) => {
-            if (event.target.closest('.mini-card-menu, .star-form')) return;
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
+    function bindMiniCards() {
+        cards = document.querySelectorAll('.mini-card');
+        cards.forEach((card) => {
+            card.addEventListener('click', (event) => {
+                if (event.target.closest('.mini-card-menu, .star-form')) return;
                 selectCard(card);
-            }
+            });
+            card.addEventListener('keydown', (event) => {
+                if (event.target.closest('.mini-card-menu, .star-form')) return;
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    selectCard(card);
+                }
+            });
         });
-    });
+    }
+
+    // Ambil ulang elemen hero habis showcase ditukar hasil fetch
+    function refreshHero() {
+        mainImg = document.getElementById('projectSelectedImg');
+        mainTitle = document.getElementById('projectHeroTitle');
+        mainDesc = document.getElementById('projectHeroDesc');
+        mainLink = document.getElementById('projectHeroLink');
+        heroStarForm = document.getElementById('heroStarForm');
+        heroStarBtn = document.getElementById('heroStarBtn');
+        heroStarIcon = document.getElementById('heroStarIcon');
+        heroStarLabel = document.getElementById('heroStarLabel');
+        heroStarCount = document.getElementById('heroStarCount');
+    }
+
+    bindMiniCards();
+
+        function closeProjectModal() {
+        document.getElementById("add-project-modal").hidePopover();
+    }
+
+    // Baca cookie csrf buat fetch
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Cari project tanpa reload, tempel hasil render server
+    const searchForm = document.getElementById('project-search-form');
+    if (searchForm) {
+        const searchInput = document.getElementById('search-input');
+        const projectsWrap = document.getElementById('projects-wrap');
+        const loadingState = document.getElementById('loading');
+        const errorState = document.getElementById('error');
+        let searchAbort;
+        let searchDebounceTimer;
+
+        function setSearchState(mode) {
+            loadingState.classList.toggle('hide', mode !== 'loading');
+            errorState.classList.toggle('hide', mode !== 'error');
+            projectsWrap.classList.toggle('hide', mode !== 'done');
+        }
+
+        function doSearch() {
+            if (searchAbort) searchAbort.abort();
+            searchAbort = new AbortController();
+            setSearchState('loading');
+            const url = searchForm.action + '?title=' + encodeURIComponent(searchInput.value.trim());
+            fetch(url, {signal: searchAbort.signal}).then((response) => {
+                if (!response.ok) throw new Error('search failed');
+                return response.text();
+            }).then((html) => {
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const fresh = doc.getElementById('projects-wrap');
+                if (!fresh) throw new Error('bad markup');
+                projectsWrap.innerHTML = fresh.innerHTML;
+                refreshHero();
+                bindMiniCards();
+                setSearchState('done');
+            }).catch((error) => {
+                if (error.name === 'AbortError') return;
+                setSearchState('error');
+            });
+        }
+
+        searchForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            clearTimeout(searchDebounceTimer);
+            doSearch();
+        });
+
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(doSearch, SEARCH_DEBOUNCE_DELAY);
+        });
+
+                const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}";
+        const projectForm = document.getElementById('project-form');
+
+        // Kirim form modal tanpa reload
+        async function addProject(event) {
+            event.preventDefault();
+
+            const submitButton = projectForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+
+            try {
+                const response = await fetch(CREATE_PROJECT_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    body: new FormData(projectForm),
+                });
+                const result = await response.json().catch(() => ({}));
+
+                if (response.ok) {
+                    projectForm.reset();
+                    closeProjectModal();
+                    showToast('Success', 'New project added!', 'success');
+                    doSearch();
+                } else {
+                    const errorMessages = result.errors
+                        ? Object.values(result.errors).flat().map(error => error.message)
+                        : [result.message || `Error (status ${response.status}).`];
+                    showToast('Failed to add project', errorMessages.join(' '), 'error');
+                }
+            } catch (error) {
+                console.error('Error adding project:', error);
+                showToast('Failed to add project', 'Cannot reach server. Please try again.', 'error');
+            } finally {
+                submitButton.disabled = false;
+            }
+        }
+
+        if (projectForm) {
+            projectForm.addEventListener('submit', addProject);
+        }
+    }
 </script>

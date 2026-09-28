@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+{% if user.is_superuser %}
+    {% include "partials/project_form_modal.html" %}
+{% endif %}
+
 <!-- PROJECTS -->
 <section class="slanted-section" id="projects">
     <div class="container">

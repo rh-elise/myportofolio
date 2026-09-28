@@ -3,10 +3,10 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.core import serializers
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 
@@ -116,27 +116,45 @@ def show_main(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html", context)
 
 
-def show_experience(request: HttpRequest) -> HttpResponse:
-    json_response = get_experience_json(request)
-    exps = [e.object for e in serializers.deserialize("json", json_response.content.decode("utf-8"))]
+def show_experience(request):
     title_query = request.GET.get("title", "").strip()
+    experience_list = Experience.objects.all()
+
+    if title_query:
+        experience_list = experience_list.filter(title__icontains=title_query)
+
     context = {
         "name": PROFILE["name"],
         "tagline": PROFILE["tagline"],
-        "experience_list": exps,
+        "experience_list": experience_list,
         "title_query": title_query,
     }
     return render(request, "experience.html", context)
 
 
-def get_experience_json(request: HttpRequest) -> HttpResponse:
+def get_experience_json(request):
     """API JSON untuk experience - dipakai filter & testing."""
     title_query = request.GET.get("title", "").strip()
-    qs = Experience.objects.all()
+    experiences = Experience.objects.all()
+
     if title_query:
-        qs = qs.filter(title__icontains=title_query)
-    data = serializers.serialize("json", qs)
-    return HttpResponse(data, content_type="application/json")
+        experiences = experiences.filter(title__icontains=title_query)
+
+    data = []
+    for exp in experiences:
+        data.append({
+            "pk": exp.id,
+            "fields": {
+                "title": exp.title,
+                "description": exp.description,
+                "thumbnail": exp.thumbnail,
+                "category": exp.category,
+                "year": exp.year,
+                "status": exp.status,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 
 @login_required(login_url="/login/")
@@ -157,7 +175,7 @@ def create_experience(request: HttpRequest) -> HttpResponse:
 @login_required(login_url="/login/")
 def update_experience(request: HttpRequest, experience_id: int) -> HttpResponse:
     if not request.user.has_perm("main.change_experience"):
-            raise PermissionDenied
+        raise PermissionDenied
 
     experience = get_object_or_404(Experience, pk=experience_id)
     form = ExperienceForm(request.POST or None, instance=experience)
@@ -190,28 +208,50 @@ def show_artworks(request: HttpRequest) -> HttpResponse:
     context.update(_artwork_context(request.GET.get("category", "")))
     return render(request, "artworks.html", context)
 
-
-def show_projects(request: HttpRequest) -> HttpResponse:
-    json_response = get_projects_json(request)
-    projects = [p.object for p in serializers.deserialize("json", json_response.content.decode("utf-8"))]
+def show_projects(request):
     title_query = request.GET.get("title", "").strip()
+    projects = Projects.objects.all()
+
+    if title_query:
+        projects = projects.filter(title__icontains=title_query)
+
     context = {
         "name": PROFILE["name"],
         "tagline": PROFILE["tagline"],
         "projects_list": projects,
         "title_query": title_query,
+        "form": ProjectForm(),
     }
     return render(request, "projects.html", context)
 
-
-def get_projects_json(request: HttpRequest) -> HttpResponse:
+def get_projects_json(request):
     """API JSON untuk projects - dipakai filter & testing."""
     title_query = request.GET.get("title", "").strip()
-    projects = Projects.objects.all()
+    projects = Projects.objects.prefetch_related('starred_by').all()
+
     if title_query:
         projects = projects.filter(title__icontains=title_query)
-    data = serializers.serialize("json", projects, use_natural_foreign_keys=True)
-    return HttpResponse(data, content_type="application/json")
+
+    data = []
+    for project in projects:
+        starred_users = project.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": project.id,
+            "fields": {
+                "title": project.title,
+                "description": project.description,
+                "image": project.image,
+                "link": project.link,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 
 @login_required(login_url="/login/")
@@ -227,6 +267,25 @@ def create_project(request: HttpRequest) -> HttpResponse:
 
     context = {"name": PROFILE["name"], "form": form}
     return render(request, "projects_form.html", context)
+
+
+@require_POST
+def create_project_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Only the portfolio owner can add projects.."},
+            status=403,
+        )
+
+    form = ProjectForm(request.POST)
+    if form.is_valid():
+        project = form.save()
+        return JsonResponse(
+            {"message": "New project added!", "pk": str(project.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 
 @login_required(login_url="/login/")

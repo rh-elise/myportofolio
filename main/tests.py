@@ -120,6 +120,40 @@ class ProjectsTest(TestCase):
         self.assertRedirects(response, reverse("main:show_projects"))
         self.assertTrue(Projects.objects.filter(title="Brine and Blade").exists())
 
+    def test_create_project_ajax_post(self):
+        response = self.client.post(reverse("main:create_project_ajax"), {
+            "title": "Brine and Blade",
+            "description": "Roguelite bullet-hell.",
+            "image": "/static/img/cover-brine-and-blade.png",
+            "link": "https://example.com/brine-and-blade",
+        })
+
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(Projects.objects.filter(title="Brine and Blade").exists())
+
+    def test_create_project_ajax_forbidden_for_anonymous(self):
+        self.client.logout()
+        response = self.client.post(reverse("main:create_project_ajax"), {
+            "title": "Brine and Blade",
+            "description": "Roguelite bullet-hell.",
+            "image": "/static/img/cover-brine-and-blade.png",
+            "link": "https://example.com/brine-and-blade",
+        })
+
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(Projects.objects.filter(title="Brine and Blade").exists())
+
+    def test_create_project_ajax_rejects_blank_title(self):
+        response = self.client.post(reverse("main:create_project_ajax"), {
+            "title": "   ",
+            "description": "Roguelite bullet-hell.",
+            "image": "/static/img/cover-brine-and-blade.png",
+            "link": "https://example.com/brine-and-blade",
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("title", response.json()["errors"])
+
     def test_projects_json(self):
         response = self.client.get(reverse("main:get_projects_json"))
 

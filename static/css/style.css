@@ -1328,6 +1328,80 @@ h1, h2, h3, .brand {
     background: #9B0A00;
 }
 
+/* Modal tambah project, ngikutin modal hapus */
+.project-form-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 1rem;
+    border: 0;
+    background: transparent;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-form-modal:popover-open {
+    display: flex;
+}
+
+.project-form-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: rgba(28, 25, 23, 0.58);
+    cursor: default;
+}
+
+.project-form-modal__content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 640px);
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    padding: 1.5rem;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+.project-form-modal__content h2 {
+    margin: 0 2.5rem 1.25rem 0;
+    font-family: "Freeman", sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.project-form-modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.project-form-modal__close:hover {
+    color: var(--accent);
+}
+
+.project-form-modal__content .form-actions {
+    margin-top: 1.5rem;
+}
+
 @media (max-width: 900px) {
     .project-header {
         grid-template-columns: 1fr;
@@ -1983,6 +2057,55 @@ h1, h2, h3, .brand {
     background: var(--ink);
     color: var(--paper);
 }
+
+/* toast */
+.toast-component {
+    position: fixed;
+    inset: auto 2rem 2rem auto;
+    margin: 0;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius);
+    background-color: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0px var(--ink);
+    color: inherit;
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.toast-component:popover-open {
+    display: flex;
+}
+
+.toast-hidden {
+    opacity: 0;
+    transform: translateY(150%);
+    pointer-events: none;
+}
+
+.toast-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-title {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 0.15rem;
+    font-family: "Freeman", sans-serif;
+    letter-spacing: 1px;
+}
+
+.toast-message {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.toast-success { border-left: 8px solid #22c55e; }
+.toast-error { border-left: 8px solid #b42318; }
+.toast-normal { border-left: 8px solid var(--accent); }
 
 /* Animations */
 html { scroll-behavior: smooth; }

@@ -5,10 +5,12 @@
 
 {% if not hide_controls %}
 <div class="project-header">
-    <form method="get"
+    <form id="project-search-form"
+            method="get"
             action="{% url 'main:show_projects' %}"
             class="project-search">
-        <input type="search"
+        <input id="search-input"
+                type="search"
                 name="title"
                 value="{{ title_query }}"
                 placeholder="Search by project name..."
@@ -17,16 +19,28 @@
         <button type="submit" class="project-search__button" aria-label="Search projects"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20L16.6 16.6"/></svg> Search</span></button>
     </form>
     {% if user.is_superuser %}
-        <a href="{% url 'main:create_project' %}"
-            class="project-add-button">
-            <span class="project-add-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
-            <span>Add Project</span>
-        </a>
+    <button type="button"
+            class="button project-add-button"
+            popovertarget="add-project-modal">
+        <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+        <span>Add Project</span>
+    </button>
     {% endif %} 
 </div>
 {% endif %}
 
+<!-- LOADING STATE -->
+<div id="loading" class="empty-state hide">
+    <p>Loading projects...</p>
+</div>
+
+<!-- ERROR STATE -->
+<div id="error" class="empty-state hide">
+    <p>Unable to load projects. Please try again.</p>
+</div>
+
 <!-- SHOWCASE -->
+<div id="projects-wrap">
 {% if projects_list %}
 <div class="project-showcase">
     <div class="project-left-col">
@@ -109,4 +123,5 @@
 {% else %}
 {% include "partials/empty_state.html" with message=empty_message %}
 {% endif %}
+</div>
 {% endif %}

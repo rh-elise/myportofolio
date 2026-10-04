@@ -12,6 +12,7 @@ from main.views import (
     show_projects,
 
     create_experience,
+    create_experience_ajax,
     delete_experience,
     update_experience,
     get_experience_json,
@@ -48,6 +49,7 @@ urlpatterns = [
 
 
     path("experience/add/", create_experience, name="create_experience"),
+    path("experience/add-ajax/", create_experience_ajax, name="create_experience_ajax"),
     path("experience/<int:experience_id>/edit/", update_experience, name="update_experience"),
     path("experience/<int:experience_id>/delete/", delete_experience, name="delete_experience"),
     path("api/experience/", get_experience_json, name="get_experience_json"),

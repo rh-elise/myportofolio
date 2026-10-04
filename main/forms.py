@@ -77,7 +77,9 @@ class ExperienceForm(ModelForm):
         }
 
     def clean_title(self) -> str:
-        title = self.cleaned_data["title"].strip()
+        title = strip_tags(self.cleaned_data["title"]).strip()
+        if not title:
+            raise forms.ValidationError("Title must not contain only HTML tags.")
         if len(title) < 3:
             raise forms.ValidationError("Title must be at least 3 characters.")
         return title
@@ -87,3 +89,6 @@ class ExperienceForm(ModelForm):
         if thumbnail and not (thumbnail.startswith("/static/") or thumbnail.startswith("http")):
             raise forms.ValidationError("Cover must be a /static/... path or http(s) URL.")
         return thumbnail
+
+    def clean_description(self) -> str:
+        return strip_tags(self.cleaned_data["description"]).strip()

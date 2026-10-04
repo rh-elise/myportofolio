@@ -194,52 +194,61 @@ exit()
 
 ### Pesan Singkat untuk Kak Asdos
 
-Halo Kak! Melanjutkan progres dari Tugas 3, di Tugas 4 ini saya masih berusaha mengurangi kebiasaan *vibecoding*. Saya mencoba mengerjakan bagian yang saya pahami terlebih dahulu, kemudian menggunakan AI ketika menemukan error atau bagian yang belum saya mengerti. Di Tugas 4 ini, AI paling banyak saya gunakan untuk membantu debugging, memahami permission, dan menerjemahkan rancangan tampilan yang saya inginkan ke dalam CSS.
+Halo Kak! Di Tugas 5 saya masih menggunakan AI, saya mengerjakan atau menentukan arahnya terlebih dahulu, lalu memberikan kode, traceback, atau screenshot yang memang sedang saya hadapi kepada AI untuk didiskusikan.
+
+Di tugas ini AI paling banyak saya gunakan untuk debugging, membantu menerjemahkan rancangan UI ke CSS/JavaScript, dan melakukan review terhadap implementasi serta test. Saya tetap mengecek hasilnya di project karena beberapa saran AI ternyata tidak langsung cocok dengan struktur kode yang saya gunakan.
 
 ### Kapan dan Bagaimana Saya Menggunakan AI di Tugas Ini?
 
-**Superuser & Login**
+**Tools & Strategi Prompting**
 
-Saya menggunakan AI untuk memahami cara membuat superuser dan perbedaan ketika menjalankan perintah secara lokal dan melalui Terminal PWS karena keduanya menggunakan database yang berbeda. Saya juga menanyakan arti `is_superuser` serta cara mengisi prompt ketika menjalankan `createsuperuser`.
+Tool AI yang saya gunakan adalah OpenCode. Cara saya memberikan prompt juga lebih spesifik dibanding sekadar meminta kode. Untuk debugging, saya memberikan traceback dan bagian kode yang berkaitan, kemudian meminta AI mencari kemungkinan penyebabnya. Untuk styling, saya memberikan screenshot hasil implementasi beserta CSS yang sedang digunakan agar masalahnya bisa dilihat berdasarkan kondisi yang sebenarnya.
 
-**Debug Star (NoReverseMatch)**
+Saya juga menggunakan AI untuk review setelah suatu bagian selesai, misalnya meminta pengecekan test, konsistensi JSON dengan template, atau mencari sisa `TODO` dan bahasa Indonesia. Jadi, prompt yang saya gunakan lebih banyak berbentuk **"ini yang saya punya, kenapa hasilnya seperti ini?"** atau **"tolong review bagian ini"**.
 
-Ketika halaman `/projects/` mengalami error `NoReverseMatch`, saya memberikan traceback kepada AI untuk membantu mencari penyebabnya. Dari proses debugging tersebut ditemukan dua masalah: URL `toggle_star` masih menggunakan `<uuid:...>`, sedangkan ID pada model saya menggunakan `int`, dan pada `{% include ... with project=project %}` nama variabel yang digunakan tidak sesuai dengan variabel loop, yaitu `proj`.
+**Debugging**
 
-Saya kemudian mengecek kembali view dan model untuk memastikan bagian tersebut memang sesuai dengan struktur project saya. Setelah itu, saya memperbaiki bagian yang bermasalah berdasarkan hasil pengecekan tersebut.
+AI paling banyak membantu ketika saya menemukan error yang sulit dilacak. Saya memberikan traceback yang saya dapatkan setelah menjalankan project, misalnya `ImportError require_POST`, `TemplateDoesNotExist`, dan `NoReverseMatch`.
 
-**Styling Star & Navbar**
+Namun, saya tetap mengecek file dan baris yang disebutkan, lalu menjalankan ulang project setelah melakukan perubahan. Dalam beberapa kasus, penyebab error memang sesuai dengan penjelasan AI, tetapi saya tetap perlu menyesuaikan solusi dengan kode saya sendiri.
 
-Untuk tampilan, saya menentukan sendiri desain yang ingin digunakan. Misalnya, badge star menggunakan `☆/★` dan jumlah star diletakkan di pojok mini card, tombol pada hero berubah dari putih menjadi merah, serta sapaan `Hi! username` diletakkan di bagian kiri navbar tanpa latar merah.
+Menurut saya, bagian ini menjadi salah satu penggunaan AI yang paling membantu karena saya mendapatkan arah untuk mencari masalah tanpa harus menyerahkan seluruh proses debugging kepada AI.
 
-Saya menggunakan AI untuk membantu menerjemahkan rancangan tersebut ke dalam CSS. Ketika hasilnya tidak sesuai, saya memberikan screenshot dan kode yang sedang digunakan agar AI membantu mencari penyebabnya. Salah satu contohnya adalah ketika badge mini card ikut berubah menjadi merah karena aturan `.button` menimpa `.button-star`, atau ketika tampilan search berubah menjadi input yang terlalu polos.
+**CSS & JavaScript**
 
-Dari proses ini, saya tidak hanya meminta CSS baru, tetapi juga mencoba memahami selector mana yang menyebabkan konflik dan mengapa perubahan pada satu class dapat memengaruhi elemen lain.
+Untuk UI, saya memberikan rancangan dan screenshot kepada AI lalu meminta bantuan untuk menerjemahkannya ke CSS atau JavaScript. Hasil pertama tidak selalu benar. Contohnya, aturan `.button` sempat ikut memengaruhi badge star sehingga tampilannya berubah menjadi merah, dan search sempat berubah menjadi input yang terlalu sederhana dibandingkan desain yang saya inginkan.
 
-**Pembagian Peran Editor**
+Pada kondisi seperti ini, saya tidak hanya meminta AI mengganti CSS sampai terlihat benar. Saya mencoba memahami selector atau aturan yang menyebabkan konflik, kemudian mengecek kembali perubahan yang diberikan. Beberapa bagian juga saya tulis terlebih dahulu sendiri, termasuk skeleton Experience dan penggunaan `strip_tags`, kemudian AI saya gunakan sebagai reviewer.
 
-Pada bagian permission Editor, saya menggunakan AI sebagai teman diskusi untuk menentukan pembagian akses yang sesuai dengan kebutuhan tugas. Saya meminta AI membantu membandingkan penggunaan `has_perm("main.change_projects")` dengan pengecekan group secara langsung.
+**Testing & Review**
 
-Dari diskusi tersebut, saya memahami bahwa Editor seharusnya memiliki akses untuk melakukan update, tetapi tidak memiliki akses untuk create atau delete. Setelah memahami pembagiannya, saya sendiri yang menerapkan perubahan pada `views.py` dan template.
+Setelah melakukan perubahan, saya menggunakan AI untuk membantu melakukan pengecekan tambahan, salah satunya dengan meminta AI memeriksa test yang gagal dan mencari kemungkinan masalah pada implementasi.
 
-Saya kemudian menggunakan AI untuk memeriksa kembali apakah pembatasan tersebut sudah konsisten, misalnya `update_*` dapat dilakukan Editor, sedangkan `create_*` dan `delete_*` tetap dibatasi untuk Owner.
+Saya juga menggunakan AI untuk pengecekan yang lebih sederhana, seperti mencari sisa `TODO`, bahasa Indonesia yang masih tertinggal, file modal yang terduplikasi, dan ketidakkonsistenan antara JSON dengan template. Hasil akhirnya saya verifikasi kembali melalui project dan test.
 
-**Test Peran Editor**
+### Keterbatasan AI yang Saya Temui
 
-Saya menggunakan AI untuk membantu menuliskan test untuk permission Editor dengan mengikuti pola test 403 yang sudah saya buat sebelumnya. Saya memberikan struktur test lama tersebut dan meminta AI menyesuaikannya untuk beberapa kondisi baru, yaitu Editor tidak dapat membuka halaman tambah, tidak dapat melakukan create, dapat melakukan update, dan tidak dapat melakukan delete experience.
+Keterbatasan AI yang saya temui di Tugas 5 adalah meskipun menggunakan agentic AI yang dapat memahami konteks beberapa file dalam project, hasilnya tetap tidak selalu sesuai dengan kondisi dan rancangan project saya. Misalnya, AI memberikan perubahan CSS yang secara teknis benar, tetapi dapat bertabrakan dengan aturan yang sudah ada. AI juga sempat menyarankan perubahan pada test yang kurang sesuai setelah cara rendering data berubah karena penggunaan skeleton.
 
-AI membantu menyesuaikan struktur test dan helper `login_as_editor`, sedangkan saya menjalankan test tersebut pada project untuk memastikan hasilnya sesuai. Hasil akhirnya adalah `29/29 OK`.
+Karena itu, saya tetap perlu mengecek hasilnya dengan menjalankan project, melihat tampilan di browser, membaca error atau traceback, dan memastikan perubahan tersebut sesuai dengan kebutuhan saya. Dari sini saya memahami bahwa AI dapat membantu mengerjakan dan menemukan solusi, tetapi hasilnya tetap perlu saya validasi.
+
+### Perbaikan Manual yang Saya Lakukan
+
+Beberapa hasil dari AI tidak langsung saya gunakan. Saya melakukan penyesuaian sendiri ketika hasilnya tidak sesuai dengan struktur project atau desain.
+
+- **Styling:** saya memperbaiki kembali selector yang terlalu umum agar tidak memengaruhi komponen lain.
+- **Template & modal:** saya memastikan sendiri posisi `{% include %}` berada pada struktur template yang benar.
+- **Test:** saya menyesuaikan kembali asersi dengan cara data sebenarnya dikembalikan oleh endpoint setelah menggunakan skeleton.
+
+Selain itu, keputusan mengenai arsitektur, struktur folder, desain UI, dan cara fitur tersebut seharusnya bekerja tetap saya tentukan sendiri. AI lebih banyak membantu pada tahap implementasi, pencarian masalah, dan review.
 
 ### Refleksi Diri
 
-Pada tugas 4 beberapa masalah yang muncul tidak terlihat dari bagian kode yang sedang saya kerjakan. Misalnya, error pada `toggle_star` ternyata berkaitan dengan tipe ID yang digunakan, sedangkan masalah pada template disebabkan oleh nama variabel yang berbeda.
+Dari Tugas 5, saya merasa penggunaan AI saya belum bisa dibilang sedikit. Saya masih cukup bergantung pada AI ketika menemukan error yang belum saya pahami, terutama pada bagian JavaScript, AJAX, dan CSS.
 
-Untuk bagian styling, saya juga beberapa kali mendapatkan hasil yang tidak sesuai dengan yang saya bayangkan. Ketika menggunakan AI untuk membantu memperbaiki tampilan, saya tetap perlu melihat kembali CSS yang sudah ada dan menyesuaikannya dengan struktur project saya.
+Hal yang paling saya rasakan adalah AI tidak selalu menghasilkan solusi yang langsung bisa dipakai. Saya tetap perlu membaca kode, menjalankan test, melihat hasil di browser, dan kadang membatalkan atau mengubah saran AI karena tidak cocok dengan project saya. Dari situ saya mulai melihat AI lebih sebagai alat bantu debugging dan diskusi daripada sebagai orang yang mengerjakan project saya.
 
-Saya masih cukup sering menggunakan AI selama pengerjaan Tugas 4, terutama ketika menemui error atau ketika saya belum tahu cara menerapkan sesuatu. Bedanya, sekarang saya lebih sering memberikan kode atau error yang memang sedang saya hadapi daripada meminta seluruh bagian dibuat dari awal.
-
-Saya rasa cara ini masih belum membuat saya sepenuhnya lepas dari bantuan AI, tetapi setidaknya saya jadi lebih terbiasa membaca error, mencari bagian yang bermasalah, dan memahami perubahan yang saya lakukan pada project.
-
+Saya masih perlu mengurangi ketergantungan ini pada tugas berikutnya. Terutama untuk bagian yang sudah pernah saya pelajari, saya ingin mencoba menyelesaikan masalahnya sendiri terlebih dahulu sebelum membuka AI. Dengan begitu, AI bisa lebih berfungsi sebagai alat untuk memeriksa pemahaman saya daripada menjadi langkah pertama setiap kali saya menemukan masalah.
 
 ### Styling README.md
 
@@ -352,3 +361,35 @@ Karena data tersebut masih dalam bentuk objek Python, data perlu diubah menjadi 
 Setelah proses tersebut selesai, view mengembalikan data dalam bentuk `HttpResponse` dengan `content_type="application/json"`. Browser atau frontend kemudian dapat menerima response tersebut dan menggunakan data JSON yang diberikan.
 
 Dari alur ini saya memahami bahwa prosesnya kurang lebih tetap mengikuti konsep MVT yang sebelumnya saya pelajari. Perbedaannya terletak pada hasil akhirnya. Jika pada halaman biasa view mengirim data ke template untuk menghasilkan HTML, pada endpoint JSON view mengubah data menjadi JSON dan mengembalikannya sebagai response yang dapat digunakan oleh frontend.
+
+## Tugas 5
+
+### 1. Apa Itu Debouncing dan Mengapa Penting pada Fitur Pencarian AJAX?
+
+Debouncing adalah teknik untuk menahan eksekusi sebuah fungsi sampai pengguna berhenti melakukan suatu aksi selama jeda waktu tertentu. Pada fitur pencarian, artinya request AJAX tidak langsung dikirim setiap kali pengguna mengetik satu huruf, tetapi baru dikirim setelah pengguna berhenti mengetik, misalnya selama 1 detik.
+
+Tanpa debouncing, setiap ketikan akan langsung memicu request ke server. Sebagai contoh, ketika pengguna mengetik "BUKU", server akan menerima request untuk `B`, `BU`, `BUK`, dan `BUKU` secara beruntun. Jika banyak pengguna melakukan hal yang sama, jumlah request yang masuk bisa menjadi sangat besar dan membuat server kelebihan beban, padahal hasil yang benar-benar dibutuhkan hanya hasil dari kata terakhir.
+
+Selain membebani server, ada juga risiko *race condition*. Request untuk kata yang lebih pendek, misalnya "BUK", bisa saja mengalami delay dan baru mendapat respons setelah request "BUKU" selesai. Akibatnya, tampilan justru diperbarui dengan data yang sudah kedaluwarsa dan tidak sesuai dengan kata yang terakhir diketik pengguna.
+
+Dengan debouncing, request hanya dikirim satu kali menggunakan kata final setelah pengguna benar-benar berhenti mengetik. Dari sini saya memahami bahwa debouncing bukan hanya soal menghemat resource server, tetapi juga membantu memastikan hasil yang ditampilkan di halaman tetap sesuai dengan apa yang pengguna cari.
+
+### 2. Fungsi `await` pada `fetch()` dan Apa yang Terjadi Jika Tidak Digunakan
+
+Mengambil data dari server membutuhkan waktu tempuh, mirip seperti menunggu makanan yang sudah dipesan sampai benar-benar siap. Karena itu, `fetch()` bekerja secara asinkron dan tidak langsung mengembalikan datanya, melainkan sebuah *Promise* yang statusnya masih menunggu.
+
+Fungsi `await` digunakan untuk menjeda eksekusi pada baris tersebut sampai proses `fetch()` selesai dan datanya siap digunakan. Dengan begitu, baris kode di bawahnya, seperti mengubah response menjadi JSON atau merender data ke halaman, baru berjalan setelah data dari server benar-benar tersedia.
+
+Jika `await` tidak digunakan, kode di bawah `fetch()` akan langsung dieksekusi sebelum data dari server tiba. Pada saat itu, yang dimiliki program baru berupa Promise yang berstatus *pending*, bukan data yang sebenarnya. Akibatnya, program bisa mengalami error atau gagal merender karena mencoba mengolah data yang masih kosong.
+
+Dari sini saya memahami bahwa `await` bukan sekadar tambahan penulisan, tetapi bagian penting untuk mengatur urutan proses ketika bekerja dengan data yang tidak langsung tersedia.
+
+### 3. Serangan XSS dan Mengapa Data AJAX/JavaScript Lebih Rentan Dibanding Template Django
+
+XSS (*Cross-Site Scripting*) adalah serangan ketika pihak yang tidak bertanggung jawab memasukkan kode berbahaya, seperti `<script>`, melalui input yang diterima aplikasi, misalnya lewat form yang datanya kemudian tersimpan di database. Ketika browser pengguna lain memuat data tersebut, browser akan mengeksekusi script itu tanpa disadari, sehingga dapat berujung pada pencurian data atau informasi rahasia pengguna.
+
+Template Django relatif lebih aman karena memiliki fitur *auto-escaping* bawaan. Karakter berbahaya seperti `<` dan `>` otomatis diubah menjadi bentuk teks biasa sebelum dirender, sehingga browser hanya menampilkannya sebagai teks dan tidak mengeksekusinya sebagai kode.
+
+Sebaliknya, pada AJAX/JavaScript, data diambil terlebih dahulu dalam bentuk mentah lalu dimasukkan ke dalam DOM oleh JavaScript, misalnya dengan `innerHTML`. Pada proses ini tidak ada auto-escaping, sehingga data disuntikkan apa adanya ke halaman. Jika data tersebut mengandung script berbahaya, browser dapat langsung mengeksekusinya.
+
+Karena itu, developer perlu melakukan escaping atau pembersihan data secara manual sebelum menampilkannya di halaman. Hal ini juga berkaitan dengan pengalaman saya di Tugas 5, ketika saya menggunakan `strip_tags` pada bagian skeleton Experience. Dari sini saya memahami bahwa ketika proses render berpindah dari template Django ke JavaScript, tanggung jawab untuk menjaga keamanan data juga ikut berpindah ke sisi developer.

@@ -8,47 +8,37 @@
         </div>
 
         <div class="project-header">
-            <form method="get" action="{% url 'main:show_experience' %}" class="project-search">
-                <input type="search" name="title" value="{{ title_query }}" placeholder="Search by title..." class="project-search__input" aria-label="Search experience">
-                <button type="submit" class="project-search__button"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20L16.6 16.6"/></svg> Search</span></button>
+            <form id="experience-search-form" method="get" action="{% url 'main:show_experience' %}" class="project-search">
+                <input id="search-input" type="search" name="title" value="{{ title_query }}" placeholder="Search by title..." class="project-search__input" aria-label="Search experience">
+                <button type="submit" class="project-search__button"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20L16.6 16.6"/></svg> Search</button>
             </form>
             {% if user.is_superuser %}
-            <a href="{% url 'main:create_experience' %}" class="project-add-button"><span class="project-add-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span>Add Experience</span></a>
+            <button type="button" class="project-add-button" popovertarget="add-experience-modal"><span class="project-add-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span>Add Experience</span></button>
             {% endif %}
         </div>
 
-        {% for exp in experience_list %}
-        <article class="exp-card">
-            <div class="exp-name"><span>{{ exp.title }}</span></div>
-            <div class="exp-year"><span>{{ exp.year }}{% if exp.is_ongoing %}-present{% endif %}</span></div>
-            <div class="exp-body">
-                {% if exp.thumbnail %}
-                <div class="exp-photo"><img src="{{ exp.thumbnail }}" alt="{{ exp.title }}"></div>
-                {% endif %}
-                <p class="exp-desc">{{ exp.description }}</p>
-                {% if perms.main.change_experience %}
-                <details class="exp-menu">
-                    <summary aria-label="Options for {{ exp.title }}" title="Options">&#8942;</summary>
-                    <div class="exp-menu__list">
-                        <a href="{% url 'main:update_experience' exp.id %}"><span aria-hidden="true">&#9998;</span>Edit</a>
-                        {% if user.is_superuser %}
-                        <button type="button"
-                            popovertarget="delete-experience-{{ exp.id }}"
-                            aria-label="Delete {{ exp.title }}"><span aria-hidden="true">&times;</span>Delete</button>
-                        {% endif %}
-                    </div>
-                </details>
-                {% endif %}
-            </div>
-        </article>
-        {% include "partials/experience_delete_modal.html" with exp=exp %}
-        {% empty %}
-        {% if title_query %}
-        {% include "partials/empty_state.html" with message="No experience found with that title." %}
-        {% else %}
-        {% include "partials/empty_state.html" with message="No experience has been added yet." %}
-        {% endif %}
-        {% endfor %}
+        <!-- LOADING STATE -->
+        <div id="loading" class="empty-state hide">
+            <p>Loading experiences...</p>
+        </div>
+
+        <!-- ERROR STATE -->
+        <div id="error" class="empty-state hide">
+            <p>Unable to load experiences. Please try again.</p>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="empty-ajax" class="hide">{% include "partials/empty_state.html" with message="No experience found." %}</div>
+
+        <div id="exp-grid"></div>
     </div>
 </section>
+
+{% if user.is_superuser %}
+{% include "partials/experience_form_modal.html" %}
+{% endif %}
 {% endblock content %}
+
+{% block extra_scripts %}
+{% include "partials/experience_cards_script.html" %}
+{% endblock extra_scripts %}

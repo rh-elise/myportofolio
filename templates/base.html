@@ -6,6 +6,9 @@
 
 <body>
     {% include "partials/toast.html" %}
+    {% if user.is_authenticated %}
+    {% include "partials/logout_modal.html" %}
+    {% endif %}
 
     {% include "partials/site_header.html" %}
 

@@ -16,7 +16,7 @@
                 <a href="{% url 'main:show_artworks' %}">Artworks</a>
 
                 {% if user.is_authenticated %}
-                    <a href="{% url 'main:logout' %}">Logout</a>
+                    <a href="{% url 'main:logout' %}" onclick="event.preventDefault(); document.getElementById('logout-modal').showPopover()">Logout</a>
                 {% else %}
                     <a href="{% url 'main:login' %}">Login</a>
                     <a href="{% url 'main:register' %}">Register</a>

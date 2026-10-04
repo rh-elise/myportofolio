@@ -6,8 +6,6 @@
 {% if not hide_controls %}
 <div class="project-header">
     <form id="project-search-form"
-            method="get"
-            action="{% url 'main:show_projects' %}"
             class="project-search">
         <input id="search-input"
                 type="search"
@@ -22,7 +20,7 @@
     <button type="button"
             class="button project-add-button"
             popovertarget="add-project-modal">
-        <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+        <span class="project-add-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
         <span>Add Project</span>
     </button>
     {% endif %} 
@@ -40,7 +38,6 @@
 </div>
 
 <!-- SHOWCASE -->
-<div id="projects-wrap">
 {% if projects_list %}
 <div class="project-showcase">
     <div class="project-left-col">
@@ -118,10 +115,44 @@
     </div>
 </div>
 {% else %}
-{% if title_query %}
-{% include "partials/empty_state.html" with message="No project found with that name." %}
-{% else %}
+{% if hide_controls %}
 {% include "partials/empty_state.html" with message=empty_message %}
-{% endif %}
+{% else %}
+<div id="empty" class="hide">
+{% include "partials/empty_state.html" with message="No projects found." %}
 </div>
+<div id="project-showcase" class="hide">
+<div class="project-showcase">
+    <div class="project-left-col">
+        <div class="project-selected-image">
+            <img id="projectSelectedImg" src="" alt="Project">
+        </div>
+    </div>
+    <div class="project-right-col">
+        <div class="project-info-card">
+            <div class="title-flag">
+                <img src="/static/img/title-flag.svg" alt="Bubble BG" class="title-flag-bg">
+                <h3 id="projectHeroTitle"></h3>
+            </div>
+            <div class="desc-box">
+                <form id="heroStarForm" method="post" action="#" class="star-form hero-star">
+                    {% csrf_token %}
+                    <button id="heroStarBtn" type="submit"
+                            class="button button-star"
+                            title="Stars: 0"
+                            aria-label="Star project">
+                        <span id="heroStarIcon" aria-hidden="true">☆</span>
+                        <span id="heroStarLabel">Star</span>
+                        <span id="heroStarCount">0</span>
+                    </button>
+                </form>
+                <p id="projectHeroDesc"></p>
+                <a id="projectHeroLink" class="project-link" href="#" target="_blank" rel="noopener" style="display:none">Play &#8599;</a>
+            </div>
+        </div>
+        <div class="project-mini-cards" id="miniCardsContainer"></div>
+    </div>
+</div>
+</div>
+{% endif %}
 {% endif %}

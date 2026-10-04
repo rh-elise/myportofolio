@@ -62,24 +62,41 @@ class ExperienceTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "experience.html")
+        self.assertContains(response, 'id="exp-grid"')
+        self.assertContains(response, 'id="experience-search-form"')
+        self.assertNotContains(response, self.experience.title)
+
+    def test_experience_json(self):
+        response = self.client.get(reverse("main:get_experience_json"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/json")
         self.assertContains(response, self.experience.title)
-        self.assertContains(response, self.experience.description)
-        self.assertContains(response, "2026-present")
+        self.assertContains(response, '"year": 2026')
+        self.assertContains(response, '"status": "ongoing"')
+
+    def test_experience_json_filter(self):
+        response = self.client.get(reverse("main:get_experience_json") + "?title=calculus")
+
+        self.assertContains(response, self.experience.title)
+
+        response = self.client.get(reverse("main:get_experience_json") + "?title=tidak-ada")
+        self.assertNotContains(response, self.experience.title)
 
     def test_completed_experience(self):
         self.experience.status = "completed"
         self.experience.save()
-        response = self.client.get(reverse("main:show_experience"))
+        response = self.client.get(reverse("main:get_experience_json"))
 
         self.assertFalse(self.experience.is_ongoing)
-        self.assertContains(response, "2026")
-        self.assertNotContains(response, "present")
+        self.assertContains(response, '"status": "completed"')
+        self.assertNotContains(response, "ongoing")
 
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
         response = self.client.get(reverse("main:show_experience"))
 
-        self.assertContains(response, "No experience has been added yet.")
+        self.assertContains(response, "No experience found.")
 
 
 class ProjectsTest(TestCase):
@@ -100,14 +117,15 @@ class ProjectsTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "projects.html")
-        self.assertContains(response, self.project.title)
-        self.assertContains(response, self.project.description)
+        self.assertContains(response, 'id="miniCardsContainer"')
+        self.assertContains(response, 'id="project-search-form"')
+        self.assertNotContains(response, self.project.title)
 
     def test_empty_projects_page(self):
         Projects.objects.all().delete()
         response = self.client.get(reverse("main:show_projects"))
 
-        self.assertContains(response, "No projects have been added yet.")
+        self.assertContains(response, "No projects found.")
 
     def test_create_project_post(self):
         response = self.client.post(reverse("main:create_project"), {
@@ -160,6 +178,8 @@ class ProjectsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "application/json")
         self.assertContains(response, self.project.title)
+        self.assertContains(response, '"star_count": 0')
+        self.assertContains(response, '"is_starred": false')
 
     def test_projects_json_filter(self):
         response = self.client.get(reverse("main:get_projects_json") + "?title=patient")
@@ -172,7 +192,7 @@ class ProjectsTest(TestCase):
     def test_projects_search_empty_message(self):
         response = self.client.get(reverse("main:show_projects") + "?title=tidak-ada")
 
-        self.assertContains(response, "No project found with that name.")
+        self.assertContains(response, "No projects found.")
 
     def test_delete_project_post(self):
         response = self.client.post(reverse("main:delete_project", args=[self.project.id]))

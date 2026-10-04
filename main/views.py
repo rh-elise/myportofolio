@@ -3,12 +3,12 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
+from django.views.decorators.http import require_POST
 
 from main.forms import ProjectForm, ExperienceForm
 from main.models import Artworks, Experience, Projects
@@ -34,7 +34,7 @@ def register(request):
 
     if request.method == "POST" and form.is_valid():
         form.save()
-        messages.success(request, "Akun berhasil dibuat. Silakan login.")
+        messages.success(request, "Account created. Please log in.")
         return redirect("main:login")
 
     context = {
@@ -116,18 +116,15 @@ def show_main(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html", context)
 
 
+# Kerangka saja, datanya diambil JS lewat JSON
 def show_experience(request):
     title_query = request.GET.get("title", "").strip()
-    experience_list = Experience.objects.all()
-
-    if title_query:
-        experience_list = experience_list.filter(title__icontains=title_query)
 
     context = {
         "name": PROFILE["name"],
         "tagline": PROFILE["tagline"],
-        "experience_list": experience_list,
         "title_query": title_query,
+        "form": ExperienceForm(),
     }
     return render(request, "experience.html", context)
 
@@ -161,7 +158,7 @@ def get_experience_json(request):
 def create_experience(request: HttpRequest) -> HttpResponse:
     if not request.user.is_superuser:
         raise PermissionDenied
-    
+
     form = ExperienceForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         form.save()
@@ -170,6 +167,24 @@ def create_experience(request: HttpRequest) -> HttpResponse:
 
     context = {"name": PROFILE["name"], "form": form}
     return render(request, "experience_form.html", context)
+
+@require_POST
+def create_experience_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Only the portfolio owner can add experience."},
+            status=403,
+        )
+
+    form = ExperienceForm(request.POST)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse(
+            {"message": "New experience added.", "pk": experience.id},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 
 @login_required(login_url="/login/")
@@ -200,6 +215,7 @@ def delete_experience(request: HttpRequest, experience_id: int) -> HttpResponse:
     return redirect("main:show_experience")
 
 
+
 def show_artworks(request: HttpRequest) -> HttpResponse:
     context = {
         "name": PROFILE["name"],
@@ -208,17 +224,14 @@ def show_artworks(request: HttpRequest) -> HttpResponse:
     context.update(_artwork_context(request.GET.get("category", "")))
     return render(request, "artworks.html", context)
 
+
+# Kerangka saja, datanya diambil JS lewat JSON
 def show_projects(request):
     title_query = request.GET.get("title", "").strip()
-    projects = Projects.objects.all()
-
-    if title_query:
-        projects = projects.filter(title__icontains=title_query)
 
     context = {
         "name": PROFILE["name"],
         "tagline": PROFILE["tagline"],
-        "projects_list": projects,
         "title_query": title_query,
         "form": ProjectForm(),
     }
@@ -232,6 +245,7 @@ def get_projects_json(request):
     if title_query:
         projects = projects.filter(title__icontains=title_query)
 
+    # JSON dirakit manual biar bisa selipkan status star per user
     data = []
     for project in projects:
         starred_users = project.starred_by.all()
@@ -258,7 +272,7 @@ def get_projects_json(request):
 def create_project(request: HttpRequest) -> HttpResponse:
     if not request.user.is_superuser:
         raise PermissionDenied
-    
+
     form = ProjectForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         form.save()
@@ -269,11 +283,12 @@ def create_project(request: HttpRequest) -> HttpResponse:
     return render(request, "projects_form.html", context)
 
 
+# Tanpa login_required: fetch ngikutin redirect jadi 200 HTML, dicek manual di bawah
 @require_POST
 def create_project_ajax(request):
     if not request.user.is_superuser:
         return JsonResponse(
-            {"message": "Only the portfolio owner can add projects.."},
+            {"message": "Only the portfolio owner can add projects."},
             status=403,
         )
 

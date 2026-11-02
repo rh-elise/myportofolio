@@ -112,6 +112,16 @@ class ProjectsTest(TestCase):
             link="https://depelemon.itch.io/save-the-patient",
         )
 
+    def login_as_editor(self):
+        group, _ = Group.objects.get_or_create(name="Editor")
+        group.permissions.add(
+            Permission.objects.get(codename="change_projects"),
+            Permission.objects.get(codename="change_experience"),
+        )
+        editor = User.objects.create_user(username="editor", password="pass12345")
+        editor.groups.add(group)
+        self.client.force_login(editor)
+
     def test_projects_page(self):
         response = self.client.get(reverse("main:show_projects"))
 
@@ -219,16 +229,6 @@ class ProjectsTest(TestCase):
         response = self.client.get(reverse("main:create_project"))
 
         self.assertEqual(response.status_code, 403)
-
-    def login_as_editor(self):
-        group, _ = Group.objects.get_or_create(name="Editor")
-        group.permissions.add(
-            Permission.objects.get(codename="change_projects"),
-            Permission.objects.get(codename="change_experience"),
-        )
-        editor = User.objects.create_user(username="editor", password="pass12345")
-        editor.groups.add(group)
-        self.client.force_login(editor)
 
     def test_editor_cannot_open_add_project(self):
         self.login_as_editor()

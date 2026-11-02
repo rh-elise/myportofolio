@@ -51,9 +51,12 @@ class ProjectAPITest(APITestCase):
     def test_guest_and_visitor_cannot_write(self):
         for user in (None, self.visitor):
             self.client.force_authenticate(user=user)
-            self.assertEqual(self.client.post(self.list_url, self.payload, format="json").status_code, 403)
-            self.assertEqual(self.client.patch(self.detail_url, {"title": "Changed"}, format="json").status_code, 403)
-            self.assertEqual(self.client.delete(self.detail_url).status_code, 403)
+            post = self.client.post(self.list_url, self.payload, format="json")
+            patch = self.client.patch(self.detail_url, {"title": "Changed"}, format="json")
+            delete = self.client.delete(self.detail_url)
+            self.assertEqual(post.status_code, 403)
+            self.assertEqual(patch.status_code, 403)
+            self.assertEqual(delete.status_code, 403)
         self.assertEqual(Projects.objects.count(), 1)
         self.project.refresh_from_db()
         self.assertEqual(self.project.title, "Portfolio")
@@ -133,7 +136,8 @@ class ProjectAPITest(APITestCase):
 
     def test_wrong_method(self):
         self.client.force_authenticate(user=self.owner)
-        self.assertEqual(self.client.delete(self.list_url).status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        response = self.client.delete(self.list_url)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_session_write_without_csrf_is_rejected(self):
         client = APIClient(enforce_csrf_checks=True)

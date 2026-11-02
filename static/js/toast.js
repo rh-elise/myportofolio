@@ -12,11 +12,11 @@ function showToast(title, message, type = 'normal', duration = 3000) {
 
   // Terapkan class baru berdasarkan tipe
   if (type === 'success') {
-      toastComponent.classList.add('toast-success');
+    toastComponent.classList.add('toast-success');
   } else if (type === 'error') {
-      toastComponent.classList.add('toast-error');
+    toastComponent.classList.add('toast-error');
   } else {
-      toastComponent.classList.add('toast-normal');
+    toastComponent.classList.add('toast-normal');
   }
 
   // Perbarui konten teks
@@ -28,16 +28,16 @@ function showToast(title, message, type = 'normal', duration = 3000) {
 
   // Animasi muncul
   if (!toastComponent.matches(':popover-open')) {
-      toastComponent.showPopover();
-      void toastComponent.offsetHeight; // paksa browser menghitung style agar transisi berjalan
+    toastComponent.showPopover();
+    void toastComponent.offsetHeight; // paksa browser menghitung style agar transisi berjalan
   }
   toastComponent.classList.remove('toast-hidden');
   toastComponent.classList.add('toast-show');
 
   // Animasi hilang otomatis
   toastTimer = setTimeout(() => {
-      toastComponent.classList.remove('toast-show');
-      toastComponent.classList.add('toast-hidden');
-      toastTimer = setTimeout(() => toastComponent.hidePopover(), 300);
+    toastComponent.classList.remove('toast-show');
+    toastComponent.classList.add('toast-hidden');
+    toastTimer = setTimeout(() => toastComponent.hidePopover(), 300);
   }, duration);
 }

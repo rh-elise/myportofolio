@@ -114,7 +114,7 @@
         const experienceForm = document.getElementById('experience-form');
 
         function closeExperienceModal() {
-            document.getElementById("add-experience-modal").hidePopover();
+            document.getElementById('add-experience-modal').hidePopover();
         }
 
         // Baca cookie csrf buat fetch
@@ -170,7 +170,6 @@
         if (experienceForm) {
             experienceForm.addEventListener('submit', addExperience);
         }
-        
 
         expSearchInput.addEventListener('input', () => {
             clearTimeout(expDebounceTimer);

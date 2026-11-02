@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm, TextInput, Textarea, URLInput
 from django.utils.html import strip_tags
 
-from main.models import Projects, Experience
+from main.models import Experience, Projects
 
 
 class ProjectForm(ModelForm):
@@ -18,14 +18,18 @@ class ProjectForm(ModelForm):
             "link": "Project Link",
         }
         widgets = {
-            "title": TextInput(attrs={"placeholder": "What's the project called?", "maxlength": 255}),
+            "title": TextInput(
+                attrs={"placeholder": "What's the project called?", "maxlength": 255}
+            ),
             "description": Textarea(
                 attrs={
                     "placeholder": "Tell a little story about this project...",
                     "rows": 3,
                 }
             ),
-            "image": TextInput(attrs={"placeholder": "/static/img/project-cover.png or http(s)/URL"}),
+            "image": TextInput(
+                attrs={"placeholder": "/static/img/project-cover.png or http(s)/URL"}
+            ),
             "link": URLInput(attrs={"placeholder": "https://your-project-link.com"}),
         }
 

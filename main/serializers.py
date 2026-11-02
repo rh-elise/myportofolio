@@ -1,4 +1,3 @@
-
 from django.utils.html import strip_tags
 from rest_framework import serializers
 
@@ -33,9 +32,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         value = strip_tags(value).strip()
 
         if not value:
-            raise serializers.ValidationError(
-                "Title cannot be empty."
-            )
+            raise serializers.ValidationError("Title cannot be empty.")
 
         return value
 
@@ -51,11 +48,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         if request is None or not request.user.is_authenticated:
             return False
 
-        return obj.starred_by.filter(
-            id=request.user.id
-        ).exists()
+        return obj.starred_by.filter(id=request.user.id).exists()
 
     def get_starred_by_names(self, obj):
-        return ", ".join(
-            obj.starred_by.values_list("username", flat=True)
-        )
+        return ", ".join(obj.starred_by.values_list("username", flat=True))

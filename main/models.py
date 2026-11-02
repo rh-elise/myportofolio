@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-
 class Projects(models.Model):
     """Game/project showcase."""
 
@@ -11,8 +10,8 @@ class Projects(models.Model):
     image = models.CharField(max_length=255, help_text="Path statis, mis. /static/img/cover-*.png")
     link = models.URLField(max_length=255, blank=True, help_text="External Game URL")
     starred_by = models.ManyToManyField(
-                User, related_name="starred_projects", blank=True
-            )
+        User, related_name="starred_projects", blank=True
+    )
 
     class Meta:
         verbose_name_plural = "Projects"
@@ -55,10 +54,14 @@ class Experience(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
-    category = models.CharField(max_length=20, choices=Category.choices, default=Category.FULL_TIME)
+    category = models.CharField(
+        max_length=20, choices=Category.choices, default=Category.FULL_TIME
+    )
     thumbnail = models.CharField(max_length=500, blank=True, null=True)
     year = models.PositiveIntegerField(default=2026)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.ONGOING)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.ONGOING
+    )
 
     class Meta:
         ordering = ["-year", "title"]

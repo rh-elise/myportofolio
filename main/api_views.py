@@ -1,9 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.decorators import (
-    api_view, authentication_classes, permission_classes,
-)
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -21,9 +19,7 @@ def project_list(request):
         title = request.query_params.get("title", "").strip()
         if title:
             projects = projects.filter(title__icontains=title)
-        serializer = ProjectSerializer(
-            projects, many=True, context={"request": request},
-        )
+        serializer = ProjectSerializer(projects, many=True, context={"request": request})
         return Response(serializer.data)
 
     serializer = ProjectSerializer(data=request.data, context={"request": request})
@@ -36,9 +32,7 @@ def project_list(request):
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsPortfolioOwnerOrReadOnly])
 def project_detail(request, project_id):
-    project = get_object_or_404(
-        Projects.objects.prefetch_related("starred_by"), pk=project_id,
-    )
+    project = get_object_or_404(Projects.objects.prefetch_related("starred_by"), pk=project_id)
     if request.method in ("GET", "HEAD"):
         serializer = ProjectSerializer(project, context={"request": request})
         return Response(serializer.data)
@@ -48,7 +42,9 @@ def project_detail(request, project_id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     serializer = ProjectSerializer(
-        project, data=request.data, partial=request.method == "PATCH",
+        project,
+        data=request.data,
+        partial=request.method == "PATCH",
         context={"request": request},
     )
     serializer.is_valid(raise_exception=True)

@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 
-from main.forms import ProjectForm, ExperienceForm
+from main.forms import ExperienceForm, ProjectForm
 from main.models import Artworks, Experience, Projects
 
 # ---------------------------------------------------------------------------
@@ -30,6 +30,7 @@ PROFILE = {
     "tagline": "Hi! Hello! How are you?",
 }
 
+
 def register(request):
     form = UserCreationForm(request.POST or None)
 
@@ -44,6 +45,7 @@ def register(request):
     }
     return render(request, "register.html", context)
 
+
 def login_user(request):
     form = AuthenticationForm(request, data=request.POST or None)
 
@@ -51,7 +53,7 @@ def login_user(request):
         user = form.get_user()
         login(request, user)
         response = redirect("main:show_main")
-        response.set_cookie('last_login', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        response.set_cookie("last_login", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         return response
 
     context = {
@@ -60,10 +62,11 @@ def login_user(request):
     }
     return render(request, "login.html", context)
 
+
 def logout_user(request):
     logout(request)
     response = redirect("main:show_main")
-    response.delete_cookie('last_login')
+    response.delete_cookie("last_login")
     return response
 
 
@@ -104,7 +107,7 @@ def _artwork_context(category_slug: str) -> dict:
 # Pages
 # ---------------------------------------------------------------------------
 def show_main(request: HttpRequest) -> HttpResponse:
-    last_login = request.COOKIES.get('last_login', 'No active login session found')
+    last_login = request.COOKIES.get("last_login", "No active login session found")
 
     context = {
         **PROFILE,
@@ -169,6 +172,7 @@ def create_experience(request: HttpRequest) -> HttpResponse:
     context = {"name": PROFILE["name"], "form": form}
     return render(request, "experience_form.html", context)
 
+
 @require_POST
 def create_experience_ajax(request):
     if not request.user.is_superuser:
@@ -216,7 +220,6 @@ def delete_experience(request: HttpRequest, experience_id: int) -> HttpResponse:
     return redirect("main:show_experience")
 
 
-
 def show_artworks(request: HttpRequest) -> HttpResponse:
     context = {
         "name": PROFILE["name"],
@@ -238,10 +241,11 @@ def show_projects(request):
     }
     return render(request, "projects.html", context)
 
+
 def get_projects_json(request):
     """API JSON untuk projects - dipakai filter & testing."""
     title_query = request.GET.get("title", "").strip()
-    projects = Projects.objects.prefetch_related('starred_by').all()
+    projects = Projects.objects.prefetch_related("starred_by").all()
 
     if title_query:
         projects = projects.filter(title__icontains=title_query)
@@ -251,7 +255,7 @@ def get_projects_json(request):
     for project in projects:
         starred_users = project.starred_by.all()
         is_starred = request.user in starred_users if request.user.is_authenticated else False
-        starred_by_names = ", ".join([u.username for u in starred_users])
+        starred_by_names = ", ".join(u.username for u in starred_users)
 
         data.append({
             "pk": project.id,

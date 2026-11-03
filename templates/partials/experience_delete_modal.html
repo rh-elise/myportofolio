@@ -28,10 +28,10 @@
                     class="project-delete-modal__btn project-delete-modal__btn--ghost"
                     popovertarget="delete-experience-{{ exp.id }}"
                     popovertargetaction="hide"><span>Cancel</span></button>
-            <form method="post" action="{% url 'main:delete_experience' exp.id %}">
-                {% csrf_token %}
-                <button type="submit" class="project-delete-modal__btn project-delete-modal__btn--danger"><span>Yes, Delete</span></button>
-            </form>
+            <button type="button"
+                    class="project-delete-modal__btn project-delete-modal__btn--danger"
+                    data-action="delete"
+                    data-id="{{ exp.id }}"><span>Yes, Delete</span></button>
         </div>
     </div>
 </div>

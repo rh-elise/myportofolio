@@ -1815,6 +1815,31 @@ h1, h2, h3, .brand {
     transform: skewX(15deg);
 }
 
+/* Tombol star kecil di ribbon tahun, mengikuti warna ribbon */
+.exp-year .button-star {
+    border: 0;
+    padding: 0 0 0 0.55rem;
+    margin: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 0.9rem;
+    line-height: 1;
+    box-shadow: none;
+    vertical-align: middle;
+}
+
+.exp-year .button-star:hover,
+.exp-year .button-star.is-starred {
+    background: transparent;
+    color: inherit;
+    transform: none;
+    box-shadow: none;
+}
+
+.exp-year .button-star:hover::after {
+    opacity: 0;
+}
+
 .exp-body {
     position: relative;
     display: flex; gap: 1.5rem; align-items: center;

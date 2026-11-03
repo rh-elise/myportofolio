@@ -30,3 +30,65 @@
         </section>
     </main>
 {% endblock content %}
+
+{% block extra_scripts %}
+{% if form.instance.pk %}
+<script>
+    // Halaman edit mengirim PATCH ke API, bukan POST biasa ke view Django.
+    (function () {
+        const form = document.querySelector('.project-form');
+        const csrfToken = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+
+        function apiErrorMessage(data, status) {
+            const messages = Object.values(data)
+                .flat()
+                .filter((value) => typeof value === 'string');
+            return messages.join(' ') || `Request failed (HTTP ${status}).`;
+        }
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+
+            const fields = new FormData(form);
+            const payload = {};
+
+            ['title', 'description', 'category', 'thumbnail', 'year', 'status'].forEach((name) => {
+                payload[name] = (fields.get(name) || '').toString();
+            });
+
+            try {
+                const response = await fetch(
+                    "{% url 'api:experience-detail' form.instance.pk %}",
+                    {
+                        method: 'PATCH',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify(payload),
+                    }
+                );
+
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    throw new Error(apiErrorMessage(data, response.status));
+                }
+
+                showToast('Success', 'Experience updated!', 'success');
+                setTimeout(() => {
+                    window.location.href = "{% url 'main:show_experience' %}";
+                }, 800);
+            } catch (error) {
+                showToast('Failed to update experience', error.message, 'error');
+                submitButton.disabled = false;
+            }
+        });
+    })();
+</script>
+{% endif %}
+{% endblock extra_scripts %}

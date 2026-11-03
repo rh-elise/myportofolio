@@ -48,22 +48,52 @@ Install seluruh dependencies yang dibutuhkan:
 pip install -r requirements.txt
 ```
 
-### 5. Jalankan Server Django
+### 5. Jalankan Migrasi
+
+Terapkan skema database, termasuk migrasi relasi star pada model `Experience`:
+
+```bash
+python manage.py migrate
+```
+
+### 6. Jalankan Test
+
+Pastikan seluruh test, termasuk test API Experience dan test Tutorial 07, lulus:
+
+```bash
+python manage.py test main
+```
+
+Gunakan `main` agar file `test_e2e.py` (Selenium) tidak ikut dijalankan.
+
+### 7. Jalankan Server Django
 
 ```bash
 python manage.py runserver
 ```
 
-### 6. Buka Website
+### 8. Buka Website
 
 Setelah server berhasil dijalankan, buka browser dan akses:
 
 `http://localhost:8000/`
 
-### 7. Buat Grup Editor (via Admin)
+### 9. Buat Grup Editor (via Admin)
+
+Editor adalah pengguna yang boleh mengubah data Experience dengan `PUT`/`PATCH`, tetapi tidak boleh membuat atau menghapus data.
 
 ```bash
-    python manage.py createsuperuser
+python manage.py createsuperuser
+```
+
+Setelah itu:
+
+1. Buka `http://localhost:8000/admin/` dan login sebagai superuser.
+2. Buat grup bernama **Editor**.
+3. Berikan permission **`main | experience | Can change experience`** kepada grup tersebut.
+4. Tambahkan akun Editor ke grup **Editor**.
+
+Hak akses ini dicek oleh `IsPortfolioOwnerOrEditorOrReadOnly` melalui `request.user.has_perm("main.change_experience")`, sehingga API dan halaman edit memakai aturan yang sama.
 
 ---
 
@@ -194,61 +224,64 @@ exit()
 
 ### Pesan Singkat untuk Kak Asdos
 
-Halo Kak! Di Tugas 5 saya masih menggunakan AI, saya mengerjakan atau menentukan arahnya terlebih dahulu, lalu memberikan kode, traceback, atau screenshot yang memang sedang saya hadapi kepada AI untuk didiskusikan.
+Halo Kak! Dalam pengerjaan portfolio ini, saya menggunakan AI sebagai alat bantu diskusi, debugging, dan review. Saya tetap menentukan arah pengerjaan dan memeriksa hasil perubahan karena beberapa saran AI tidak selalu sesuai dengan struktur project yang sudah saya buat.
 
-Di tugas ini AI paling banyak saya gunakan untuk debugging, membantu menerjemahkan rancangan UI ke CSS/JavaScript, dan melakukan review terhadap implementasi serta test. Saya tetap mengecek hasilnya di project karena beberapa saran AI ternyata tidak langsung cocok dengan struktur kode yang saya gunakan.
-
-### Kapan dan Bagaimana Saya Menggunakan AI di Tugas Ini?
+### Kapan dan Bagaimana Saya Menggunakan AI?
 
 **Tools & Strategi Prompting**
 
-Tool AI yang saya gunakan adalah OpenCode. Cara saya memberikan prompt juga lebih spesifik dibanding sekadar meminta kode. Untuk debugging, saya memberikan traceback dan bagian kode yang berkaitan, kemudian meminta AI mencari kemungkinan penyebabnya. Untuk styling, saya memberikan screenshot hasil implementasi beserta CSS yang sedang digunakan agar masalahnya bisa dilihat berdasarkan kondisi yang sebenarnya.
+Tool AI yang saya gunakan adalah OpenCode. Saya biasanya memberikan konteks terlebih dahulu, seperti bagian kode yang sedang dikerjakan, traceback, atau screenshot hasil implementasi. Dengan begitu, AI bisa memberikan saran berdasarkan kondisi project, bukan hanya menghasilkan kode secara umum.
 
-Saya juga menggunakan AI untuk review setelah suatu bagian selesai, misalnya meminta pengecekan test, konsistensi JSON dengan template, atau mencari sisa `TODO` dan bahasa Indonesia. Jadi, prompt yang saya gunakan lebih banyak berbentuk **"ini yang saya punya, kenapa hasilnya seperti ini?"** atau **"tolong review bagian ini"**.
+Prompt yang saya gunakan juga tidak selalu meminta AI membuat sesuatu dari awal. Saya lebih sering meminta penjelasan mengenai penyebab masalah, membandingkan beberapa pendekatan, atau melakukan review terhadap kode yang sudah ada. Contohnya, saya meminta AI memeriksa konsistensi antara data JSON dan template, serta mencari bagian yang masih perlu diperbaiki.
 
 **Debugging**
 
-AI paling banyak membantu ketika saya menemukan error yang sulit dilacak. Saya memberikan traceback yang saya dapatkan setelah menjalankan project, misalnya `ImportError require_POST`, `TemplateDoesNotExist`, dan `NoReverseMatch`.
+AI cukup membantu ketika saya menemukan error yang penyebabnya belum langsung terlihat. Saya memberikan traceback setelah menjalankan project, misalnya `ImportError require_POST`, `TemplateDoesNotExist`, dan `NoReverseMatch`, lalu meminta AI membantu menelusuri kemungkinan sumber masalahnya.
 
-Namun, saya tetap mengecek file dan baris yang disebutkan, lalu menjalankan ulang project setelah melakukan perubahan. Dalam beberapa kasus, penyebab error memang sesuai dengan penjelasan AI, tetapi saya tetap perlu menyesuaikan solusi dengan kode saya sendiri.
-
-Menurut saya, bagian ini menjadi salah satu penggunaan AI yang paling membantu karena saya mendapatkan arah untuk mencari masalah tanpa harus menyerahkan seluruh proses debugging kepada AI.
+Saya tetap membuka file yang berkaitan dan memeriksa perubahan yang disarankan sebelum menjalankan ulang project. Dengan cara ini, saya mendapat petunjuk untuk memulai proses debugging tanpa harus langsung mencoba perubahan secara acak.
 
 **CSS & JavaScript**
 
-Untuk UI, saya memberikan rancangan dan screenshot kepada AI lalu meminta bantuan untuk menerjemahkannya ke CSS atau JavaScript. Hasil pertama tidak selalu benar. Contohnya, aturan `.button` sempat ikut memengaruhi badge star sehingga tampilannya berubah menjadi merah, dan search sempat berubah menjadi input yang terlalu sederhana dibandingkan desain yang saya inginkan.
+Untuk bagian tampilan dan interaksi halaman, saya menggunakan AI untuk mendiskusikan penerapan CSS maupun JavaScript berdasarkan rancangan dan hasil implementasi. Hasil awalnya tidak selalu sesuai. Contohnya, aturan `.button` sempat ikut memengaruhi badge star, sedangkan tampilan search sempat menjadi terlalu sederhana dibandingkan desain yang saya inginkan.
 
-Pada kondisi seperti ini, saya tidak hanya meminta AI mengganti CSS sampai terlihat benar. Saya mencoba memahami selector atau aturan yang menyebabkan konflik, kemudian mengecek kembali perubahan yang diberikan. Beberapa bagian juga saya tulis terlebih dahulu sendiri, termasuk skeleton Experience dan penggunaan `strip_tags`, kemudian AI saya gunakan sebagai reviewer.
+Saya kemudian memeriksa selector dan aturan yang menyebabkan masalah tersebut sebelum menyesuaikannya. Beberapa bagian juga saya kerjakan terlebih dahulu, seperti skeleton Experience dan penggunaan `strip_tags`, kemudian meminta AI membantu melakukan review.
+
+**Implementasi API DRF**
+
+Dalam mengembangkan API menggunakan Django REST Framework, saya menggunakan AI untuk membantu memahami dan menerapkan konsep dari tutorial ke dalam project yang sudah ada. Saya berdiskusi mengenai struktur API, serializer, permission, views, serta cara menghubungkan API dengan frontend.
+
+Saya juga meminta penjelasan tambahan ketika menemukan konsep atau bagian kode yang belum saya pahami. Salah satu hal yang saya pelajari adalah bagaimana optimasi query dapat membantu menghindari pengambilan data berulang. Untuk keputusan implementasi, saya tetap mempertimbangkan kesesuaiannya dengan struktur dan kebutuhan project.
 
 **Testing & Review**
 
-Setelah melakukan perubahan, saya menggunakan AI untuk membantu melakukan pengecekan tambahan, salah satunya dengan meminta AI memeriksa test yang gagal dan mencari kemungkinan masalah pada implementasi.
+Saya menggunakan AI untuk membantu memeriksa test, menelusuri penyebab test yang gagal, dan mencari bagian implementasi yang belum konsisten. Saya juga memanfaatkannya untuk pengecekan tambahan, seperti mencari sisa `TODO`, bahasa Indonesia yang masih tertinggal, file modal yang terduplikasi, dan ketidaksesuaian antara JSON dengan template.
 
-Saya juga menggunakan AI untuk pengecekan yang lebih sederhana, seperti mencari sisa `TODO`, bahasa Indonesia yang masih tertinggal, file modal yang terduplikasi, dan ketidakkonsistenan antara JSON dengan template. Hasil akhirnya saya verifikasi kembali melalui project dan test.
+Setelah itu, saya menjalankan pemeriksaan pada project, termasuk `python manage.py check`, pengecekan migration, dan `python manage.py test main`. Hasil pengujian terakhir menunjukkan 65 test berhasil lulus dan Django system check tidak menemukan masalah. Namun, pengecekan tampilan akhir secara langsung di browser masih perlu saya lakukan sendiri.
 
 ### Keterbatasan AI yang Saya Temui
 
-Keterbatasan AI yang saya temui di Tugas 5 adalah meskipun menggunakan agentic AI yang dapat memahami konteks beberapa file dalam project, hasilnya tetap tidak selalu sesuai dengan kondisi dan rancangan project saya. Misalnya, AI memberikan perubahan CSS yang secara teknis benar, tetapi dapat bertabrakan dengan aturan yang sudah ada. AI juga sempat menyarankan perubahan pada test yang kurang sesuai setelah cara rendering data berubah karena penggunaan skeleton.
+Walaupun menggunakan agentic AI yang dapat membantu memahami beberapa file dalam project, AI tetap tidak selalu memahami seluruh maksud dan rancangan yang saya inginkan. Saran yang diberikan terkadang terlihat benar secara teknis, tetapi belum tentu cocok dengan struktur kode atau kebutuhan project.
 
-Karena itu, saya tetap perlu mengecek hasilnya dengan menjalankan project, melihat tampilan di browser, membaca error atau traceback, dan memastikan perubahan tersebut sesuai dengan kebutuhan saya. Dari sini saya memahami bahwa AI dapat membantu mengerjakan dan menemukan solusi, tetapi hasilnya tetap perlu saya validasi.
+AI juga bisa menghasilkan kode yang perlu diperbaiki kembali, memberikan solusi yang terlalu umum, atau menyarankan pendekatan yang berbeda dari pola yang sudah digunakan sebelumnya. Karena itu, saya tidak bisa langsung menganggap setiap jawaban AI sebagai solusi akhir. Saya tetap perlu memeriksa kode, memahami dampak perubahannya, dan menjalankan pengujian.
 
 ### Perbaikan Manual yang Saya Lakukan
 
-Beberapa hasil dari AI tidak langsung saya gunakan. Saya melakukan penyesuaian sendiri ketika hasilnya tidak sesuai dengan struktur project atau desain.
+Beberapa hasil dari AI tidak langsung saya gunakan. Saya melakukan penyesuaian ketika hasilnya tidak sesuai dengan struktur project atau desain.
 
-- **Styling:** saya memperbaiki kembali selector yang terlalu umum agar tidak memengaruhi komponen lain.
-- **Template & modal:** saya memastikan sendiri posisi `{% include %}` berada pada struktur template yang benar.
-- **Test:** saya menyesuaikan kembali asersi dengan cara data sebenarnya dikembalikan oleh endpoint setelah menggunakan skeleton.
+- **Styling:** saya memperbaiki selector yang terlalu umum agar tidak memengaruhi komponen lain.
+- **Template & modal:** saya memastikan posisi `{% include %}` berada pada struktur template yang benar.
+- **Test:** saya menyesuaikan asersi dengan bentuk data yang sebenarnya dikembalikan setelah perubahan implementasi.
+- **Serializer:** saya membetulkan referensi model `Experience`, `Meta.model`, field `status`, dan nama `validate_thumbnail` yang sebelumnya tidak sesuai.
+- **Permission:** saya memilih penggunaan `has_perm("main.change_experience")` daripada hanya mengecek nama grup agar konsisten dengan halaman edit.
+- **JavaScript:** saya menyesuaikan penggunaan data dari API, event delegation untuk tombol star dan hapus, serta header `X-CSRFToken` pada request yang mengubah data.
 
-Selain itu, keputusan mengenai arsitektur, struktur folder, desain UI, dan cara fitur tersebut seharusnya bekerja tetap saya tentukan sendiri. AI lebih banyak membantu pada tahap implementasi, pencarian masalah, dan review.
+Keputusan mengenai bagian yang dikembangkan, rancangan fitur, dan kesesuaian implementasi dengan project tetap saya pertimbangkan sendiri. AI lebih banyak membantu pada proses diskusi, implementasi, pencarian masalah, dan review.
 
 ### Refleksi Diri
 
-Dari Tugas 5, saya merasa penggunaan AI saya belum bisa dibilang sedikit. Saya masih cukup bergantung pada AI ketika menemukan error yang belum saya pahami, terutama pada bagian JavaScript, AJAX, dan CSS.
+Saya merasa penggunaan AI dalam pengerjaan portfolio ini masih cukup banyak, terutama ketika menemukan error atau bagian kode yang belum saya pahami. Namun, dari proses tersebut saya mulai menyadari bahwa hasil AI tidak selalu bisa langsung digunakan. Saya tetap perlu membaca kode, memahami perubahan yang diberikan, dan memastikan hasilnya sesuai dengan kebutuhan project.
 
-Hal yang paling saya rasakan adalah AI tidak selalu menghasilkan solusi yang langsung bisa dipakai. Saya tetap perlu membaca kode, menjalankan test, melihat hasil di browser, dan kadang membatalkan atau mengubah saran AI karena tidak cocok dengan project saya. Dari situ saya mulai melihat AI lebih sebagai alat bantu debugging dan diskusi daripada sebagai orang yang mengerjakan project saya.
-
-Saya masih perlu mengurangi ketergantungan ini pada tugas berikutnya. Terutama untuk bagian yang sudah pernah saya pelajari, saya ingin mencoba menyelesaikan masalahnya sendiri terlebih dahulu sebelum membuka AI. Dengan begitu, AI bisa lebih berfungsi sebagai alat untuk memeriksa pemahaman saya daripada menjadi langkah pertama setiap kali saya menemukan masalah.
+Saya juga belajar untuk tidak hanya menerima solusi pertama yang diberikan AI. Ketika ada beberapa pendekatan, saya perlu memahami perbedaannya dan mempertimbangkan mana yang paling sesuai. Untuk pengerjaan berikutnya, saya ingin mencoba menyelesaikan masalah yang sudah pernah saya pelajari terlebih dahulu sebelum meminta bantuan AI. Dengan begitu, AI dapat lebih saya gunakan sebagai teman diskusi dan alat untuk memeriksa pemahaman.
 
 ### Styling README.md
 
@@ -256,8 +289,7 @@ Saya juga menggunakan AI untuk membantu merapikan format dan struktur penulisan 
 
 ### Log Obrolan AI
 
-1. [Link Chat 1](https://opncd.ai/share/0BwNh7SM)
-
+1. [Link Chat 1](https://drive.google.com/file/d/18iycGxKFX1xnQ0iXhym5_Xy36NpwiXwP/view?usp=sharing)
 
 ---
 
@@ -308,7 +340,7 @@ Setelah mendapatkan data yang dibutuhkan, view meneruskannya ke template. Templa
 
 Dari alur ini saya memahami bahwa setiap bagian dalam MVT memiliki tanggung jawab yang berbeda. `urls.py` menentukan ke mana request diarahkan, view mengatur prosesnya, model menangani data, sedangkan template berfokus pada bagaimana data tersebut ditampilkan.
 
-### 2. Mengapa Data (Model dan Temoplate) Dipisahkan?
+### 2. Mengapa Data (Model dan Template) Dipisahkan?
 
 Data untuk bagian portofolio sebaiknya disimpan pada model daripada ditulis langsung di dalam template karena data dan tampilan memiliki fungsi yang berbeda. Jika nama project, deskripsi, gambar, dan informasi lainnya ditulis langsung di dalam HTML, setiap perubahan atau penambahan project akan membuat saya harus mengubah kode template secara manual.
 
@@ -393,3 +425,62 @@ Template Django relatif lebih aman karena memiliki fitur *auto-escaping* bawaan.
 Sebaliknya, pada AJAX/JavaScript, data diambil terlebih dahulu dalam bentuk mentah lalu dimasukkan ke dalam DOM oleh JavaScript, misalnya dengan `innerHTML`. Pada proses ini tidak ada auto-escaping, sehingga data disuntikkan apa adanya ke halaman. Jika data tersebut mengandung script berbahaya, browser dapat langsung mengeksekusinya.
 
 Karena itu, developer perlu melakukan escaping atau pembersihan data secara manual sebelum menampilkannya di halaman. Hal ini juga berkaitan dengan pengalaman saya di Tugas 5, ketika saya menggunakan `strip_tags` pada bagian skeleton Experience. Dari sini saya memahami bahwa ketika proses render berpindah dari template Django ke JavaScript, tanggung jawab untuk menjaga keamanan data juga ikut berpindah ke sisi developer.
+
+## Tugas 6
+
+### 1. Pengertian REST, Mengapa JSON Saja Tidak Cukup, serta Perbedaan PUT dan PATCH
+
+REST (*Representational State Transfer*) adalah salah satu cara untuk merancang API dengan memanfaatkan method HTTP. Dalam REST, setiap data memiliki URL masing-masing. Misalnya, `/api/v1/experience/` digunakan untuk mengambil kumpulan data Experience, sedangkan `/api/v1/experience/5/` digunakan untuk mengakses Experience dengan ID 5.
+
+Untuk melakukan operasi pada data tersebut, kita menggunakan method HTTP yang sesuai. `GET` untuk mengambil data, `POST` untuk menambahkan data, `PUT` dan `PATCH` untuk mengubah data, serta `DELETE` untuk menghapus data. Selain itu, server juga mengirimkan status code untuk menunjukkan hasil dari request, misalnya `201 Created` jika data berhasil dibuat atau `404 Not Found` jika data yang dicari tidak ditemukan.
+
+Menurut saya, mengembalikan data dalam bentuk JSON saja belum cukup untuk membuat sebuah API disebut RESTful. JSON hanya merupakan format untuk mengirimkan data. Sebuah API bisa saja menggunakan JSON, tetapi masih menggunakan satu URL untuk semua operasi atau selalu memakai `POST`, termasuk untuk menghapus data. REST menggunakan URL dan method HTTP dengan tujuan yang lebih jelas, sehingga cara client berkomunikasi dengan server menjadi lebih teratur dan mudah dipahami.
+
+Perbedaan `PUT` dan `PATCH` ada pada jumlah data yang ingin diubah. `PUT` digunakan ketika client ingin memperbarui data secara keseluruhan, sehingga biasanya seluruh field yang dibutuhkan dikirim kembali. Sementara itu, `PATCH` digunakan jika hanya beberapa field yang ingin diubah tanpa harus mengirim ulang semua data.
+
+Contohnya, ketika pengguna mengedit Experience melalui halaman edit, seluruh isi form dikirim untuk diperbarui. Ini sesuai dengan penggunaan `PUT`. Namun, jika pengguna hanya ingin mengganti judul, client cukup mengirim `{"title": "Judul Baru"}` menggunakan `PATCH`. Pada implementasi saya, perbedaan keduanya diatur melalui `partial=request.method == "PATCH"` pada serializer.
+
+### 2. Peran Serializer pada Django REST Framework dan Keuntungannya
+
+Serializer digunakan untuk mengubah data dari model Django menjadi format yang bisa dikirim melalui API, seperti JSON. Serializer juga menangani data yang dikirim dari client sebelum data tersebut disimpan ke database. Jadi, serializer tidak hanya bertugas mengubah format data, tetapi juga memeriksa apakah data yang dikirim sudah sesuai dengan aturan yang ditentukan.
+
+Pada `ExperienceSerializer`, saya menentukan field yang boleh dikirim ke client, seperti `id`, `title`, `description`, `category`, `thumbnail`, `year`, dan `status`. Saya juga menggunakan serializer untuk mengatur informasi tambahan seperti jumlah star dan apakah pengguna yang sedang login sudah memberikan star. Untuk data yang masuk, serializer melakukan validasi, misalnya memeriksa judul, kategori, status, dan thumbnail, serta membersihkan HTML menggunakan `strip_tags`.
+
+Dibandingkan membuat dictionary secara manual menggunakan `JsonResponse` seperti yang pernah dilakukan pada tutorial sebelumnya, penggunaan serializer terasa lebih praktis karena beberapa hal:
+
+- **Validasi lebih mudah diatur:** Aturan seperti judul tidak boleh kosong, minimal tiga karakter, dan format thumbnail bisa ditulis di satu tempat. Jadi, saya tidak perlu memeriksa semuanya secara manual di setiap view.
+- **Lebih sesuai dengan model:** `ModelSerializer` bisa menggunakan informasi field dan pilihan `choices` yang sudah ada pada model. Jika kategori atau status tidak sesuai, serializer bisa langsung memberikan error.
+- **Mengurangi kode berulang:** Saya tidak perlu mengambil setiap atribut model dan memasukkannya satu per satu ke dalam dictionary untuk dijadikan JSON.
+- **Field tertentu bisa dibuat read-only:** Informasi seperti `star_count` dan `is_starred` berasal dari hasil perhitungan, sehingga pengguna tidak bisa sembarangan mengubah nilainya melalui request.
+- **Lebih mudah mengatur data yang ditampilkan:** Saya bisa menentukan sendiri field apa saja yang boleh dikirim ke client, sehingga data yang tidak diperlukan atau bersifat sensitif tidak ikut ditampilkan.
+- **Format error lebih teratur:** Jika ada input yang salah, serializer mengembalikan pesan error berdasarkan field yang bermasalah. Frontend jadi lebih mudah menampilkan pesan tersebut kepada pengguna.
+
+Kalau menggunakan `JsonResponse` secara manual, proses validasi dan penyusunan data tersebut harus dibuat sendiri. Untuk data yang field-nya semakin banyak, cara itu bisa membuat kode menjadi lebih panjang dan lebih sulit dirawat.
+
+### 3. Perbedaan Autentikasi dan Otorisasi serta Mengapa Hak Akses Diperiksa di Server
+
+Autentikasi dan otorisasi merupakan dua hal yang berbeda. Autentikasi digunakan untuk mengetahui siapa pengguna yang sedang mengakses aplikasi. Misalnya, ketika seseorang login menggunakan akun Django, sistem akan mengenali pengguna tersebut melalui session. Jika belum login, pengguna akan dianggap sebagai `AnonymousUser`.
+
+Sementara itu, otorisasi digunakan untuk menentukan apa saja yang boleh dilakukan oleh pengguna tersebut. Jadi, meskipun seseorang sudah berhasil login, belum tentu ia boleh melakukan semua tindakan di aplikasi.
+
+Pada project saya, aturan tersebut diterapkan melalui permission class `IsPortfolioOwnerOrEditorOrReadOnly`. Pengunjung tetap bisa melihat data, tetapi tidak bisa mengubahnya. Pengguna biasa juga tidak diberikan akses untuk menambah, mengedit, atau menghapus Experience. Editor yang memiliki permission `main.change_experience` dapat melakukan perubahan, sedangkan superuser memiliki akses penuh. Untuk fitur star, pengguna harus login terlebih dahulu agar bisa memberikan atau membatalkan star.
+
+Pengecekan hak akses perlu dilakukan di server karena pengguna bisa saja melewati tampilan frontend dan mengirim request secara langsung. Contohnya, tombol Delete mungkin hanya ditampilkan kepada Editor. Namun, pengguna biasa tetap bisa mencoba mengirim request `DELETE` melalui Postman atau DevTools. Jika server tidak memeriksa permission, data tetap berisiko terhapus meskipun tombolnya disembunyikan dari halaman.
+
+Karena itu, menyembunyikan tombol hanya berguna untuk mengatur tampilan yang dilihat pengguna. Server tetap harus memeriksa apakah pengguna tersebut benar-benar memiliki izin untuk melakukan tindakan yang diminta.
+
+### 4. Mengapa CSRF Tetap Diperlukan pada SessionAuthentication dan Mengapa force_authenticate Tidak Cukup
+
+Pada `SessionAuthentication`, Django menggunakan session cookie untuk mengenali pengguna yang sudah login. Masalahnya, browser mengirimkan cookie tersebut secara otomatis ketika mengakses domain yang sesuai. Hal ini bisa dimanfaatkan dalam serangan CSRF (*Cross-Site Request Forgery*), yaitu ketika pengguna tanpa sadar diminta oleh situs lain untuk mengirim request yang mengubah data di aplikasi tempat ia sedang login.
+
+Misalnya, pengguna sedang login ke portfolio saya, lalu membuka situs lain yang mencoba mengirim request untuk menghapus salah satu Experience. Browser bisa saja ikut mengirimkan cookie session pengguna pada request tersebut. Jika tidak ada perlindungan CSRF, server berisiko menganggap request itu benar-benar berasal dari pengguna.
+
+Untuk mencegah hal tersebut, Django menggunakan token CSRF. Pada request yang mengubah data, frontend perlu mengirimkan token melalui header `X-CSRFToken`. Token ini digunakan server untuk memeriksa apakah request tersebut memang berasal dari halaman aplikasi yang sah.
+
+Pada halaman Experience, saya menggunakan `{% csrf_token %}` dan fungsi `getCookie` untuk mengambil token dari cookie `csrftoken`. Token tersebut kemudian dikirim melalui header pada request `POST`, `PATCH`, dan `DELETE`.
+
+Saya juga mempelajari bahwa menggunakan `force_authenticate` saja belum cukup untuk menguji perlindungan CSRF. Alasannya, `force_authenticate` langsung mengatur pengguna pada request untuk kebutuhan testing, sehingga tidak melewati proses login dan autentikasi session seperti yang terjadi ketika pengguna benar-benar mengakses aplikasi melalui browser.
+
+Karena itu, untuk pengujian CSRF saya menggunakan `APIClient(enforce_csrf_checks=True)` dan `.login()`. Dengan cara ini, saya bisa menguji apakah request tanpa token CSRF ditolak dan apakah request dengan token yang benar berhasil diproses. Hasilnya, request `POST` tanpa token mendapatkan status `403`, sedangkan setelah token dikirim melalui header, request berhasil dengan status `201`.
+
+Dari pengujian tersebut, saya jadi lebih memahami bahwa autentikasi menggunakan session saja belum cukup untuk melindungi request yang mengubah data. Perlindungan CSRF tetap diperlukan agar request tersebut tidak bisa dilakukan sembarangan oleh situs lain.

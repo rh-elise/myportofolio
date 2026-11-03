@@ -98,6 +98,30 @@ class ExperienceTest(TestCase):
 
         self.assertContains(response, "No experience found.")
 
+    def test_experience_page_exposes_csrf_and_api_endpoints(self):
+        response = self.client.get(reverse("main:show_experience"))
+
+        self.assertContains(response, 'name="csrfmiddlewaretoken"')
+        self.assertContains(response, reverse("api:experience-list"))
+        self.assertContains(response, "/api/v1/experience/0/")
+        self.assertContains(response, "/api/v1/experience/0/star/")
+
+    def test_edit_page_sends_patch_to_api(self):
+        owner = User.objects.create_superuser(
+            username="owner", password="pass12345", email="owner@example.com"
+        )
+        self.client.force_login(owner)
+
+        response = self.client.get(
+            reverse("main:update_experience", args=[self.experience.id])
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "method: 'PATCH'")
+        self.assertContains(
+            response, reverse("api:experience-detail", args=[self.experience.id])
+        )
+
 
 class ProjectsTest(TestCase):
     def setUp(self):

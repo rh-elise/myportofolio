@@ -62,6 +62,9 @@ class Experience(models.Model):
     status = models.CharField(
         max_length=20, choices=Status.choices, default=Status.ONGOING
     )
+    starred_by = models.ManyToManyField(
+        User, related_name="starred_experiences", blank=True
+    )
 
     class Meta:
         ordering = ["-year", "title"]

@@ -1,40 +1,57 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <main>
-        <section class="slanted-section" id="experience">
-            <div class="container">
-                <div class="section-title-wrapper">
-                    <div class="slanted-title"><span>{% if form.instance.pk %}EDIT EXPERIENCE{% else %}ADD NEW EXPERIENCE{% endif %}</span></div>
-                </div>
+<!-- ==========================================================================
+     Form Experience (tambah dan edit)
+     --------------------------------------------------------------------------
+     Saat mode edit, form dikirim sebagai PATCH ke API DRF.
+     ========================================================================== -->
 
-                <div class="project-form-outer">
-                    <form method="post" action="" class="project-form">
-                        {% csrf_token %}
-                        {% for field in form %}
-                            <div class="form-group">
-                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                {{ field }}
-                                {% for error in field.errors %}
-                                    <p class="form-error">{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
-                        <div class="form-actions">
-                            <a href="{% url 'main:show_experience' %}" class="form-cancel">Cancel</a>
-                            <button type="submit" class="form-submit"><span>{% if form.instance.pk %}Update{% else %}Add{% endif %} Experience</span></button>
-                        </div>
-                    </form>
+{% block content %}
+<main>
+    <section class="slanted-section" id="experience">
+        <div class="container">
+            <!-- Judul halaman, menyesuaikan mode tambah atau edit -->
+            <div class="section-title-wrapper">
+                <div class="slanted-title">
+                    <span>{% if form.instance.pk %}EDIT EXPERIENCE{% else %}ADD NEW EXPERIENCE{% endif %}</span>
                 </div>
             </div>
-        </section>
-    </main>
+
+            <!-- Form experience -->
+            <div class="project-form-outer">
+                <form method="post" action="" class="project-form">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+
+                            {% for error in field.errors %}
+                                <p class="form-error">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="form-actions">
+                        <a href="{% url 'main:show_experience' %}" class="form-cancel">Cancel</a>
+                        <button type="submit" class="form-submit">
+                            <span>{% if form.instance.pk %}Update{% else %}Add{% endif %} Experience</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock content %}
 
 {% block extra_scripts %}
 {% if form.instance.pk %}
 <script>
-    // Halaman edit mengirim PATCH ke API, bukan POST biasa ke view Django.
+    // ======================================================================
+    // Kirim perubahan Experience sebagai PATCH ke API DRF
+    // ======================================================================
     (function () {
         const form = document.querySelector('.project-form');
         const csrfToken = form.querySelector('[name="csrfmiddlewaretoken"]').value;

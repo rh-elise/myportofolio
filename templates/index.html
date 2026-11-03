@@ -1,22 +1,33 @@
 {% extends "base.html" %}
 
+<!-- ==========================================================================
+     Halaman profil
+     --------------------------------------------------------------------------
+     Menampilkan ringkasan pemilik portofolio, lalu cuplikan Projects,
+     Experience, dan Artworks dalam mode baca saja.
+     ========================================================================== -->
+
 {% block content %}
 <main>
-    <!-- PROFILE -->
+    <!-- ======================================================================
+         01. HERO PROFIL
+         ====================================================================== -->
     <div class="hero-wrapper" id="profile">
         <section class="hero-slanted-photo">
             <div class="hero-overlay"></div>
+
             <div class="container hero-content-right">
                 <div class="hero-boxes">
-                    <!-- NAMA -->
+                    <!-- Nama -->
                     <div class="box-name">
                         <h1>HI, I'M {{ name|upper }}</h1>
                     </div>
 
-                    <!-- DESKRIPSI: Major & NPM -->
+                    <!-- Deskripsi: program studi, bio, dan data singkat -->
                     <div class="box-desc">
                         <p class="hero-kicker">{{ study_program|upper }} &bull; UNIVERSITAS INDONESIA</p>
                         <p class="bio">{{ bio }}</p>
+
                         <dl class="meta-list">
                             <div class="meta-row"><dt>NPM</dt><dd>{{ npm }}</dd></div>
                             <div class="meta-row"><dt>Program</dt><dd>{{ study_program }}</dd></div>
@@ -24,7 +35,7 @@
                         </dl>
                     </div>
 
-                    <!-- CONTACT -->
+                    <!-- Kontak dan media sosial -->
                     <div class="box-icons">
                         <a href="{{ linkedin }}" class="icon-square" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5ZM.5 8.98h8.96V23.5H.5V8.98ZM8.98 8.98h8.6v1.98h.12c1.2-2.1 4.13-2.98 6.5-1.98 3.4 1.42 3.8 4.4 3.8 7.6v8.92h-9V17.4c0-1.94-.04-4.43-2.7-4.43-2.7 0-3.12 2.1-3.12 4.28v6.25h-8.9V8.98Z"/></svg></a>
                         <a href="{{ twitter }}" class="icon-square" aria-label="Twitter / X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2H21.5l-7.5 8.57L22.8 22h-6.86l-5.37-6.62L4.4 22H1.14l8.02-9.17L1 2h7.03l4.86 6.05L18.244 2Zm-1.2 18.17h1.9L7.06 3.72H5.02l12.02 16.45Z"/></svg></a>
@@ -38,37 +49,45 @@
     </div>
 </main>
 
-<!-- PROJECTS (profile: read-only, no search/add/delete) -->
+<!-- ======================================================================
+     02. PROJECTS (baca saja: tanpa search, tambah, edit, atau hapus)
+     ====================================================================== -->
 <section class="slanted-section" id="projects">
     <div class="container">
         {% include "partials/project_showcase.html" with empty_message="No projects have been added yet." hide_controls=True %}
     </div>
 </section>
 
-<!-- EXPERIENCE (profile: read-only, no search/edit/delete) -->
+<!-- ======================================================================
+     03. EXPERIENCE (baca saja: tanpa search, tambah, edit, atau hapus)
+     ====================================================================== -->
 <section class="exp-section" id="experience">
     <div class="container">
         <div class="section-title-wrapper">
             <div class="slanted-title"><span>EXPERIENCE</span></div>
         </div>
+
         {% for exp in experience_list %}
-        <article class="exp-card">
-            <div class="exp-name"><span>{{ exp.title }}</span></div>
-            <div class="exp-year"><span>{{ exp.year }}{% if exp.is_ongoing %}-present{% endif %}</span></div>
-            <div class="exp-body">
-                {% if exp.thumbnail %}
-                <div class="exp-photo"><img src="{{ exp.thumbnail }}" alt="{{ exp.title }}"></div>
-                {% endif %}
-                <p class="exp-desc">{{ exp.description }}</p>
-            </div>
-        </article>
+            <article class="exp-card">
+                <div class="exp-name"><span>{{ exp.title }}</span></div>
+                <div class="exp-year"><span>{{ exp.year }}{% if exp.is_ongoing %}-present{% endif %}</span></div>
+
+                <div class="exp-body">
+                    {% if exp.thumbnail %}
+                        <div class="exp-photo"><img src="{{ exp.thumbnail }}" alt="{{ exp.title }}"></div>
+                    {% endif %}
+                    <p class="exp-desc">{{ exp.description }}</p>
+                </div>
+            </article>
         {% empty %}
-        {% include "partials/empty_state.html" with message="No experience has been added yet." %}
+            {% include "partials/empty_state.html" with message="No experience has been added yet." %}
         {% endfor %}
     </div>
 </section>
 
-<!-- ARTS + COMMISSION (gabung) -->
+<!-- ======================================================================
+     04. ARTWORKS + COMMISSION (digabung dalam satu section)
+     ====================================================================== -->
 <section class="slanted-section" id="artworks">
     {% include "partials/artworks_section.html" with empty_message="No artworks have been added yet." %}
     {% include "partials/commission_section.html" %}
@@ -76,6 +95,6 @@
 {% endblock content %}
 
 {% block extra_scripts %}
-{% include "partials/artworks_ui_script.html" %}
-{% include "partials/project_cards_script.html" %}
+    {% include "partials/artworks_ui_script.html" %}
+    {% include "partials/project_cards_script.html" %}
 {% endblock extra_scripts %}

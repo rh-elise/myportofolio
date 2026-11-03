@@ -1,33 +1,46 @@
+<!-- ==========================================================================
+     Partial: modal konfirmasi logout
+     ========================================================================== -->
 <div id="logout-modal"
      class="project-delete-modal"
      popover="auto"
      role="dialog"
      aria-modal="true"
      aria-labelledby="logout-modal-title">
+    <!-- Latar untuk menutup modal -->
     <button type="button"
             class="project-delete-modal__backdrop"
             popovertarget="logout-modal"
             popovertargetaction="hide"
             aria-label="Close logout confirmation"></button>
+
     <div class="project-delete-modal__content">
+        <!-- Tombol tutup -->
         <button type="button"
                 class="project-delete-modal__close"
                 popovertarget="logout-modal"
                 popovertargetaction="hide"
                 aria-label="Close logout confirmation">×</button>
+
+        <!-- Ikon peringatan -->
         <div class="project-delete-modal__flag" aria-hidden="true">
             <img src="/static/img/warning-flag.svg" alt="">
         </div>
+
         <h2 id="logout-modal-title">Log out?</h2>
+
         <p class="project-delete-modal__desc">
             Are you sure you want to log out?<br>
             <span>You'll need to log in again to manage your portfolio.</span>
         </p>
+
+        <!-- Aksi konfirmasi -->
         <div class="project-delete-modal__actions">
             <button type="button"
                     class="project-delete-modal__btn project-delete-modal__btn--ghost"
                     popovertarget="logout-modal"
                     popovertargetaction="hide"><span>Cancel</span></button>
+
             <a href="{% url 'main:logout' %}" class="project-delete-modal__btn project-delete-modal__btn--danger"><span>Yes, Log Out</span></a>
         </div>
     </div>

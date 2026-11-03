@@ -1,5 +1,9 @@
 <script>
-    // Endpoint: angka 0 hanya placeholder, nanti diganti id asli oleh experienceEndpoint().
+    // ======================================================================
+    // Halaman Experience: konfigurasi endpoint dan state
+    // ======================================================================
+
+    // Angka 0 hanya placeholder, nanti diganti id asli oleh experienceEndpoint().
     const EXPERIENCES_ENDPOINT = "{% url 'api:experience-list' %}";
     const EXPERIENCE_DETAIL_ENDPOINT = "{% url 'api:experience-detail' 0 %}";
     const EXPERIENCE_STAR_ENDPOINT = "{% url 'api:experience-star' 0 %}";
@@ -21,7 +25,11 @@
     let expAbort;
     let expDebounceTimer;
 
-    // Angka khusus HTML jadi entity sebelum masuk innerHTML.
+    // ======================================================================
+    // Utilitas
+    // ======================================================================
+
+    // Ubah karakter khusus HTML menjadi entity sebelum masuk innerHTML.
     function escapeHtml(value) {
         return String(value ?? '')
             .replaceAll('&', '&amp;')
@@ -52,7 +60,8 @@
         return messages.join(' ') || `Request failed (HTTP ${status}).`;
     }
 
-    // Satu pintu untuk POST/PATCH/DELETE: kirim JSON + token CSRF, lempar error dari DRF.
+    // Satu pintu untuk POST/PATCH/DELETE: kirim JSON + token CSRF,
+    // lalu lempar pesan error dari DRF bila request gagal.
     async function writeExperience(url, method, payload) {
         const options = {
             method: method,
@@ -81,12 +90,20 @@
         return data;
     }
 
+    // ======================================================================
+    // Status tampilan
+    // ======================================================================
+
     function setExpState(mode) {
         expLoading.classList.toggle('hide', mode !== 'loading');
         expError.classList.toggle('hide', mode !== 'error');
         expEmpty.classList.toggle('hide', mode !== 'empty');
         expGrid.classList.toggle('hide', mode !== 'grid');
     }
+
+    // ======================================================================
+    // Render kartu dan modal
+    // ======================================================================
 
     function buildDeleteModal(item) {
         const holder = document.createElement('div');
@@ -116,6 +133,7 @@
             ? `<div class="exp-photo"><img src="${escapeHtml(item.thumbnail)}" alt="${escapeHtml(item.title)}"></div>`
             : '';
 
+        // Tombol star: pengguna login memakai API, tamu diarahkan ke login.
         const starHtml = IS_AUTHENTICATED
             ? `<button type="button" class="button button-star${item.is_starred ? ' is-starred' : ''}"
                  data-action="star" data-id="${item.id}" title="${item.star_count} stars"
@@ -124,6 +142,7 @@
             : `<a href="${LOGIN_URL}" class="button button-star" title="Login to star">
                  <span aria-hidden="true">☆</span><span>${item.star_count}</span></a>`;
 
+        // Menu edit/hapus hanya untuk Editor; hapus hanya untuk superuser.
         const menuHtml = IS_EDITOR
             ? `<details class="exp-menu">
                  <summary aria-label="Options for ${escapeHtml(item.title)}" title="Options">&#8942;</summary>
@@ -145,6 +164,10 @@
 
         return article;
     }
+
+    // ======================================================================
+    // Ambil data dari API
+    // ======================================================================
 
     async function fetchExperiences(query = '') {
         if (expAbort) expAbort.abort();
@@ -187,6 +210,10 @@
         }
     }
 
+    // ======================================================================
+    // Aksi star
+    // ======================================================================
+
     function applyStarUpdate(updated) {
         const card = expGrid.querySelector(`.exp-card[data-id="${updated.id}"]`);
         if (!card) return;
@@ -202,6 +229,10 @@
         if (spans[0]) spans[0].textContent = updated.is_starred ? '★' : '☆';
         if (spans[1]) spans[1].textContent = updated.star_count;
     }
+
+    // ======================================================================
+    // Tambah Experience
+    // ======================================================================
 
     async function addExperience(event) {
         event.preventDefault();
@@ -234,7 +265,12 @@
         experienceForm.addEventListener('submit', addExperience);
     }
 
-    // Event delegation: card dibuat ulang oleh JS, jadi listener dipasang di container.
+    // ======================================================================
+    // Event delegation untuk star dan hapus
+    // ----------------------------------------------------------------------
+    // Kartu dibuat ulang oleh JavaScript, jadi listener dipasang di container.
+    // ======================================================================
+
     expGrid.addEventListener('click', async function (event) {
         const button = event.target.closest('button[data-action]');
         if (!button || button.disabled) return;
@@ -266,6 +302,10 @@
             if (button.isConnected) button.disabled = false;
         }
     });
+
+    // ======================================================================
+    // Pencarian dengan debounce
+    // ======================================================================
 
     if (expSearchForm) {
         expSearchInput.addEventListener('input', function () {

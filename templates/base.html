@@ -2,20 +2,35 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- ==========================================================================
+     Kerangka halaman utama
+     --------------------------------------------------------------------------
+     Semua template halaman memakai file ini. Bagian yang bisa diubah:
+     - block content      : isi utama halaman
+     - block extra_scripts: script khusus halaman
+     ========================================================================== -->
+
 {% include "partials/head.html" %}
 
 <body>
+    <!-- Notifikasi global -->
     {% include "partials/toast.html" %}
+
+    <!-- Modal logout, hanya tersedia untuk pengguna yang sudah login -->
     {% if user.is_authenticated %}
-    {% include "partials/logout_modal.html" %}
+        {% include "partials/logout_modal.html" %}
     {% endif %}
 
+    <!-- Navigasi utama -->
     {% include "partials/site_header.html" %}
 
+    <!-- Isi halaman -->
     {% block content %}{% endblock content %}
 
+    <!-- Footer -->
     {% include "partials/site_footer.html" %}
 
+    <!-- Script tambahan per halaman -->
     {% block extra_scripts %}{% endblock extra_scripts %}
 </body>
 

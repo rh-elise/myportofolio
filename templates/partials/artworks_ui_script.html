@@ -1,27 +1,48 @@
 <script>
+    // ======================================================================
+    // Artworks: simpan posisi scroll saat berpindah kategori
+    // ======================================================================
     (function () {
         const KEY = 'artsScroll';
         const tabs = document.querySelectorAll('.artwork-tab');
 
         tabs.forEach((tab) => {
             tab.addEventListener('click', () => {
-                try { sessionStorage.setItem(KEY, String(window.scrollY)); } catch (e) {}
+                try {
+                    sessionStorage.setItem(KEY, String(window.scrollY));
+                } catch (error) {
+                    // sessionStorage bisa diblokir oleh browser; abaikan.
+                }
             });
         });
 
         let saved = null;
-        try { saved = sessionStorage.getItem(KEY); } catch (e) {}
+        try {
+            saved = sessionStorage.getItem(KEY);
+        } catch (error) {
+            // sessionStorage bisa diblokir oleh browser; abaikan.
+        }
+
         if (saved !== null) {
             document.documentElement.style.scrollBehavior = 'auto';
             window.scrollTo(0, parseInt(saved, 10));
             document.documentElement.style.scrollBehavior = '';
-            try { sessionStorage.removeItem(KEY); } catch (e) {}
+
+            try {
+                sessionStorage.removeItem(KEY);
+            } catch (error) {
+                // sessionStorage bisa diblokir oleh browser; abaikan.
+            }
         }
     })();
 
+    // ======================================================================
+    // Artworks: ulangi isi marquee agar tidak putus saat layar lebar
+    // ======================================================================
     (function () {
         document.querySelectorAll('.arts-marquee-track').forEach((track) => {
             if (!track.children.length) return;
+
             let guard = 0;
             while (track.scrollWidth < window.innerWidth * 2 && guard < 6) {
                 track.innerHTML += track.innerHTML;

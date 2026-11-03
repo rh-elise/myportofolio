@@ -1,4 +1,11 @@
 <script>
+    // ======================================================================
+    // Showcase Projects versi halaman profil
+    // ----------------------------------------------------------------------
+    // Script ini memakai endpoint lama /api/projects/ dan dipakai pada
+    // halaman index untuk pencarian serta pemilihan kartu project.
+    // ======================================================================
+
     const SEARCH_DEBOUNCE_DELAY = 300;
     const PROJECTS_ENDPOINT = "/api/projects/";
     const IS_EDITOR = "{{ perms.main.change_projects|yesno:'true,false' }}" === "true";
@@ -18,7 +25,11 @@
     let searchAbort;
     let searchDebounceTimer;
 
-    // Samakan karakter khusus HTML jadi entity sebelum masuk HTML
+    // ======================================================================
+    // Utilitas
+    // ======================================================================
+
+    // Ubah karakter khusus HTML menjadi entity sebelum masuk HTML.
     function escapeHtml(value) {
         return String(value ?? '')
             .replaceAll('&', '&amp;')
@@ -27,6 +38,26 @@
             .replaceAll('"', '&quot;')
             .replaceAll("'", '&#39;');
     }
+
+    // Baca cookie CSRF untuk request fetch.
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // ======================================================================
+    // Pemilihan kartu dan hero
+    // ======================================================================
 
     function selectCard(card) {
         cards.forEach((c) => c.classList.remove('is-active'));
@@ -64,6 +95,7 @@
                 if (event.target.closest('.mini-card-menu, .star-form')) return;
                 selectCard(card);
             });
+
             card.addEventListener('keydown', (event) => {
                 if (event.target.closest('.mini-card-menu, .star-form')) return;
                 if (event.key === 'Enter' || event.key === ' ') {
@@ -73,6 +105,10 @@
             });
         });
     }
+
+    // ======================================================================
+    // Render kartu dan modal
+    // ======================================================================
 
     function buildDeleteModal(pk, title) {
         const holder = document.createElement('div');
@@ -106,6 +142,7 @@
         card.setAttribute('data-id', item.pk);
         card.setAttribute('data-count', fields.star_count);
         card.setAttribute('data-starred', starred ? 'true' : 'false');
+
         card.innerHTML =
             '<img src="' + escapeHtml(fields.image) + '" alt="' + escapeHtml(fields.title) + '">' +
             '<span class="mini-card-label">' + escapeHtml(fields.title) + '</span>' +
@@ -124,7 +161,11 @@
         if (IS_SUPERUSER) box.appendChild(buildDeleteModal(item.pk, fields.title));
     }
 
-    function displayPageSection({showLoading = false, showError = false, showEmpty = false, showGrid = false}) {
+    // ======================================================================
+    // Status tampilan dan pengambilan data
+    // ======================================================================
+
+    function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
         document.getElementById('loading').classList.toggle('hide', !showLoading);
         document.getElementById('error').classList.toggle('hide', !showError);
         document.getElementById('empty').classList.toggle('hide', !showEmpty);
@@ -134,51 +175,52 @@
     function fetchProjects(query = "") {
         if (searchAbort) searchAbort.abort();
         searchAbort = new AbortController();
-        displayPageSection({showLoading: true});
-        const url = query ? PROJECTS_ENDPOINT + '?title=' + encodeURIComponent(query) : PROJECTS_ENDPOINT;
-        fetch(url, {signal: searchAbort.signal, headers: {'Accept': 'application/json'}}).then((response) => {
+        displayPageSection({ showLoading: true });
+
+        const url = query
+            ? PROJECTS_ENDPOINT + '?title=' + encodeURIComponent(query)
+            : PROJECTS_ENDPOINT;
+
+        fetch(url, {
+            signal: searchAbort.signal,
+            headers: { 'Accept': 'application/json' },
+        }).then((response) => {
             if (!response.ok) throw new Error('fetch failed');
             return response.json();
         }).then((items) => {
             if (items.length === 0) {
-                document.querySelector('#empty p').textContent = query ? 'No projects found.' : 'No projects have been added yet.';
-                displayPageSection({showEmpty: true});
+                document.querySelector('#empty p').textContent = query
+                    ? 'No projects found.'
+                    : 'No projects have been added yet.';
+                displayPageSection({ showEmpty: true });
                 return;
             }
+
             document.getElementById('miniCardsContainer').innerHTML = '';
             items.forEach((item) => buildMiniCard(item));
             bindMiniCards();
             selectCard(document.querySelector('.mini-card'));
-            displayPageSection({showGrid: true});
+            displayPageSection({ showGrid: true });
         }).catch((error) => {
             if (error.name === 'AbortError') return;
-            displayPageSection({showError: true});
+            displayPageSection({ showError: true });
         });
     }
+
+    // ======================================================================
+    // Modal tambah project
+    // ======================================================================
 
     function closeProjectModal() {
         document.getElementById("add-project-modal").hidePopover();
     }
 
-    // Baca cookie csrf buat fetch
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
     bindMiniCards();
 
-    // Cari project tanpa reload + kirim form modal tanpa reload
+    // ======================================================================
+    // Pencarian dan pengiriman form tanpa reload
+    // ======================================================================
+
     const searchForm = document.getElementById('project-search-form');
     if (searchForm) {
         const searchInput = document.getElementById('search-input');
@@ -196,7 +238,7 @@
             searchDebounceTimer = setTimeout(() => fetchProjects(searchInput.value.trim()), SEARCH_DEBOUNCE_DELAY);
         });
 
-        // Kirim form modal tanpa reload
+        // Kirim form modal tanpa reload.
         async function addProject(event) {
             event.preventDefault();
 
@@ -209,6 +251,7 @@
                     headers: { 'X-CSRFToken': getCookie('csrftoken') },
                     body: new FormData(projectForm),
                 });
+
                 const result = await response.json().catch(() => ({}));
 
                 if (response.ok) {

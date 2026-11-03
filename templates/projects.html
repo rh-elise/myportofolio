@@ -1,15 +1,27 @@
 {% extends "base.html" %}
 
+<!-- ==========================================================================
+     Halaman Projects
+     --------------------------------------------------------------------------
+     Showcase project, pencarian langsung (debounce), tombol star, serta
+     modal tambah dan hapus. Semua aksi memakai API DRF.
+     ========================================================================== -->
+
 {% block content %}
 
+<!-- Modal tambah project, hanya untuk superuser -->
 {% if user.is_superuser %}
     {% include "partials/project_form_modal.html" %}
 {% endif %}
 
-<!-- PROJECTS -->
+<!-- ======================================================================
+     01. SHOWCASE PROJECTS
+     ====================================================================== -->
 <section class="slanted-section" id="projects">
     <div class="container">
         {% include "partials/project_showcase.html" with empty_message="No projects have been added yet." %}
+
+        <!-- Empty state untuk hasil pencarian kosong -->
         <div id="project-empty" class="hide">
             {% include "partials/empty_state.html" with message="No projects found." %}
         </div>
@@ -18,7 +30,11 @@
 
 {% csrf_token %}
 <script>
-    // Endpoint: angka 0 cuma placeholder, nanti diganti id asli oleh projectEndpoint()
+    // ======================================================================
+    // 02. KONFIGURASI ENDPOINT DAN STATE
+    // ======================================================================
+
+    // Angka 0 hanya placeholder, nanti diganti id asli oleh projectEndpoint().
     const BASE_PROJECTS_ENDPOINT = "{% url 'api:project-list' %}";
     const DETAIL_PROJECT_ENDPOINT = "{% url 'api:project-detail' 0 %}";
     const STAR_PROJECT_ENDPOINT = "{% url 'api:project-star' 0 %}";
@@ -48,6 +64,10 @@
     let cards = [];
     let selectedProject = null;
 
+    // ======================================================================
+    // 03. UTILITAS
+    // ======================================================================
+
     function getCookie(name) {
         const prefix = `${name}=`;
         const cookie = document.cookie.split(';').map(value => value.trim())
@@ -74,6 +94,10 @@
         if (showcase) showcase.classList.toggle('hide', !showGrid);
     }
 
+    // ======================================================================
+    // 04. RENDER KARTU DAN MODAL
+    // ======================================================================
+
     function renderHeroStar(project) {
         if (!heroStarBtn) return;
         heroStarBtn.classList.toggle('is-starred', project.is_starred);
@@ -96,6 +120,7 @@
         card.dataset.count = project.star_count;
         card.dataset.starred = project.is_starred ? 'true' : 'false';
 
+        // Tombol star: pengguna login memakai API, tamu diarahkan ke halaman login.
         const star = IS_AUTHENTICATED
             ? `<button type="button" class="button button-star${project.is_starred ? ' is-starred' : ''}"
                 data-action="star" data-id="${escapeHtml(project.id)}"
@@ -104,6 +129,7 @@
             : `<a href="${LOGIN_URL}" class="button button-star" title="Login to star">
                 <span aria-hidden="true">☆</span><span>${project.star_count}</span></a>`;
 
+        // Menu edit/hapus hanya untuk pengguna yang berhak.
         const menu = IS_SUPERUSER
             ? `<details class="mini-card-menu">
                  <summary class="mini-card-delete" aria-label="Options for ${escapeHtml(project.title)}" title="Options">&#8942;</summary>
@@ -123,7 +149,7 @@
         return card;
     }
 
-    // Modal hapus, tombolnya sekarang memakai API (bukan form POST)
+    // Modal hapus: tombol konfirmasi memakai API, bukan form POST biasa.
     function buildDeleteModal(project) {
         const holder = document.createElement('div');
         holder.innerHTML =
@@ -142,6 +168,10 @@
              </div>`;
         return holder.firstElementChild;
     }
+
+    // ======================================================================
+    // 05. PEMILIHAN KARTU DAN HERO
+    // ======================================================================
 
     function selectCard(card) {
         cards.forEach((item) => item.classList.remove('is-active'));
@@ -179,6 +209,7 @@
                 if (event.target.closest('.mini-card-menu, .star-form')) return;
                 selectCard(card);
             });
+
             card.addEventListener('keydown', (event) => {
                 if (event.target.closest('.mini-card-menu, .star-form')) return;
                 if (event.key === 'Enter' || event.key === ' ') {
@@ -189,18 +220,26 @@
         });
     }
 
+    // ======================================================================
+    // 06. AMBIL DATA DAN AKSI TULIS
+    // ======================================================================
+
     async function fetchProjects(searchQuery = '') {
         if (projectsAbortController) projectsAbortController.abort();
         projectsAbortController = new AbortController();
+
         try {
             displayPageSection({ showLoading: true });
+
             const url = new URL(BASE_PROJECTS_ENDPOINT, window.location.origin);
             if (searchQuery) url.searchParams.set('title', searchQuery);
+
             const response = await fetch(url, {
                 headers: { Accept: 'application/json' },
                 signal: projectsAbortController.signal,
             });
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
             const projects = await response.json();
 
             gridContainer.replaceChildren();
@@ -213,6 +252,7 @@
                 displayPageSection({ showEmpty: true });
                 return;
             }
+
             bindMiniCards();
             selectCard(gridContainer.querySelector('.mini-card'));
             displayPageSection({ showGrid: true });
@@ -238,9 +278,12 @@
             },
             body: payload === undefined ? undefined : JSON.stringify(payload),
         });
+
         if (response.status === 204) return null;
+
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(apiErrorMessage(data, response.status));
+
         return data;
     }
 
@@ -249,30 +292,44 @@
             selectedProject = { ...selectedProject, ...project };
             renderHeroStar(selectedProject);
         }
+
         const card = gridContainer.querySelector(`.mini-card[data-id="${project.id}"]`);
         if (!card) return;
+
         card.dataset.count = project.star_count;
         card.dataset.starred = project.is_starred ? 'true' : 'false';
+
         const starButton = card.querySelector('.star-form .button-star');
         if (!starButton) return;
+
         starButton.classList.toggle('is-starred', project.is_starred);
         starButton.title = `${project.star_count} stars`;
+
         const spans = starButton.querySelectorAll('span');
         if (spans[0]) spans[0].textContent = project.is_starred ? '★' : '☆';
         if (spans[1]) spans[1].textContent = project.star_count;
     }
 
+    // ======================================================================
+    // 07. TAMBAH PROJECT
+    // ======================================================================
+
     async function addProject(event) {
         event.preventDefault();
+
         const button = projectForm.querySelector('button[type="submit"]');
         button.disabled = true;
+
         try {
             const fields = new FormData(projectForm);
             const payload = {};
+
             ['title', 'description', 'image', 'link'].forEach((name) => {
                 payload[name] = (fields.get(name) || '').toString();
             });
+
             await writeProject(BASE_PROJECTS_ENDPOINT, 'POST', payload);
+
             projectForm.reset();
             document.getElementById('add-project-modal').hidePopover();
             showToast('Success', 'Project created.', 'success');
@@ -286,12 +343,18 @@
 
     if (projectForm) projectForm.addEventListener('submit', addProject);
 
+    // ======================================================================
+    // 08. EVENT: STAR, HAPUS, DAN PENCARIAN
+    // ======================================================================
+
     gridContainer.addEventListener('click', async function (event) {
         const button = event.target.closest('button[data-action]');
         if (!button || button.disabled) return;
+
         const action = button.dataset.action;
         const id = button.dataset.id;
         button.disabled = true;
+
         try {
             if (action === 'star') {
                 const updated = await writeProject(projectEndpoint(STAR_PROJECT_ENDPOINT, id), 'POST');
@@ -315,6 +378,7 @@
             event.preventDefault();
             if (!IS_AUTHENTICATED) { window.location.href = LOGIN_URL; return; }
             if (!selectedProject) return;
+
             heroStarBtn.disabled = true;
             try {
                 const updated = await writeProject(projectEndpoint(STAR_PROJECT_ENDPOINT, selectedProject.id), 'POST');
@@ -333,11 +397,13 @@
             clearTimeout(searchDebounceTimer);
             searchDebounceTimer = setTimeout(() => fetchProjects(searchInput.value.trim()), SEARCH_DEBOUNCE_DELAY);
         });
+
         searchForm.addEventListener('submit', function (event) {
             event.preventDefault();
             clearTimeout(searchDebounceTimer);
             fetchProjects(searchInput.value.trim());
         });
+
         fetchProjects(searchInput.value.trim());
     }
 </script>

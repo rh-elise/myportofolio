@@ -1,32 +1,45 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <main>
-        <section class="slanted-section" id="projects">
-            <div class="container">
-                <div class="section-title-wrapper">
-                    <div class="slanted-title"><span>{% if form.instance.pk %}EDIT PROJECT{% else %}ADD NEW PROJECTS{% endif %}</span></div>
-                </div>
+<!-- ==========================================================================
+     Form Projects (tambah dan edit)
+     ========================================================================== -->
 
-                <div class="project-form-outer">
-                    <form method="post" action="" class="project-form">
-                        {% csrf_token %}
-                        {% for field in form %}
-                            <div class="form-group">
-                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                {{ field }}
-                                {% for error in field.errors %}
-                                    <p class="form-error">{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
-                        <div class="form-actions">
-                            <a href="{% url 'main:show_projects' %}" class="form-cancel">Cancel</a>
-                            <button type="submit" class="form-submit"><span>{% if form.instance.pk %}Update{% else %}Add{% endif %} Project</span></button>
-                        </div>
-                    </form>
+{% block content %}
+<main>
+    <section class="slanted-section" id="projects">
+        <div class="container">
+            <!-- Judul halaman, menyesuaikan mode tambah atau edit -->
+            <div class="section-title-wrapper">
+                <div class="slanted-title">
+                    <span>{% if form.instance.pk %}EDIT PROJECT{% else %}ADD NEW PROJECTS{% endif %}</span>
                 </div>
             </div>
-        </section>
-    </main>
+
+            <!-- Form project -->
+            <div class="project-form-outer">
+                <form method="post" action="" class="project-form">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+
+                            {% for error in field.errors %}
+                                <p class="form-error">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="form-actions">
+                        <a href="{% url 'main:show_projects' %}" class="form-cancel">Cancel</a>
+                        <button type="submit" class="form-submit">
+                            <span>{% if form.instance.pk %}Update{% else %}Add{% endif %} Project</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock content %}

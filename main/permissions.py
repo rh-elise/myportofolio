@@ -18,5 +18,5 @@ class IsPortfolioOwnerOrEditorOrReadOnly(BasePermission):
             return True
         return (
             request.method in ("PUT", "PATCH")
-            and request.user.groups.filter(name="Editor").exists()
+            and request.user.has_perm("main.change_experience")
         )

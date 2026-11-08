@@ -49,6 +49,7 @@ html, body {
     --text-muted: #374151;
     --line: #151515; /* Samakan dengan ink */
     --radius: 0; /* Tema kotak tegas, tanpa lengkung */
+    --header-height: 84px; /* Diperbarui oleh JavaScript sesuai tinggi header */
 }
 
 /* Body */
@@ -63,8 +64,8 @@ body {
     min-height: 100vh; /* Minimal tinggi selalu selayar penuh */
     display: flex;
     flex-direction: column; /* Footer selalu di bawah */
-    /* Jarak atas supaya tidak tertabrak Navbar - sinkron header 84px */
-    padding-top: 84px;
+    /* Jarak atas mengikuti tinggi navbar yang dihitung JavaScript */
+    padding-top: var(--header-height);
 }
 
 main {
@@ -996,6 +997,17 @@ h1, h2, h3, .brand {
     font-weight: 700;
     margin-top: 0.5rem;
     box-shadow: 3px 3px 0px var(--ink);
+}
+
+.form-error--general {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin-bottom: 1rem;
+}
+
+.form-group [aria-invalid="true"] {
+    border-color: var(--accent);
 }
 
 .form-actions {
@@ -2186,30 +2198,6 @@ h1, h2, h3, .brand {
     transform: skewX(15deg);
 }
 
-/* Tombol star kecil di ribbon tahun, mengikuti warna ribbon */
-.exp-year .button-star {
-    border: 0;
-    padding: 0 0 0 0.55rem;
-    margin: 0;
-    background: transparent;
-    color: inherit;
-    font-size: 0.9rem;
-    line-height: 1;
-    box-shadow: none;
-    vertical-align: middle;
-}
-
-.exp-year .button-star:hover, .exp-year .button-star.is-starred {
-    background: transparent;
-    color: inherit;
-    transform: none;
-    box-shadow: none;
-}
-
-.exp-year .button-star:hover::after {
-    opacity: 0;
-}
-
 .exp-body {
     position: relative;
     display: flex;
@@ -2218,56 +2206,97 @@ h1, h2, h3, .brand {
     background-color: var(--paper);
     border: 3px solid var(--ink);
     box-shadow: 6px 6px 0px var(--ink);
-    padding: 2.5rem 2rem 2rem;
+    padding: 2.5rem 2rem 1.8rem;
     transform: skewX(-12deg); /* Supaya miring */
 }
 
-.exp-menu {
-    position: absolute;
-    top: 2.4rem;
-    right: 1.2rem;
+/* Isi teks dan aksi di dalam kartu */
+.exp-content {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    transform: skewX(12deg); /* Balikkan kemiringan kartu */
+}
+
+.exp-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: auto;
+}
+
+/* Bintang di pojok kanan atas isi kartu, sejajar sudut kartu */
+.exp-star {
+    align-self: flex-end;
+    flex-shrink: 0;
     z-index: 2;
 }
 
-.exp-menu > summary {
-    list-style: none;
+.exp-star.button-star {
+    border: 3px solid var(--ink);
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    box-shadow: none;
+}
+
+/* Hover sama seperti star di halaman detail Project */
+.exp-star.button-star:hover {
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+/* Tombol menu aksi di kanan bawah kartu */
+.exp-menu {
+    position: relative;
+}
+
+.exp-menu__trigger {
     width: 32px;
     height: 32px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background: var(--paper);
-    color: var(--ink);
     border: 3px solid var(--ink);
+    color: var(--ink);
+    font: inherit;
     font-size: 1rem;
     font-weight: 700;
     line-height: 1;
     cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.exp-menu > summary::-webkit-details-marker {
-    display: none;
-}
-
-.exp-menu > summary:hover {
+.exp-menu__trigger:hover {
     background: var(--accent);
     color: var(--paper);
+    transform: translateY(-2px);
     box-shadow: 4px 4px 0px var(--ink);
 }
 
 .exp-menu__list {
-    position: absolute;
-    top: 38px;
-    right: 0;
-    display: flex;
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    padding: 0;
+    min-width: 120px;
     flex-direction: column;
-    min-width: 110px;
     background: var(--paper);
     border: 3px solid var(--ink);
     box-shadow: 4px 4px 0px var(--ink);
+    color: var(--ink);
+    z-index: 400;
 }
 
-.exp-menu__list a, .exp-menu__list button {
+.exp-menu__list:popover-open {
+    display: flex;
+}
+
+.exp-menu__list a,
+.exp-menu__list button {
     display: flex;
     align-items: center;
     gap: 0.55rem;
@@ -2284,19 +2313,17 @@ h1, h2, h3, .brand {
     cursor: pointer;
 }
 
-.exp-menu__list a span, .exp-menu__list button span {
+.exp-menu__list a span,
+.exp-menu__list button span {
     width: 1.1em;
     text-align: center;
     flex-shrink: 0;
 }
 
-.exp-menu__list a:hover, .exp-menu__list button:hover {
+.exp-menu__list a:hover,
+.exp-menu__list button:hover {
     background: var(--ink);
     color: var(--paper);
-}
-
-.exp-menu__list form {
-    margin: 0;
 }
 
 .exp-photo {
@@ -2318,7 +2345,6 @@ h1, h2, h3, .brand {
     margin: 0;
     font-size: 0.95rem;
     color: var(--ink);
-    transform: skewX(12deg);
 }
 
 /* ==========================================================================
@@ -2394,77 +2420,81 @@ h1, h2, h3, .brand {
 
 .toast-stack {
     position: fixed;
-    top: 84px;
+    top: calc(var(--header-height, 84px) + 0.75rem);
     left: 50%;
     transform: translateX(-50%);
-    z-index: 200;
+    z-index: 300;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    align-items: center;
+    gap: 0.5rem;
     width: min(560px, calc(100% - 2rem));
     pointer-events: none;
 }
 
 .toast {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.7rem;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 100%;
     background-color: var(--paper);
     border: 3px solid var(--ink);
-    box-shadow: 6px 6px 0px var(--ink);
-    padding: 0.8rem 1rem;
-    font-weight: 700;
-    font-size: 0.92rem;
+    box-shadow: 4px 4px 0px var(--ink);
+    padding: 0.5rem 0.55rem 0.5rem 0.85rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.35;
     color: var(--ink);
     pointer-events: auto;
-    position: relative;
-    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.toast::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 8px;
-    background-image: url('/static/img/halftone-bg.png');
-    background-repeat: no-repeat;
-    background-size: 100% auto;
-    background-position: 50% 74%;
-    opacity: 0.35;
+.toast--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast--leaving {
+    opacity: 0;
+    transform: translateY(-6px);
     pointer-events: none;
 }
 
-.toast--success {
-    border-left: 8px solid var(--accent);
-}
-
-.toast--error {
-    border-left: 8px solid #9B0A00;
-}
-
-.toast__dot {
-    width: 10px;
-    height: 10px;
-    background-color: var(--accent);
-    flex-shrink: 0;
-}
-
 .toast__text {
-    flex: 1;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.toast__title {
+    flex-shrink: 0;
+    font-family: "Freeman", sans-serif;
+    font-size: 0.88rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.toast__message {
+    font-weight: 500;
+    overflow-wrap: anywhere;
 }
 
 .toast__close {
     flex-shrink: 0;
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
+    margin-left: 0.15rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background: var(--paper);
     border: 2px solid var(--ink);
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1;
     cursor: pointer;
 }
@@ -2472,63 +2502,6 @@ h1, h2, h3, .brand {
 .toast__close:hover {
     background: var(--ink);
     color: var(--paper);
-}
-
-/* toast */
-.toast-component {
-    position: fixed;
-    inset: auto 2rem 2rem auto;
-    margin: 0;
-    padding: 1rem 1.5rem;
-    border-radius: var(--radius);
-    background-color: var(--paper);
-    border: 3px solid var(--ink);
-    box-shadow: 6px 6px 0px var(--ink);
-    color: inherit;
-    display: none;
-    align-items: center;
-    gap: 1rem;
-    transition: all 0.3s ease;
-}
-
-.toast-component:popover-open {
-    display: flex;
-}
-
-.toast-hidden {
-    opacity: 0;
-    transform: translateY(150%);
-    pointer-events: none;
-}
-
-.toast-show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.toast-title {
-    font-size: 1rem;
-    font-weight: 400;
-    margin-bottom: 0.15rem;
-    font-family: "Freeman", sans-serif;
-    letter-spacing: 1px;
-}
-
-.toast-message {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-.toast-success {
-    border-left: 8px solid #22c55e;
-}
-
-.toast-error {
-    border-left: 8px solid #b42318;
-}
-
-.toast-normal {
-    border-left: 8px solid var(--accent);
 }
 
 /* ==========================================================================
@@ -2769,6 +2742,33 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
    14. RESPONSIVE
    ========================================================================== */
 
+/* Header: sapaan dan menu ditumpuk sebelum nav mulai berdesakan */
+@media (max-width: 1100px) {
+    .header-inner {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        row-gap: 0.4rem;
+    }
+    .header-inner nav {
+        grid-column: 1;
+        min-width: 0;
+    }
+    .nav-user {
+        grid-column: 1;
+        max-width: 100%;
+        text-align: center;
+    }
+    .site-header-slanted nav {
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .site-header-slanted nav a {
+        font-size: 0.9rem;
+        padding: 0.3rem 0.65rem;
+    }
+}
+
 @media (max-width: 900px) {
     .container {
         padding: 0 1.5rem;
@@ -2903,27 +2903,11 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
 
 /* Responsive: mobile */
 @media (max-width: 600px) {
-    body {
-        padding-top: 84px;
-    } /* Navbar dua baris */
     .container {
         padding: 0 1rem;
     }
-    /* Header: logo dan menu mengecil, boleh turun dua baris */
-    .header-inner {
-        row-gap: 0.5rem;
-    }
-    .header-inner {
-        grid-template-columns: 1fr;
-        justify-items: center;
-    }
-    .header-inner nav {
-        grid-column: 1;
-    }
+    /* Header: menu dibuat lebih rapat di layar kecil */
     .nav-user {
-        grid-column: 1;
-        max-width: 100%;
-        text-align: center;
         font-size: 0.8rem;
     }
     .brand {
@@ -2931,7 +2915,6 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
     }
     .site-header-slanted nav {
         gap: 0.4rem;
-        flex-wrap: wrap;
     }
     .site-header-slanted nav a {
         font-size: 0.8rem;
@@ -3077,9 +3060,16 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
     .exp-photo img {
         transform: skewX(6deg) scale(1.3);
     }
+    .exp-content {
+        gap: 0.7rem;
+        transform: skewX(6deg);
+    }
+    .exp-star.button-star {
+        padding: 0.35rem 0.7rem;
+        font-size: 0.8rem;
+    }
     .exp-desc {
         font-size: 0.8rem;
-        transform: skewX(6deg);
     }
     /* Commission: baru di sini gambar pindah ke atas, teks di bawah */
     .commission-grid {

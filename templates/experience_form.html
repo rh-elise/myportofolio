@@ -68,6 +68,7 @@
 
             const submitButton = form.querySelector('button[type="submit"]');
             submitButton.disabled = true;
+            FormErrors.clear(form);
 
             const fields = new FormData(form);
             const payload = {};
@@ -93,15 +94,19 @@
                 const data = await response.json().catch(() => ({}));
 
                 if (!response.ok) {
-                    throw new Error(apiErrorMessage(data, response.status));
+                    const error = new Error(apiErrorMessage(data, response.status));
+                    error.data = data;
+                    throw error;
                 }
 
-                showToast('Success', 'Experience updated!', 'success');
+                showToast('Success', 'Experience updated.', 'success');
                 setTimeout(() => {
                     window.location.href = "{% url 'main:show_experience' %}";
                 }, 800);
             } catch (error) {
-                showToast('Failed to update experience', error.message, 'error');
+                // Error validasi tampil di bawah field; toast hanya untuk kegagalan lain.
+                const shown = error.data ? FormErrors.show(form, error.data) : 0;
+                if (!shown) showToast('Could not update experience', error.message, 'error');
                 submitButton.disabled = false;
             }
         });

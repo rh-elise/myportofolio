@@ -15,6 +15,7 @@
 <body>
     <!-- Notifikasi global -->
     {% include "partials/toast.html" %}
+    <script src="{% static 'js/form_errors.js' %}"></script>
 
     <!-- Modal logout, hanya tersedia untuk pengguna yang sudah login -->
     {% if user.is_authenticated %}
@@ -23,6 +24,31 @@
 
     <!-- Navigasi utama -->
     {% include "partials/site_header.html" %}
+
+    <script>
+        // ======================================================================
+        // Samakan jarak konten dan posisi toast dengan tinggi header asli.
+        // Tinggi header bisa berubah saat menu turun baris atau pengguna login.
+        // ======================================================================
+        (function () {
+            const header = document.querySelector('.site-header-slanted');
+            if (!header) return;
+
+            const setHeaderHeight = () => {
+                document.documentElement.style.setProperty(
+                    '--header-height',
+                    `${header.offsetHeight}px`
+                );
+            };
+
+            setHeaderHeight();
+            window.addEventListener('resize', setHeaderHeight);
+
+            if ('ResizeObserver' in window) {
+                new ResizeObserver(setHeaderHeight).observe(header);
+            }
+        })();
+    </script>
 
     <!-- Isi halaman -->
     {% block content %}{% endblock content %}

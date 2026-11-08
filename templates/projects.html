@@ -282,7 +282,12 @@
         if (response.status === 204) return null;
 
         const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(apiErrorMessage(data, response.status));
+        if (!response.ok) {
+            const error = new Error(apiErrorMessage(data, response.status));
+            error.data = data;
+            error.status = response.status;
+            throw error;
+        }
 
         return data;
     }
@@ -319,6 +324,7 @@
 
         const button = projectForm.querySelector('button[type="submit"]');
         button.disabled = true;
+        FormErrors.clear(projectForm);
 
         try {
             const fields = new FormData(projectForm);
@@ -332,10 +338,12 @@
 
             projectForm.reset();
             document.getElementById('add-project-modal').hidePopover();
-            showToast('Success', 'Project created.', 'success');
+            showToast('Success', 'Project added.', 'success');
             await fetchProjects(searchInput.value.trim());
         } catch (error) {
-            showToast('Could not create project', error.message, 'error');
+            // Error validasi tampil di bawah field; toast hanya untuk kegagalan lain.
+            const shown = error.data ? FormErrors.show(projectForm, error.data) : 0;
+            if (!shown) showToast('Could not add project', error.message, 'error');
         } finally {
             button.disabled = false;
         }
@@ -367,7 +375,10 @@
                 await fetchProjects(searchInput.value.trim());
             }
         } catch (error) {
-            showToast('Request failed', error.message, 'error');
+            const errorTitle = action === 'delete'
+                ? 'Could not delete project'
+                : 'Could not update star';
+            showToast(errorTitle, error.message, 'error');
         } finally {
             if (button.isConnected) button.disabled = false;
         }
@@ -385,7 +396,7 @@
                 applyProjectUpdate(updated);
                 showToast('Success', updated.is_starred ? 'Starred.' : 'Unstarred.', 'success');
             } catch (error) {
-                showToast('Request failed', error.message, 'error');
+                showToast('Could not update star', error.message, 'error');
             } finally {
                 heroStarBtn.disabled = false;
             }

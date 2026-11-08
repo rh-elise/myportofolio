@@ -166,7 +166,7 @@ def create_experience(request: HttpRequest) -> HttpResponse:
     form = ExperienceForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         form.save()
-        messages.success(request, "New experience added!")
+        messages.success(request, "Experience added.")
         return redirect("main:show_experience")
 
     context = {"name": PROFILE["name"], "form": form}
@@ -201,7 +201,7 @@ def update_experience(request: HttpRequest, experience_id: int) -> HttpResponse:
     form = ExperienceForm(request.POST or None, instance=experience)
     if request.method == "POST" and form.is_valid():
         form.save()
-        messages.success(request, "Experience updated!")
+        messages.success(request, "Experience updated.")
         return redirect("main:show_experience")
 
     context = {"name": PROFILE["name"], "form": form}
@@ -216,7 +216,7 @@ def delete_experience(request: HttpRequest, experience_id: int) -> HttpResponse:
     experience = get_object_or_404(Experience, pk=experience_id)
     if request.method == "POST":
         experience.delete()
-        messages.success(request, "Experience deleted successfully!")
+        messages.success(request, "Experience deleted.")
     return redirect("main:show_experience")
 
 
@@ -281,7 +281,7 @@ def create_project(request: HttpRequest) -> HttpResponse:
     form = ProjectForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         form.save()
-        messages.success(request, "New project added!")
+        messages.success(request, "Project added.")
         return redirect("main:show_projects")
 
     context = {"name": PROFILE["name"], "form": form}
@@ -317,7 +317,7 @@ def update_project(request: HttpRequest, project_id: int) -> HttpResponse:
     form = ProjectForm(request.POST or None, instance=project)
     if request.method == "POST" and form.is_valid():
         form.save()
-        messages.success(request, "Project updated!")
+        messages.success(request, "Project updated.")
         return redirect("main:show_projects")
 
     context = {"name": PROFILE["name"], "form": form}
@@ -332,7 +332,7 @@ def delete_project(request: HttpRequest, project_id: int) -> HttpResponse:
     project = get_object_or_404(Projects, pk=project_id)
     if request.method == "POST":
         project.delete()
-        messages.success(request, "Project deleted successfully!")
+        messages.success(request, "Project deleted.")
     return redirect("main:show_projects")
 
 

@@ -244,6 +244,7 @@
 
             const submitButton = projectForm.querySelector('button[type="submit"]');
             submitButton.disabled = true;
+            FormErrors.clear(projectForm);
 
             try {
                 const response = await fetch(CREATE_PROJECT_ENDPOINT, {
@@ -257,17 +258,21 @@
                 if (response.ok) {
                     projectForm.reset();
                     closeProjectModal();
-                    showToast('Success', 'New project added!', 'success');
+                    showToast('Success', 'Project added.', 'success');
                     fetchProjects(searchInput.value.trim());
                 } else {
-                    const errorMessages = result.errors
-                        ? Object.values(result.errors).flat().map(error => error.message)
-                        : [result.message || `Error (status ${response.status}).`];
-                    showToast('Failed to add project', errorMessages.join(' '), 'error');
+                    const errors = result.errors
+                        || { detail: result.message || `Error (status ${response.status}).` };
+                    const shown = FormErrors.show(projectForm, errors);
+                    if (!shown) {
+                        showToast('Could not add project', `Error (status ${response.status}).`, 'error');
+                    }
                 }
             } catch (error) {
                 console.error('Error adding project:', error);
-                showToast('Failed to add project', 'Cannot reach server. Please try again.', 'error');
+                // Error validasi tampil di bawah field; toast hanya untuk kegagalan jaringan.
+                const shown = error.data ? FormErrors.show(projectForm, error.data) : 0;
+                if (!shown) showToast('Could not add project', 'Cannot reach server. Please try again.', 'error');
             } finally {
                 submitButton.disabled = false;
             }

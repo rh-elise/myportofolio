@@ -1,0 +1,19 @@
+<!-- Partial: tombol bintang besar di kartu project terpilih. -->
+{% if user.is_authenticated %}
+    <button id="heroStarBtn"
+            type="button"
+            class="button button-star{% if project and user in project.starred_by.all %} is-starred{% endif %}"
+            {% if project %}data-star-url="{% url 'api:project-star' project.id %}"{% endif %}
+            title="{% if project %}{{ project.starred_by.count }}{% else %}0{% endif %} stars"
+            aria-label="{% if project and user in project.starred_by.all %}Unstar{% else %}Star{% endif %} {% if project %}{{ project.title }}{% else %}project{% endif %}">
+        <span id="heroStarIcon" data-star-icon aria-hidden="true">{% if project and user in project.starred_by.all %}★{% else %}☆{% endif %}</span>
+        <span id="heroStarLabel" data-star-label>{% if project and user in project.starred_by.all %}Starred{% else %}Star{% endif %}</span>
+        <span id="heroStarCount" data-star-count>{% if project %}{{ project.starred_by.count }}{% else %}0{% endif %}</span>
+    </button>
+{% else %}
+    <a id="heroStarBtn" href="{% url 'main:login' %}" class="button button-star" title="Login to star">
+        <span id="heroStarIcon" data-star-icon aria-hidden="true">☆</span>
+        <span id="heroStarLabel" data-star-label>Star</span>
+        <span id="heroStarCount" data-star-count>{% if project %}{{ project.starred_by.count }}{% else %}0{% endif %}</span>
+    </a>
+{% endif %}

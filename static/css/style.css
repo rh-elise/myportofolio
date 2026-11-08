@@ -705,6 +705,7 @@ h1, h2, h3, .brand {
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .mini-card-delete:hover {
@@ -741,6 +742,28 @@ h1, h2, h3, .brand {
     min-width: 110px;
     background: var(--paper);
     border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0px var(--ink);
+}
+
+/* Animasi buka yang sama dengan menu Experience. */
+@keyframes dropdown-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mini-card-menu[open] > .mini-card-menu__list {
+    animation: dropdown-in 0.15s ease-out;
+}
+
+.mini-card-menu[open] > .mini-card-delete {
+    background-color: var(--accent);
+    color: var(--paper);
     box-shadow: 4px 4px 0px var(--ink);
 }
 
@@ -1179,7 +1202,10 @@ h1, h2, h3, .brand {
 .project-add-button {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.6rem;
+    /* Lebar minimum yang sama untuk "Add Project" dan "Add Experience". */
+    min-width: 13rem;
     position: relative;
     overflow: hidden;
     background-color: var(--ink);
@@ -2213,12 +2239,19 @@ h1, h2, h3, .brand {
 /* Isi teks dan aksi di dalam kartu */
 .exp-content {
     position: relative;
+    align-self: stretch;
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 0.9rem;
     transform: skewX(12deg); /* Balikkan kemiringan kartu */
+}
+
+/* Index hanya menampilkan teks, tanpa menu aksi di bawah. */
+.exp-content--readonly {
+    justify-content: flex-start;
 }
 
 .exp-footer {
@@ -2229,23 +2262,31 @@ h1, h2, h3, .brand {
     margin-top: auto;
 }
 
-/* Bintang di pojok kanan atas isi kartu, sejajar sudut kartu */
-.exp-star {
-    align-self: flex-end;
-    flex-shrink: 0;
-    z-index: 2;
-}
-
+/* Bintang di pojok kanan atas isi kartu */
 .exp-star.button-star {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
     border: 3px solid var(--ink);
-    padding: 0.6rem 1.2rem;
-    font-size: 0.85rem;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.8rem;
     box-shadow: none;
 }
 
-/* Hover sama seperti star di halaman detail Project */
+/* Samakan dengan badge bintang di kartu Project (tanpa efek hover) */
 .exp-star.button-star:hover {
-    box-shadow: 6px 6px 0px var(--ink);
+    transform: none;
+    box-shadow: none;
+}
+
+.exp-star.button-star:hover::after {
+    opacity: 0;
+}
+
+.exp-star.button-star:not(.is-starred):hover {
+    background: var(--paper);
+    color: var(--ink);
 }
 
 /* Tombol menu aksi di kanan bawah kartu */
@@ -2270,10 +2311,10 @@ h1, h2, h3, .brand {
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.exp-menu__trigger:hover {
+.exp-menu__trigger:hover,
+.exp-menu__trigger[aria-expanded="true"] {
     background: var(--accent);
     color: var(--paper);
-    transform: translateY(-2px);
     box-shadow: 4px 4px 0px var(--ink);
 }
 
@@ -2282,7 +2323,7 @@ h1, h2, h3, .brand {
     inset: auto;
     margin: 0;
     padding: 0;
-    min-width: 120px;
+    min-width: 110px;
     flex-direction: column;
     background: var(--paper);
     border: 3px solid var(--ink);
@@ -2293,6 +2334,7 @@ h1, h2, h3, .brand {
 
 .exp-menu__list:popover-open {
     display: flex;
+    animation: dropdown-in 0.15s ease-out;
 }
 
 .exp-menu__list a,
@@ -2343,6 +2385,8 @@ h1, h2, h3, .brand {
 
 .exp-desc {
     margin: 0;
+    /* Sisakan ruang agar baris pertama tidak tertimpa bintang di kanan atas. */
+    padding-right: 4rem;
     font-size: 0.95rem;
     color: var(--ink);
 }
@@ -2738,6 +2782,18 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
     }
 }
 
+/* Kurangi animasi bagi pengguna yang memintanya */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
 /* ==========================================================================
    14. RESPONSIVE
    ========================================================================== */
@@ -3064,11 +3120,14 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
         gap: 0.7rem;
         transform: skewX(6deg);
     }
+    /* Di layar sempit bintang turun jadi baris sendiri di atas teks. */
     .exp-star.button-star {
-        padding: 0.35rem 0.7rem;
-        font-size: 0.8rem;
+        position: static;
+        align-self: flex-end;
+        margin-bottom: 0.2rem;
     }
     .exp-desc {
+        padding-right: 0;
         font-size: 0.8rem;
     }
     /* Commission: baru di sini gambar pindah ke atas, teks di bawah */

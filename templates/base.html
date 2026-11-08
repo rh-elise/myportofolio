@@ -16,6 +16,7 @@
     <!-- Notifikasi global -->
     {% include "partials/toast.html" %}
     <script src="{% static 'js/form_errors.js' %}"></script>
+    <script src="{% static 'js/star.js' %}"></script>
 
     <!-- Modal logout, hanya tersedia untuk pengguna yang sudah login -->
     {% if user.is_authenticated %}
@@ -26,10 +27,7 @@
     {% include "partials/site_header.html" %}
 
     <script>
-        // ======================================================================
-        // Samakan jarak konten dan posisi toast dengan tinggi header asli.
-        // Tinggi header bisa berubah saat menu turun baris atau pengguna login.
-        // ======================================================================
+        // Samakan --header-height dengan tinggi header asli.
         (function () {
             const header = document.querySelector('.site-header-slanted');
             if (!header) return;

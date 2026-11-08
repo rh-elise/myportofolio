@@ -1,0 +1,14 @@
+{% comment %}Tombol bintang Experience untuk kartu yang dirender server.{% endcomment %}
+{% if user.is_authenticated %}
+    <button type="button"
+            class="button button-star exp-star{% if user in exp.starred_by.all %} is-starred{% endif %}"
+            data-star-url="{% url 'api:experience-star' exp.id %}"
+            title="{{ exp.starred_by.count }} stars"
+            aria-label="{% if user in exp.starred_by.all %}Unstar{% else %}Star{% endif %} {{ exp.title }}">
+        <span class="exp-star__icon" aria-hidden="true">{% if user in exp.starred_by.all %}★{% else %}☆{% endif %}</span><span class="exp-star__count">{{ exp.starred_by.count }}</span>
+    </button>
+{% else %}
+    <a href="{% url 'main:login' %}" class="button button-star exp-star" title="Login to star">
+        <span class="exp-star__icon" aria-hidden="true">☆</span><span class="exp-star__count">{{ exp.starred_by.count }}</span>
+    </a>
+{% endif %}

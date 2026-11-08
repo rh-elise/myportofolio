@@ -80,21 +80,9 @@
 
                 <div class="desc-box">
                     <!-- Tombol star -->
-                    <form id="heroStarForm"
-                          method="post"
-                          action="{% url 'main:toggle_star' projects_list.0.id %}"
-                          class="star-form hero-star">
-                        {% csrf_token %}
-                        <button id="heroStarBtn"
-                                type="submit"
-                                class="button button-star{% if user in projects_list.0.starred_by.all %} is-starred{% endif %}"
-                                title="Stars: {{ projects_list.0.starred_by.count }}"
-                                aria-label="Star {{ projects_list.0.title }}">
-                            <span id="heroStarIcon" aria-hidden="true">{% if user in projects_list.0.starred_by.all %}★{% else %}☆{% endif %}</span>
-                            <span id="heroStarLabel">{% if user in projects_list.0.starred_by.all %}Starred{% else %}Star{% endif %}</span>
-                            <span id="heroStarCount">{{ projects_list.0.starred_by.count }}</span>
-                        </button>
-                    </form>
+                    <div class="star-form hero-star">
+                        {% include "partials/project_hero_star.html" with project=projects_list.0 %}
+                    </div>
 
                     <p id="projectHeroDesc">{{ projects_list.0.description }}</p>
 
@@ -185,18 +173,9 @@
                         </div>
 
                         <div class="desc-box">
-                            <form id="heroStarForm" method="post" action="#" class="star-form hero-star">
-                                {% csrf_token %}
-                                <button id="heroStarBtn"
-                                        type="submit"
-                                        class="button button-star"
-                                        title="Stars: 0"
-                                        aria-label="Star project">
-                                    <span id="heroStarIcon" aria-hidden="true">☆</span>
-                                    <span id="heroStarLabel">Star</span>
-                                    <span id="heroStarCount">0</span>
-                                </button>
-                            </form>
+                            <div class="star-form hero-star">
+                                {% include "partials/project_hero_star.html" %}
+                            </div>
 
                             <p id="projectHeroDesc"></p>
                             <a id="projectHeroLink"

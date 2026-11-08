@@ -1,18 +1,16 @@
-<!-- ==========================================================================
-     Partial: tombol star project
-     --------------------------------------------------------------------------
-     Form ini tetap dikirim ke view Django; di halaman Projects aksi
-     ditangani JavaScript melalui API.
-     ========================================================================== -->
-<form method="post"
-      action="{% url 'main:toggle_star' project.id %}"
-      data-id="{{ project.id }}"
-      class="star-form">
-    {% csrf_token %}
-    <button type="submit"
-            class="button button-star{% if user in project.starred_by.all %} is-starred{% endif %}"
-            title="{{ project.starred_by.count }} stars"
-            aria-label="Star {{ project.title }}">
-        <span aria-hidden="true">{% if user in project.starred_by.all %}★{% else %}☆{% endif %}</span><span>{{ project.starred_by.count }}</span>
-    </button>
-</form>
+<!-- Partial: tombol bintang pada kartu kecil Project. -->
+<span class="star-form">
+    {% if user.is_authenticated %}
+        <button type="button"
+                class="button button-star{% if user in project.starred_by.all %} is-starred{% endif %}"
+                data-star-url="{% url 'api:project-star' project.id %}"
+                title="{{ project.starred_by.count }} stars"
+                aria-label="{% if user in project.starred_by.all %}Unstar{% else %}Star{% endif %} {{ project.title }}">
+            <span data-star-icon aria-hidden="true">{% if user in project.starred_by.all %}★{% else %}☆{% endif %}</span><span data-star-count>{{ project.starred_by.count }}</span>
+        </button>
+    {% else %}
+        <a href="{% url 'main:login' %}" class="button button-star" title="Login to star">
+            <span data-star-icon aria-hidden="true">☆</span><span data-star-count>{{ project.starred_by.count }}</span>
+        </a>
+    {% endif %}
+</span>

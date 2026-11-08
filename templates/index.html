@@ -76,7 +76,10 @@
                     {% if exp.thumbnail %}
                         <div class="exp-photo"><img src="{{ exp.thumbnail }}" alt="{{ exp.title }}"></div>
                     {% endif %}
-                    <p class="exp-desc">{{ exp.description }}</p>
+                    <div class="exp-content exp-content--readonly">
+                        {% include "partials/experience_star.html" with exp=exp %}
+                        <p class="exp-desc">{{ exp.description }}</p>
+                    </div>
                 </div>
             </article>
         {% empty %}

@@ -112,7 +112,7 @@ def show_main(request: HttpRequest) -> HttpResponse:
     context = {
         **PROFILE,
         "projects_list": Projects.objects.all(),
-        "experience_list": Experience.objects.all(),
+        "experience_list": Experience.objects.prefetch_related("starred_by").all(),
         "last_login": last_login,
     }
 

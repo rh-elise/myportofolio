@@ -1,10 +1,4 @@
-/* ==========================================================================
-   toast.js - Notifikasi ringkas
-   --------------------------------------------------------------------------
-   Semua toast dirender ke dalam satu stack di atas halaman. Setiap toast
-   dapat ditutup manual dan akan hilang otomatis setelah beberapa detik.
-   Dipakai oleh pesan Django maupun pemanggilan showToast() dari JavaScript.
-   ========================================================================== */
+/* toast.js - notifikasi ringan: satu stack, bisa ditutup, hilang otomatis. */
 
 (function () {
   const DEFAULT_DURATION = 4500;

@@ -8,6 +8,9 @@
 
     const SEARCH_DEBOUNCE_DELAY = 300;
     const PROJECTS_ENDPOINT = "/api/projects/";
+    const STAR_PROJECT_ENDPOINT = "{% url 'api:project-star' 0 %}";
+    const LOGIN_URL = "{% url 'main:login' %}";
+    const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
     const IS_EDITOR = "{{ perms.main.change_projects|yesno:'true,false' }}" === "true";
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
     const CSRF_TOKEN = "{{ csrf_token }}";
@@ -16,7 +19,6 @@
     let mainTitle = document.getElementById('projectHeroTitle');
     let mainDesc = document.getElementById('projectHeroDesc');
     let mainLink = document.getElementById('projectHeroLink');
-    let heroStarForm = document.getElementById('heroStarForm');
     let heroStarBtn = document.getElementById('heroStarBtn');
     let heroStarIcon = document.getElementById('heroStarIcon');
     let heroStarLabel = document.getElementById('heroStarLabel');
@@ -55,6 +57,11 @@
         return cookieValue;
     }
 
+    // /api/v1/projects/0/star/  ->  /api/v1/projects/5/star/
+    function projectStarUrl(id) {
+        return STAR_PROJECT_ENDPOINT.replace('/0/', `/${id}/`);
+    }
+
     // ======================================================================
     // Pemilihan kartu dan hero
     // ======================================================================
@@ -76,15 +83,17 @@
             mainLink.style.display = 'none';
         }
 
-        if (heroStarForm) {
+        if (heroStarBtn) {
             const starred = card.getAttribute('data-starred') === 'true';
             const count = card.getAttribute('data-count');
-            heroStarForm.action = '/projects/' + card.getAttribute('data-id') + '/star/';
+            if (heroStarBtn.tagName === 'BUTTON') {
+                heroStarBtn.dataset.starUrl = projectStarUrl(card.getAttribute('data-id'));
+            }
             heroStarBtn.classList.toggle('is-starred', starred);
             heroStarIcon.textContent = starred ? '★' : '☆';
             heroStarLabel.textContent = starred ? 'Starred' : 'Star';
             heroStarCount.textContent = count;
-            heroStarBtn.title = 'Stars: ' + count;
+            heroStarBtn.title = `${count} stars`;
         }
     }
 
@@ -143,12 +152,18 @@
         card.setAttribute('data-count', fields.star_count);
         card.setAttribute('data-starred', starred ? 'true' : 'false');
 
+        const star = IS_AUTHENTICATED
+            ? '<button type="button" class="button button-star' + (starred ? ' is-starred' : '') + '"' +
+              ' data-star-url="' + projectStarUrl(item.pk) + '"' +
+              ' title="' + fields.star_count + ' stars" aria-label="Star ' + escapeHtml(fields.title) + '">' +
+              '<span data-star-icon aria-hidden="true">' + (starred ? '★' : '☆') + '</span><span data-star-count>' + fields.star_count + '</span></button>'
+            : '<a href="' + LOGIN_URL + '" class="button button-star" title="Login to star">' +
+              '<span data-star-icon aria-hidden="true">☆</span><span data-star-count>' + fields.star_count + '</span></a>';
+
         card.innerHTML =
             '<img src="' + escapeHtml(fields.image) + '" alt="' + escapeHtml(fields.title) + '">' +
             '<span class="mini-card-label">' + escapeHtml(fields.title) + '</span>' +
-            '<form method="post" action="/projects/' + item.pk + '/star/" class="star-form"><input type="hidden" name="csrfmiddlewaretoken" value="' + CSRF_TOKEN + '">' +
-            '<button type="submit" class="button button-star' + (starred ? ' is-starred' : '') + '" title="' + fields.star_count + ' stars" aria-label="Star ' + escapeHtml(fields.title) + '">' +
-            '<span aria-hidden="true">' + (starred ? '★' : '☆') + '</span><span>' + fields.star_count + '</span></button></form>' +
+            '<span class="star-form">' + star + '</span>' +
                 (IS_EDITOR
                 ? '<details class="mini-card-menu"><summary class="mini-card-delete" aria-label="Options for ' + escapeHtml(fields.title) + '" title="Options">&#8942;</summary>' +
                   '<div class="mini-card-menu__list"><a href="/projects/' + item.pk + '/edit/"><span aria-hidden="true">&#9998;</span>Edit</a>' +
@@ -216,6 +231,12 @@
     }
 
     bindMiniCards();
+
+    // Sinkronkan bintang besar dengan kartu yang sedang aktif.
+    document.addEventListener('star:updated', function () {
+        const active = document.querySelector('.mini-card.is-active');
+        if (active) selectCard(active);
+    });
 
     // ======================================================================
     // Pencarian dan pengiriman form tanpa reload

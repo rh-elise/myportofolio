@@ -1,20 +1,14 @@
-/* ==========================================================================
-   form_errors.js - Error validasi form
-   --------------------------------------------------------------------------
-   Menampilkan error dari respons API tepat di bawah field yang bermasalah,
-   sama seperti form login dan signup. Toast tetap dipakai untuk kegagalan
-   jaringan atau pesan yang tidak terikat ke field tertentu.
-   ========================================================================== */
+/* form_errors.js - tampilkan error validasi API di bawah field terkait. */
 
 (function () {
-  // Key yang bukan nama field: ditampilkan sebagai satu pesan umum.
+  // Key ini bukan nama field, jadi ditampilkan sebagai pesan umum.
   const GENERAL_KEYS = new Set(['non_field_errors', 'detail', 'message', 'error']);
 
   function toMessages(value) {
     if (Array.isArray(value)) return value.flatMap(toMessages);
     if (typeof value === 'string') return [value];
     if (value && typeof value === 'object') {
-      // Format DRF get_json_data: { code, message }.
+      // Format DRF: { code, message }.
       if (typeof value.message === 'string') return [value.message];
       return Object.values(value).flatMap(toMessages);
     }

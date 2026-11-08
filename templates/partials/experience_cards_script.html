@@ -139,21 +139,22 @@
         // Tombol star: pengguna login memakai API, tamu diarahkan ke login.
         const starHtml = IS_AUTHENTICATED
             ? `<button type="button" class="button button-star exp-star${item.is_starred ? ' is-starred' : ''}"
-                 data-action="star" data-id="${item.id}" title="${item.star_count} stars"
+                 data-star-url="${experienceEndpoint(EXPERIENCE_STAR_ENDPOINT, item.id)}"
+                 title="${item.star_count} stars"
                  aria-label="${item.is_starred ? 'Unstar' : 'Star'} ${escapeHtml(item.title)}">
-                 <span class="exp-star__icon" aria-hidden="true">${item.is_starred ? '★' : '☆'}</span><span class="exp-star__label">${item.is_starred ? 'Starred' : 'Star'}</span><span class="exp-star__count">${item.star_count}</span></button>`
+                 <span class="exp-star__icon" aria-hidden="true">${item.is_starred ? '★' : '☆'}</span><span class="exp-star__count">${item.star_count}</span></button>`
             : `<a href="${LOGIN_URL}" class="button button-star exp-star" title="Login to star">
-                 <span class="exp-star__icon" aria-hidden="true">☆</span><span class="exp-star__label">Star</span><span class="exp-star__count">${item.star_count}</span></a>`;
+                 <span class="exp-star__icon" aria-hidden="true">☆</span><span class="exp-star__count">${item.star_count}</span></a>`;
 
         // Menu edit/hapus hanya untuk Editor; hapus hanya untuk superuser.
-        // Daftar aksi memakai popover agar tampil di atas ribbon tahun.
+        // Pakai popover supaya tidak tertutup ribbon tahun.
         const menuHtml = IS_EDITOR
             ? `<div class="exp-menu">
                  <button type="button" class="exp-menu__trigger"
                          aria-haspopup="true" aria-expanded="false"
                          aria-label="Options for ${escapeHtml(item.title)}"
                          title="Options">&#8942;</button>
-                 <div class="exp-menu__list" popover="auto" role="menu">
+                 <div class="exp-menu__list" popover="manual" role="menu">
                    <a role="menuitem" href="${experienceEndpoint(EXPERIENCE_EDIT_ENDPOINT, item.id)}"><span aria-hidden="true">&#9998;</span>Edit</a>
                    ${IS_SUPERUSER ? `<button type="button" role="menuitem" popovertarget="delete-experience-${item.id}" aria-label="Delete ${escapeHtml(item.title)}"><span aria-hidden="true">&times;</span>Delete</button>` : ''}
                  </div>
@@ -172,7 +173,7 @@
             `<div class="exp-footer">${menuHtml}</div>` +
             `</div></div>`;
 
-        // Sinkronkan status aria tombol menu saat popover tertutup sendiri.
+        // Reset aria-expanded saat menu tertutup.
         const menuList = article.querySelector('.exp-menu__list');
         if (menuList) {
             menuList.addEventListener('toggle', (event) => {
@@ -233,33 +234,6 @@
     }
 
     // ======================================================================
-    // Aksi star
-    // ======================================================================
-
-    function applyStarUpdate(updated) {
-        const card = expGrid.querySelector(`.exp-card[data-id="${updated.id}"]`);
-        if (!card) return;
-
-        const starButton = card.querySelector('.button-star');
-        if (!starButton) return;
-
-        starButton.classList.toggle('is-starred', updated.is_starred);
-        starButton.title = `${updated.star_count} stars`;
-        starButton.setAttribute(
-            'aria-label',
-            `${updated.is_starred ? 'Unstar' : 'Star'} ${updated.title}`
-        );
-
-        const icon = starButton.querySelector('.exp-star__icon');
-        const label = starButton.querySelector('.exp-star__label');
-        const count = starButton.querySelector('.exp-star__count');
-
-        if (icon) icon.textContent = updated.is_starred ? '★' : '☆';
-        if (label) label.textContent = updated.is_starred ? 'Starred' : 'Star';
-        if (count) count.textContent = updated.star_count;
-    }
-
-    // ======================================================================
     // Tambah Experience
     // ======================================================================
 
@@ -285,7 +259,7 @@
             showToast('Success', 'Experience added.', 'success');
             await fetchExperiences(expSearchInput.value.trim());
         } catch (error) {
-            // Error validasi tampil di bawah field; toast hanya untuk kegagalan lain.
+            // Error field tampil di bawah input; toast untuk kegagalan lain.
             const shown = error.data ? FormErrors.show(experienceForm, error.data) : 0;
             if (!shown) showToast('Could not add experience', error.message, 'error');
         } finally {
@@ -298,77 +272,69 @@
     }
 
     // ======================================================================
-    // Event delegation untuk star dan hapus
+    // Hapus Experience
     // ----------------------------------------------------------------------
-    // Kartu dibuat ulang oleh JavaScript, jadi listener dipasang di container.
+    // Bintang ditangani experience_star.js; listener ini hanya untuk hapus.
     // ======================================================================
 
     expGrid.addEventListener('click', async function (event) {
-        const button = event.target.closest('button[data-action]');
+        const button = event.target.closest('button[data-action="delete"]');
         if (!button || button.disabled) return;
 
-        const action = button.dataset.action;
         const id = button.dataset.id;
         button.disabled = true;
 
         try {
-            if (action === 'star') {
-                const updated = await writeExperience(
-                    experienceEndpoint(EXPERIENCE_STAR_ENDPOINT, id),
-                    'POST'
-                );
-                applyStarUpdate(updated);
-                showToast('Success', updated.is_starred ? 'Starred.' : 'Unstarred.', 'success');
-            } else if (action === 'delete') {
-                await writeExperience(
-                    experienceEndpoint(EXPERIENCE_DETAIL_ENDPOINT, id),
-                    'DELETE'
-                );
-                document.getElementById(`delete-experience-${id}`)?.hidePopover();
-                showToast('Success', 'Experience deleted.', 'success');
-                await fetchExperiences(expSearchInput.value.trim());
-            }
+            await writeExperience(
+                experienceEndpoint(EXPERIENCE_DETAIL_ENDPOINT, id),
+                'DELETE'
+            );
+            document.getElementById(`delete-experience-${id}`)?.hidePopover();
+            showToast('Success', 'Experience deleted.', 'success');
+            await fetchExperiences(expSearchInput.value.trim());
         } catch (error) {
-            const errorTitle = action === 'delete'
-                ? 'Could not delete experience'
-                : 'Could not update star';
-            showToast(errorTitle, error.message, 'error');
+            showToast('Could not delete experience', error.message, 'error');
         } finally {
             if (button.isConnected) button.disabled = false;
         }
     });
 
-    // ======================================================================
-    // Menu aksi edit/hapus
-    // ----------------------------------------------------------------------
-    // Popover ditempatkan di atas tombol dan dibatasi agar tetap di layar.
-    // ======================================================================
+    // Menu aksi edit/hapus.
+    // Popover manual: klik tombol yang sama atau klik di luar menu menutupnya.
+
+    function closeExpMenu(list) {
+        if (!list) return;
+        list.hidePopover();
+        list.closest('.exp-menu')
+            ?.querySelector('.exp-menu__trigger')
+            ?.setAttribute('aria-expanded', 'false');
+    }
+
+    function closeAllExpMenus(except) {
+        document.querySelectorAll('.exp-menu__list').forEach((list) => {
+            if (list !== except && list.matches(':popover-open')) closeExpMenu(list);
+        });
+    }
 
     expGrid.addEventListener('click', function (event) {
-        const trigger = event.target.closest('.exp-menu__trigger');
         const choice = event.target.closest('.exp-menu__list a, .exp-menu__list button');
-
         if (choice) {
-            choice.closest('.exp-menu__list')?.hidePopover();
+            closeExpMenu(choice.closest('.exp-menu__list'));
             return;
         }
 
+        const trigger = event.target.closest('.exp-menu__trigger');
         if (!trigger) return;
 
         const list = trigger.parentElement.querySelector('.exp-menu__list');
         if (!list) return;
 
-        const isOpen = list.matches(':popover-open');
-
-        document.querySelectorAll('.exp-menu__list').forEach((other) => {
-            if (other !== list && other.matches(':popover-open')) other.hidePopover();
-        });
-
-        if (isOpen) {
-            list.hidePopover();
-            trigger.setAttribute('aria-expanded', 'false');
+        if (list.matches(':popover-open')) {
+            closeExpMenu(list);
             return;
         }
+
+        closeAllExpMenus(list);
 
         // Ukur dulu tanpa terlihat, lalu posisikan di atas tombol.
         list.style.visibility = 'hidden';
@@ -393,11 +359,20 @@
         trigger.setAttribute('aria-expanded', 'true');
     });
 
-    // Tutup menu saat halaman digulir agar posisinya tidak tertinggal.
+    // Klik di luar menu menutup menu.
+    document.addEventListener('pointerdown', function (event) {
+        if (event.target.closest('.exp-menu')) return;
+        closeAllExpMenus();
+    });
+
+    // Tombol Escape juga menutup menu.
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeAllExpMenus();
+    });
+
+    // Tutup menu saat halaman digulir.
     window.addEventListener('scroll', function () {
-        document.querySelectorAll('.exp-menu__list:popover-open').forEach((list) => {
-            list.hidePopover();
-        });
+        closeAllExpMenus();
     }, { passive: true });
 
     // ======================================================================

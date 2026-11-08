@@ -30,16 +30,18 @@
                        class="project-search__input"
                        aria-label="Search experience">
                 <button type="submit" class="project-search__button">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                        <circle cx="11" cy="11" r="7"/>
-                        <path d="M20 20L16.6 16.6"/>
-                    </svg>
-                    Search
+                    <span>
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7"/>
+                            <path d="M20 20L16.6 16.6"/>
+                        </svg>
+                        Search
+                    </span>
                 </button>
             </form>
 
             {% if user.is_superuser %}
-                <button type="button" class="project-add-button" popovertarget="add-experience-modal">
+                <button type="button" class="button project-add-button" popovertarget="add-experience-modal">
                     <span class="project-add-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
                             <path d="M12 5v14M5 12h14"/>

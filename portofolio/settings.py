@@ -18,7 +18,12 @@ if PRODUCTION and (not SECRET_KEY or SECRET_KEY.startswith("django-insecure")):
     raise ValueError("SECRET_KEY must be set in production.")
 SECRET_KEY = SECRET_KEY or "django-insecure-dev-only"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "rheina-uliana-myportofolio.pws.cs.ui.ac.id"]
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "10.0.2.2",
+    "rheina-uliana-myportofolio.pws.cs.ui.ac.id",
+]
 CSRF_TRUSTED_ORIGINS = ["https://rheina-uliana-myportofolio.pws.cs.ui.ac.id"]
 
 # ---------------------------------------------------------------------------
@@ -33,12 +38,15 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "main",
     "rest_framework",
+    "corsheaders",
+    "rest_framework.authtoken"
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -46,8 +54,16 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
 ROOT_URLCONF = "portofolio.urls"
 WSGI_APPLICATION = "portofolio.wsgi.application"
+CORS_ALLOW_ALL_ORIGINS = True
 
 # ---------------------------------------------------------------------------
 # Database
